@@ -22,9 +22,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
   } catch {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8 text-center">
-        <p className="text-gray-500">Product not found.</p>
+        <p className="text-gray-500">Producto no encontrado.</p>
         <Link href="/products" className="underline text-sm mt-2 inline-block">
-          Back to products
+          Volver a productos
         </Link>
       </div>
     );
@@ -44,9 +44,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link
         href="/products"
-        className="text-sm text-gray-500 hover:underline mb-4 inline-block"
+        className="text-sm text-gray-500 hover:text-black transition-colors mb-4 inline-block"
       >
-        &larr; Back to products
+        &larr; Volver a productos
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -59,7 +59,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               className="object-cover rounded-lg w-full h-full"
             />
           ) : (
-            <span className="text-gray-400 text-sm">No image</span>
+            <span className="text-gray-400 text-sm">Sin imagen</span>
           )}
         </div>
 
@@ -72,20 +72,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
           {product.seller && (
             <p className="text-sm text-gray-500 mt-2">
-              by {product.seller.display_name}
+              por {product.seller.display_name}
             </p>
           )}
 
           {avgRating && (
             <p className="text-sm text-gray-600 mt-1">
-              {avgRating} / 5 ({reviews.total} reviews)
+              {avgRating} / 5 ({reviews.total} reseñas)
             </p>
           )}
 
           <p className="text-sm text-gray-500 mt-1">
-            {product.stock > 0
-              ? `${product.stock} in stock`
-              : "Out of stock"}
+            {product.stock > 0 ? `${product.stock} en stock` : "Sin stock"}
           </p>
 
           {product.description && (
@@ -103,15 +101,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
       {/* Reviews */}
       <div className="mt-12">
         <h2 className="text-lg font-semibold mb-4">
-          Reviews ({reviews.total ?? 0})
+          Reseñas ({reviews.total ?? 0})
         </h2>
         {reviews.data.length > 0 ? (
           <div className="space-y-4">
             {reviews.data.map((review) => (
-              <div key={review.id} className="border rounded-lg p-4">
+              <div key={review.id} className="border rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">
-                    {review.buyer?.display_name ?? "Buyer"}
+                    {review.buyer?.display_name ?? "Comprador"}
                   </p>
                   <p className="text-sm text-gray-500">
                     {"★".repeat(review.rating)}
@@ -119,15 +117,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   </p>
                 </div>
                 {review.comment && (
-                  <p className="text-sm text-gray-700 mt-2">
-                    {review.comment}
-                  </p>
+                  <p className="text-sm text-gray-700 mt-2">{review.comment}</p>
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No reviews yet.</p>
+          <p className="text-sm text-gray-500">Aún no hay reseñas.</p>
         )}
       </div>
     </div>

@@ -20,51 +20,63 @@ export default async function DashboardPage() {
 
   // Fetch recent orders
   const column = isSeller ? "seller_id" : "buyer_id";
-  const { data: recentOrders, count: totalOrders } = await supabase
+  const { data: recentOrders, count: totalOrders } = (await supabase
     .from("orders")
-    .select("id, total_amount, status, created_at, product:products!inner(title)", {
-      count: "exact",
-    })
+    .select(
+      "id, total_amount, status, created_at, product:products!inner(title)",
+      {
+        count: "exact",
+      },
+    )
     .eq(column, user.id)
     .order("created_at", { ascending: false })
-    .limit(5) as { data: Array<{ id: string; total_amount: number; status: string; created_at: string; product: { title: string } }> | null; count: number | null };
+    .limit(5)) as {
+    data: Array<{
+      id: string;
+      total_amount: number;
+      status: string;
+      created_at: string;
+      product: { title: string };
+    }> | null;
+    count: number | null;
+  };
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-6">Panel Principal</h1>
 
-      {/* Seller onboarding prompt */}
+      {/* Aviso de onboarding Stripe */}
       {isSeller && !profile?.stripe_onboarding_complete && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-          <p className="text-sm font-medium text-yellow-800">
-            Complete your Stripe setup to start receiving payments.
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+          <p className="text-sm font-medium text-amber-800">
+            Completa la configuración de Stripe para empezar a recibir pagos.
           </p>
           <Link
             href="/dashboard/settings"
-            className="text-sm underline text-yellow-700 mt-1 inline-block"
+            className="text-sm underline text-amber-700 mt-1 inline-block"
           >
-            Go to Settings
+            Ir a Configuración
           </Link>
         </div>
       )}
 
-      {/* Stats */}
+      {/* Estadísticas */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="border rounded-lg p-4">
-          <p className="text-sm text-gray-500">Total Orders</p>
-          <p className="text-2xl font-bold">{totalOrders ?? 0}</p>
+        <div className="border rounded-xl p-5 bg-gray-50/50">
+          <p className="text-sm text-gray-500">Total de Pedidos</p>
+          <p className="text-3xl font-bold mt-1">{totalOrders ?? 0}</p>
         </div>
       </div>
 
-      {/* Recent Orders */}
-      <h2 className="text-lg font-semibold mb-3">Recent Orders</h2>
+      {/* Pedidos Recientes */}
+      <h2 className="text-lg font-semibold mb-3">Pedidos Recientes</h2>
       {recentOrders && recentOrders.length > 0 ? (
-        <div className="border rounded-lg divide-y">
+        <div className="border rounded-xl divide-y">
           {recentOrders.map((order) => (
             <Link
               key={order.id}
               href={`/dashboard/orders`}
-              className="flex items-center justify-between p-4 hover:bg-gray-50"
+              className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors rounded-lg"
             >
               <div>
                 <p className="text-sm font-medium">
@@ -79,14 +91,18 @@ export default async function DashboardPage() {
                   {formatPrice(order.total_amount)}
                 </p>
                 <p className="text-xs capitalize text-gray-500">
-                  {order.status}
+                  {order.status === "paid"
+                    ? "Pagado"
+                    : order.status === "pending"
+                      ? "Pendiente"
+                      : order.status}
                 </p>
               </div>
             </Link>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-gray-500">No orders yet.</p>
+        <p className="text-sm text-gray-500">Aún no hay pedidos.</p>
       )}
     </div>
   );

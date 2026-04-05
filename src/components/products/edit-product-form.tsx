@@ -30,7 +30,7 @@ export function EditProductForm({ product }: { product: Product }) {
 
     if (!res.ok) {
       const data = await res.json();
-      setError(data.error?.toString() ?? "Something went wrong");
+      setError(data.error?.toString() ?? "Algo salió mal");
       setLoading(false);
       return;
     }
@@ -40,7 +40,7 @@ export function EditProductForm({ product }: { product: Product }) {
   }
 
   async function handleDelete() {
-    if (!confirm("Delete this product?")) return;
+    if (!confirm("¿Eliminar este producto?")) return;
 
     const res = await fetch(`/api/products/${product.id}`, {
       method: "DELETE",
@@ -55,15 +55,15 @@ export function EditProductForm({ product }: { product: Product }) {
   return (
     <>
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded mb-4">
+        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4 border border-red-100">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium mb-1">
-            Title
+          <label htmlFor="title" className="block text-sm font-medium mb-1.5">
+            Título
           </label>
           <input
             id="title"
@@ -71,30 +71,30 @@ export function EditProductForm({ product }: { product: Product }) {
             defaultValue={product.title}
             required
             minLength={3}
-            className="w-full border rounded-md px-3 py-2 text-sm"
+            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
           />
         </div>
 
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium mb-1"
+            className="block text-sm font-medium mb-1.5"
           >
-            Description
+            Descripción
           </label>
           <textarea
             id="description"
             name="description"
             rows={4}
             defaultValue={product.description ?? ""}
-            className="w-full border rounded-md px-3 py-2 text-sm"
+            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="price" className="block text-sm font-medium mb-1">
-              Price (USD)
+            <label htmlFor="price" className="block text-sm font-medium mb-1.5">
+              Precio (USD)
             </label>
             <input
               id="price"
@@ -104,11 +104,11 @@ export function EditProductForm({ product }: { product: Product }) {
               min="0.50"
               defaultValue={(product.price / 100).toFixed(2)}
               required
-              className="w-full border rounded-md px-3 py-2 text-sm"
+              className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
             />
           </div>
           <div>
-            <label htmlFor="stock" className="block text-sm font-medium mb-1">
+            <label htmlFor="stock" className="block text-sm font-medium mb-1.5">
               Stock
             </label>
             <input
@@ -117,20 +117,23 @@ export function EditProductForm({ product }: { product: Product }) {
               type="number"
               min="0"
               defaultValue={product.stock}
-              className="w-full border rounded-md px-3 py-2 text-sm"
+              className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="category" className="block text-sm font-medium mb-1">
-            Category
+          <label
+            htmlFor="category"
+            className="block text-sm font-medium mb-1.5"
+          >
+            Categoría
           </label>
           <input
             id="category"
             name="category"
             defaultValue={product.category ?? ""}
-            className="w-full border rounded-md px-3 py-2 text-sm"
+            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
           />
         </div>
 
@@ -138,16 +141,16 @@ export function EditProductForm({ product }: { product: Product }) {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 bg-black text-white py-2 rounded-md text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
+            className="flex-1 bg-black text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 transition-colors"
           >
-            {loading ? "Saving..." : "Save Changes"}
+            {loading ? "Guardando..." : "Guardar Cambios"}
           </button>
           <button
             type="button"
             onClick={handleDelete}
-            className="px-4 py-2 border border-red-300 text-red-600 rounded-md text-sm hover:bg-red-50"
+            className="px-4 py-2.5 border border-red-200 text-red-600 rounded-lg text-sm font-medium hover:bg-red-50 transition-colors"
           >
-            Delete
+            Eliminar
           </button>
         </div>
       </form>

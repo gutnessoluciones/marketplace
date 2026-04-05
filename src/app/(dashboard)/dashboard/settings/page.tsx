@@ -17,27 +17,27 @@ export default async function SettingsPage() {
 
   return (
     <div className="max-w-lg">
-      <h1 className="text-2xl font-bold mb-6">Settings</h1>
+      <h1 className="text-2xl font-bold mb-6">Configuración</h1>
 
-      <div className="border rounded-lg p-4 mb-6">
-        <h2 className="font-semibold mb-2">Account</h2>
-        <p className="text-sm text-gray-600">Email: {user.email}</p>
+      <div className="border rounded-xl p-5 mb-6">
+        <h2 className="font-semibold mb-3">Cuenta</h2>
+        <p className="text-sm text-gray-600">Correo: {user.email}</p>
         <p className="text-sm text-gray-600 capitalize">
-          Role: {profile?.role}
+          Rol: {profile?.role === "seller" ? "Vendedor" : "Comprador"}
         </p>
       </div>
 
       {profile?.role === "seller" && (
-        <div className="border rounded-lg p-4">
-          <h2 className="font-semibold mb-2">Stripe Payments</h2>
+        <div className="border rounded-xl p-5">
+          <h2 className="font-semibold mb-3">Pagos con Stripe</h2>
           {profile.stripe_onboarding_complete ? (
-            <p className="text-sm text-green-600">
-              Stripe connected. You can receive payments.
+            <p className="text-sm text-emerald-600 font-medium">
+              ✓ Stripe conectado. Puedes recibir pagos.
             </p>
           ) : (
             <>
               <p className="text-sm text-gray-600 mb-3">
-                Connect your Stripe account to start receiving payments.
+                Conecta tu cuenta de Stripe para empezar a recibir pagos.
               </p>
               <StripeConnectButton />
             </>

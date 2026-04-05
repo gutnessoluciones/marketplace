@@ -22,7 +22,7 @@ export default async function EditProductPage({ params }: PageProps) {
     if (product.seller_id !== user.id) redirect("/dashboard/products");
     return (
       <div className="max-w-lg">
-        <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
+        <h1 className="text-2xl font-bold mb-6">Editar Producto</h1>
         <EditProductForm product={product} />
       </div>
     );

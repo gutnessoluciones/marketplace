@@ -29,7 +29,7 @@ export function BuyButton({
         router.push("/login");
         return;
       }
-      alert(data.error ?? "Failed to create order");
+      alert(data.error ?? "Error al crear el pedido");
       setLoading(false);
       return;
     }
@@ -45,7 +45,7 @@ export function BuyButton({
 
     if (!checkoutRes.ok) {
       const data = await checkoutRes.json();
-      alert(data.error ?? "Failed to start checkout");
+      alert(data.error ?? "Error al iniciar el pago");
       setLoading(false);
       return;
     }
@@ -60,13 +60,9 @@ export function BuyButton({
     <button
       onClick={handleBuy}
       disabled={!inStock || loading}
-      className="w-full bg-black text-white py-3 rounded-md text-sm font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full bg-black text-white py-3 rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
-      {!inStock
-        ? "Out of Stock"
-        : loading
-        ? "Processing..."
-        : "Buy Now"}
+      {!inStock ? "Sin Stock" : loading ? "Procesando..." : "Comprar Ahora"}
     </button>
   );
 }

@@ -20,9 +20,12 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Products</h1>
-        <Link href="/" className="text-sm text-gray-500 hover:underline">
-          &larr; Home
+        <h1 className="text-2xl font-bold">Productos</h1>
+        <Link
+          href="/"
+          className="text-sm text-gray-500 hover:text-black transition-colors"
+        >
+          &larr; Inicio
         </Link>
       </div>
 
@@ -40,27 +43,27 @@ export default async function ProductsPage({ searchParams }: PageProps) {
               {page > 1 && (
                 <Link
                   href={`/products?page=${page - 1}${category ? `&category=${category}` : ""}`}
-                  className="px-3 py-1 border rounded text-sm"
+                  className="px-4 py-2 border rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
                 >
-                  Previous
+                  Anterior
                 </Link>
               )}
               <span className="text-sm text-gray-500">
-                Page {page} of {totalPages}
+                Página {page} de {totalPages}
               </span>
               {page < totalPages && (
                 <Link
                   href={`/products?page=${page + 1}${category ? `&category=${category}` : ""}`}
-                  className="px-3 py-1 border rounded text-sm"
+                  className="px-4 py-2 border rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
                 >
-                  Next
+                  Siguiente
                 </Link>
               )}
             </div>
           )}
         </>
       ) : (
-        <p className="text-gray-500">No products found.</p>
+        <p className="text-gray-500">No se encontraron productos.</p>
       )}
     </div>
   );

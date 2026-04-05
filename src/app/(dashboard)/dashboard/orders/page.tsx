@@ -25,19 +25,22 @@ export default async function OrdersPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Orders</h1>
+      <h1 className="text-2xl font-bold mb-6">Pedidos</h1>
 
       {orders && orders.length > 0 ? (
-        <div className="border rounded-lg divide-y">
+        <div className="border rounded-xl divide-y">
           {orders.map((order) => (
-            <div key={order.id} className="p-4 flex items-center justify-between">
+            <div
+              key={order.id}
+              className="p-4 flex items-center justify-between"
+            >
               <div>
                 <p className="text-sm font-medium">
                   {order.product?.title ?? "Product"}
                 </p>
                 <p className="text-xs text-gray-500">
-                  {new Date(order.created_at).toLocaleDateString()} &middot;
-                  Qty: {order.quantity}
+                  {new Date(order.created_at).toLocaleDateString("es-ES")}{" "}
+                  &middot; Cant: {order.quantity}
                 </p>
               </div>
               <div className="text-right">
@@ -45,22 +48,26 @@ export default async function OrdersPage() {
                   {formatPrice(order.total_amount)}
                 </p>
                 <span
-                  className={`text-xs px-2 py-0.5 rounded-full ${
+                  className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                     order.status === "paid"
-                      ? "bg-green-100 text-green-700"
+                      ? "bg-emerald-100 text-emerald-700"
                       : order.status === "pending"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-gray-100 text-gray-700"
+                        ? "bg-amber-100 text-amber-700"
+                        : "bg-gray-100 text-gray-700"
                   }`}
                 >
-                  {order.status}
+                  {order.status === "paid"
+                    ? "Pagado"
+                    : order.status === "pending"
+                      ? "Pendiente"
+                      : order.status}
                 </span>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-gray-500">No orders yet.</p>
+        <p className="text-sm text-gray-500">Aún no hay pedidos.</p>
       )}
     </div>
   );

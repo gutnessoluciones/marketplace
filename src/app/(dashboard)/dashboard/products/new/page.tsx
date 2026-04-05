@@ -29,7 +29,7 @@ export default function NewProductPage() {
 
     if (!res.ok) {
       const data = await res.json();
-      setError(data.error?.toString() ?? "Something went wrong");
+      setError(data.error?.toString() ?? "Algo salió mal");
       setLoading(false);
       return;
     }
@@ -40,47 +40,49 @@ export default function NewProductPage() {
 
   return (
     <div className="max-w-lg">
-      <h1 className="text-2xl font-bold mb-6">New Product</h1>
+      <h1 className="text-2xl font-bold mb-6">Nuevo Producto</h1>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded mb-4">
+        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4 border border-red-100">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium mb-1">
-            Title
+          <label htmlFor="title" className="block text-sm font-medium mb-1.5">
+            Título
           </label>
           <input
             id="title"
             name="title"
             required
             minLength={3}
-            className="w-full border rounded-md px-3 py-2 text-sm"
+            placeholder="Nombre del producto"
+            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
           />
         </div>
 
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium mb-1"
+            className="block text-sm font-medium mb-1.5"
           >
-            Description
+            Descripción
           </label>
           <textarea
             id="description"
             name="description"
             rows={4}
-            className="w-full border rounded-md px-3 py-2 text-sm"
+            placeholder="Describe tu producto..."
+            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="price" className="block text-sm font-medium mb-1">
-              Price (USD)
+            <label htmlFor="price" className="block text-sm font-medium mb-1.5">
+              Precio (USD)
             </label>
             <input
               id="price"
@@ -89,11 +91,11 @@ export default function NewProductPage() {
               step="0.01"
               min="0.50"
               required
-              className="w-full border rounded-md px-3 py-2 text-sm"
+              className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
             />
           </div>
           <div>
-            <label htmlFor="stock" className="block text-sm font-medium mb-1">
+            <label htmlFor="stock" className="block text-sm font-medium mb-1.5">
               Stock
             </label>
             <input
@@ -102,29 +104,32 @@ export default function NewProductPage() {
               type="number"
               min="0"
               defaultValue={1}
-              className="w-full border rounded-md px-3 py-2 text-sm"
+              className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="category" className="block text-sm font-medium mb-1">
-            Category
+          <label
+            htmlFor="category"
+            className="block text-sm font-medium mb-1.5"
+          >
+            Categoría
           </label>
           <input
             id="category"
             name="category"
-            className="w-full border rounded-md px-3 py-2 text-sm"
-            placeholder="e.g. electronics, clothing"
+            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
+            placeholder="ej. electrónica, ropa"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-black text-white py-2 rounded-md text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
+          className="w-full bg-black text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 transition-colors"
         >
-          {loading ? "Creating..." : "Create Product"}
+          {loading ? "Creando..." : "Crear Producto"}
         </button>
       </form>
     </div>

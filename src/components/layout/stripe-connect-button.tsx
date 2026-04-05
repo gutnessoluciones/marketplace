@@ -13,7 +13,7 @@ export function StripeConnectButton() {
     if (data.url) {
       window.location.href = data.url;
     } else {
-      alert(data.error ?? "Failed to start Stripe onboarding");
+      alert(data.error ?? "Error al iniciar el proceso de Stripe");
       setLoading(false);
     }
   }
@@ -22,9 +22,9 @@ export function StripeConnectButton() {
     <button
       onClick={handleConnect}
       disabled={loading}
-      className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+      className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-colors"
     >
-      {loading ? "Redirecting..." : "Connect Stripe"}
+      {loading ? "Redirigiendo..." : "Conectar Stripe"}
     </button>
   );
 }
