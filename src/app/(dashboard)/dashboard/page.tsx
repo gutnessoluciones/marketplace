@@ -1,0 +1,93 @@
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
+
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, stripe_onboarding_complete")
+    .eq("id", user.id)
+    .single();
+
+  const isSeller = profile?.role === "seller";
+
+  // Fetch recent orders
+  const column = isSeller ? "seller_id" : "buyer_id";
+  const { data: recentOrders, count: totalOrders } = await supabase
+    .from("orders")
+    .select("id, total_amount, status, created_at, product:products!inner(title)", {
+      count: "exact",
+    })
+    .eq(column, user.id)
+    .order("created_at", { ascending: false })
+    .limit(5) as { data: Array<{ id: string; total_amount: number; status: string; created_at: string; product: { title: string } }> | null; count: number | null };
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+
+      {/* Seller onboarding prompt */}
+      {isSeller && !profile?.stripe_onboarding_complete && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <p className="text-sm font-medium text-yellow-800">
+            Complete your Stripe setup to start receiving payments.
+          </p>
+          <Link
+            href="/dashboard/settings"
+            className="text-sm underline text-yellow-700 mt-1 inline-block"
+          >
+            Go to Settings
+          </Link>
+        </div>
+      )}
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="border rounded-lg p-4">
+          <p className="text-sm text-gray-500">Total Orders</p>
+          <p className="text-2xl font-bold">{totalOrders ?? 0}</p>
+        </div>
+      </div>
+
+      {/* Recent Orders */}
+      <h2 className="text-lg font-semibold mb-3">Recent Orders</h2>
+      {recentOrders && recentOrders.length > 0 ? (
+        <div className="border rounded-lg divide-y">
+          {recentOrders.map((order) => (
+            <Link
+              key={order.id}
+              href={`/dashboard/orders`}
+              className="flex items-center justify-between p-4 hover:bg-gray-50"
+            >
+              <div>
+                <p className="text-sm font-medium">
+                  {order.product?.title ?? "Product"}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {new Date(order.created_at).toLocaleDateString()}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium">
+                  {formatPrice(order.total_amount)}
+                </p>
+                <p className="text-xs capitalize text-gray-500">
+                  {order.status}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-gray-500">No orders yet.</p>
+      )}
+    </div>
+  );
+}
