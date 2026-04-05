@@ -7,6 +7,8 @@ export const createProductSchema = z.object({
   price: z.number().int().positive().max(99999999),
   category: z.string().max(50).optional(),
   stock: z.number().int().min(0).default(1),
+  images: z.array(z.string().url()).max(10).optional(),
+  status: z.enum(["active", "draft"]).optional(),
 });
 
 export const updateProductSchema = createProductSchema.partial();
@@ -50,4 +52,17 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
+});
+
+// ── Profile ──────────────────────────────────────────────
+export const updateProfileSchema = z.object({
+  display_name: z.string().min(2).max(100).optional(),
+  bio: z.string().max(500).optional().nullable(),
+  phone: z.string().max(20).optional().nullable(),
+});
+
+// ── Site Settings ────────────────────────────────────────
+export const updateSiteSettingSchema = z.object({
+  key: z.string().min(1),
+  value: z.record(z.string(), z.unknown()),
 });

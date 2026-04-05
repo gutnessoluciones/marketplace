@@ -2,11 +2,20 @@
 
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
 
-export default function LoginPage() {
-  const [error, setError] = useState("");
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get("error");
+
+  const [error, setError] = useState(
+    urlError === "confirmation"
+      ? "El enlace de confirmación ha expirado o no es válido. Regístrate de nuevo."
+      : urlError === "auth"
+        ? "Error de autenticación. Inténtalo de nuevo."
+        : "",
+  );
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
@@ -23,7 +32,16 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError(error.message);
+      // Translate common Supabase errors to Spanish
+      if (error.message.includes("Email not confirmed")) {
+        setError(
+          "Tu email no está confirmado. Revisa tu bandeja de entrada o spam.",
+        );
+      } else if (error.message.includes("Invalid login credentials")) {
+        setError("Credenciales incorrectas. Revisa tu email y contraseña.");
+      } else {
+        setError(error.message);
+      }
       setLoading(false);
     } else {
       router.push("/dashboard");
@@ -33,22 +51,25 @@ export default function LoginPage() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-center mb-1">
+      <h1 className="text-2xl font-bold text-center mb-1 text-slate-800">
         Bienvenido de nuevo
       </h1>
-      <p className="text-sm text-gray-500 text-center mb-6">
+      <p className="text-sm text-slate-400 text-center mb-6">
         Inicia sesión en tu cuenta
       </p>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4 border border-red-100">
+        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-xl mb-4 border border-red-100">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1.5">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-slate-700 mb-1.5"
+          >
             Correo electrónico
           </label>
           <input
@@ -57,14 +78,14 @@ export default function LoginPage() {
             type="email"
             required
             placeholder="tu@email.com"
-            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
+            className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
           />
         </div>
 
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium mb-1.5"
+            className="block text-sm font-medium text-slate-700 mb-1.5"
           >
             Contraseña
           </label>
@@ -75,28 +96,36 @@ export default function LoginPage() {
             required
             minLength={8}
             placeholder="Mínimo 8 caracteres"
-            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
+            className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-black text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 transition-colors"
+          className="w-full bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all shadow-sm"
         >
           {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
         </button>
       </form>
 
-      <p className="text-sm text-center mt-6 text-gray-500">
+      <p className="text-sm text-center mt-6 text-slate-400">
         ¿No tienes cuenta?{" "}
         <Link
           href="/register"
-          className="font-medium text-black hover:underline"
+          className="font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
         >
           Regístrate
         </Link>
       </p>
     </>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }

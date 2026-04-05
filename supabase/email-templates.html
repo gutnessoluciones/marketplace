@@ -1,0 +1,522 @@
+<!--
+  ═══════════════════════════════════════════════════════════════
+  GutnesPlace — Email Templates para Supabase
+  ═══════════════════════════════════════════════════════════════
+  
+  INSTRUCCIONES:
+  1. Ve a tu proyecto de Supabase → Authentication → Email Templates
+  2. Para cada tipo de email, copia el HTML correspondiente abajo
+  3. En "Subject", pon el asunto indicado
+  4. Guarda los cambios
+  
+  IMPORTANTE:
+  - Supabase Dashboard → Authentication → URL Configuration:
+    • Site URL: http://localhost:3000 (o tu dominio en producción)
+    • Redirect URLs: http://localhost:3000/** 
+  
+  - Supabase Dashboard → Authentication → Email:
+    • Enable email confirmations: ON
+    • Secure email change: ON
+  ═══════════════════════════════════════════════════════════════
+-->
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- TEMPLATE 1: Confirm signup (Confirmar registro)            -->
+<!-- Subject: Confirma tu cuenta en GutnesPlace                 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+
+<div
+  style="
+    max-width: 520px;
+    margin: 0 auto;
+    font-family:
+      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
+      sans-serif;
+  "
+>
+  <div
+    style="
+      background: linear-gradient(135deg, #1e1b4b, #4c1d95);
+      border-radius: 16px 16px 0 0;
+      padding: 32px 24px;
+      text-align: center;
+    "
+  >
+    <img
+      src="{{ .SiteURL }}/gutnes-logo.png"
+      alt="GutnesPlace"
+      width="48"
+      height="48"
+      style="border-radius: 12px; margin-bottom: 12px"
+    />
+    <h1 style="color: #ffffff; font-size: 22px; margin: 0">GutnesPlace</h1>
+    <p style="color: #a5b4fc; font-size: 13px; margin: 4px 0 0">
+      Tu marketplace de confianza
+    </p>
+  </div>
+  <div
+    style="
+      background: #ffffff;
+      padding: 32px 24px;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <h2 style="color: #1e293b; font-size: 18px; margin: 0 0 8px">
+      ¡Bienvenido! 🎉
+    </h2>
+    <p
+      style="
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0 0 24px;
+      "
+    >
+      Gracias por registrarte en GutnesPlace. Para activar tu cuenta y empezar a
+      explorar, confirma tu dirección de correo electrónico.
+    </p>
+    <div style="text-align: center; margin: 24px 0">
+      <a
+        href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&next=/dashboard"
+        style="
+          display: inline-block;
+          background: linear-gradient(135deg, #4f46e5, #7c3aed);
+          color: #ffffff;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 14px;
+          padding: 12px 32px;
+          border-radius: 12px;
+        "
+      >
+        Confirmar mi cuenta
+      </a>
+    </div>
+    <p
+      style="
+        color: #94a3b8;
+        font-size: 12px;
+        line-height: 1.5;
+        margin: 24px 0 0;
+      "
+    >
+      Si no creaste esta cuenta, ignora este correo. El enlace expira en 24
+      horas.
+    </p>
+  </div>
+  <div
+    style="
+      background: #f8fafc;
+      border-radius: 0 0 16px 16px;
+      padding: 16px 24px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <p style="color: #94a3b8; font-size: 11px; margin: 0">
+      © 2026 GutnesPlace. Todos los derechos reservados.
+    </p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- TEMPLATE 2: Magic Link / Login (Enlace mágico)             -->
+<!-- Subject: Tu enlace de acceso a GutnesPlace                 -->
+<!-- ════════════════════════════════════════════════════════════ -->
+
+<div
+  style="
+    max-width: 520px;
+    margin: 0 auto;
+    font-family:
+      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
+      sans-serif;
+  "
+>
+  <div
+    style="
+      background: linear-gradient(135deg, #1e1b4b, #4c1d95);
+      border-radius: 16px 16px 0 0;
+      padding: 32px 24px;
+      text-align: center;
+    "
+  >
+    <img
+      src="{{ .SiteURL }}/gutnes-logo.png"
+      alt="GutnesPlace"
+      width="48"
+      height="48"
+      style="border-radius: 12px; margin-bottom: 12px"
+    />
+    <h1 style="color: #ffffff; font-size: 22px; margin: 0">GutnesPlace</h1>
+    <p style="color: #a5b4fc; font-size: 13px; margin: 4px 0 0">
+      Tu marketplace de confianza
+    </p>
+  </div>
+  <div
+    style="
+      background: #ffffff;
+      padding: 32px 24px;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <h2 style="color: #1e293b; font-size: 18px; margin: 0 0 8px">
+      Inicia sesión
+    </h2>
+    <p
+      style="
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0 0 24px;
+      "
+    >
+      Haz clic en el botón para acceder a tu cuenta de GutnesPlace.
+    </p>
+    <div style="text-align: center; margin: 24px 0">
+      <a
+        href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=magiclink&next=/dashboard"
+        style="
+          display: inline-block;
+          background: linear-gradient(135deg, #4f46e5, #7c3aed);
+          color: #ffffff;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 14px;
+          padding: 12px 32px;
+          border-radius: 12px;
+        "
+      >
+        Acceder a mi cuenta
+      </a>
+    </div>
+    <p
+      style="
+        color: #94a3b8;
+        font-size: 12px;
+        line-height: 1.5;
+        margin: 24px 0 0;
+      "
+    >
+      Si no solicitaste este acceso, ignora este correo. El enlace expira en 1
+      hora.
+    </p>
+  </div>
+  <div
+    style="
+      background: #f8fafc;
+      border-radius: 0 0 16px 16px;
+      padding: 16px 24px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <p style="color: #94a3b8; font-size: 11px; margin: 0">
+      © 2026 GutnesPlace. Todos los derechos reservados.
+    </p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- TEMPLATE 3: Change Email (Cambio de email)                 -->
+<!-- Subject: Confirma tu nuevo email en GutnesPlace             -->
+<!-- ════════════════════════════════════════════════════════════ -->
+
+<div
+  style="
+    max-width: 520px;
+    margin: 0 auto;
+    font-family:
+      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
+      sans-serif;
+  "
+>
+  <div
+    style="
+      background: linear-gradient(135deg, #1e1b4b, #4c1d95);
+      border-radius: 16px 16px 0 0;
+      padding: 32px 24px;
+      text-align: center;
+    "
+  >
+    <img
+      src="{{ .SiteURL }}/gutnes-logo.png"
+      alt="GutnesPlace"
+      width="48"
+      height="48"
+      style="border-radius: 12px; margin-bottom: 12px"
+    />
+    <h1 style="color: #ffffff; font-size: 22px; margin: 0">GutnesPlace</h1>
+    <p style="color: #a5b4fc; font-size: 13px; margin: 4px 0 0">
+      Tu marketplace de confianza
+    </p>
+  </div>
+  <div
+    style="
+      background: #ffffff;
+      padding: 32px 24px;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <h2 style="color: #1e293b; font-size: 18px; margin: 0 0 8px">
+      Cambio de email
+    </h2>
+    <p
+      style="
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0 0 24px;
+      "
+    >
+      Has solicitado cambiar tu dirección de correo. Haz clic en el botón para
+      confirmar tu nueva dirección.
+    </p>
+    <div style="text-align: center; margin: 24px 0">
+      <a
+        href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email_change&next=/dashboard/settings"
+        style="
+          display: inline-block;
+          background: linear-gradient(135deg, #4f46e5, #7c3aed);
+          color: #ffffff;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 14px;
+          padding: 12px 32px;
+          border-radius: 12px;
+        "
+      >
+        Confirmar nuevo email
+      </a>
+    </div>
+    <p
+      style="
+        color: #94a3b8;
+        font-size: 12px;
+        line-height: 1.5;
+        margin: 24px 0 0;
+      "
+    >
+      Si no solicitaste este cambio, ignora este correo.
+    </p>
+  </div>
+  <div
+    style="
+      background: #f8fafc;
+      border-radius: 0 0 16px 16px;
+      padding: 16px 24px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <p style="color: #94a3b8; font-size: 11px; margin: 0">
+      © 2026 GutnesPlace. Todos los derechos reservados.
+    </p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- TEMPLATE 4: Reset Password (Recuperar contraseña)          -->
+<!-- Subject: Restablece tu contraseña en GutnesPlace            -->
+<!-- ════════════════════════════════════════════════════════════ -->
+
+<div
+  style="
+    max-width: 520px;
+    margin: 0 auto;
+    font-family:
+      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
+      sans-serif;
+  "
+>
+  <div
+    style="
+      background: linear-gradient(135deg, #1e1b4b, #4c1d95);
+      border-radius: 16px 16px 0 0;
+      padding: 32px 24px;
+      text-align: center;
+    "
+  >
+    <img
+      src="{{ .SiteURL }}/gutnes-logo.png"
+      alt="GutnesPlace"
+      width="48"
+      height="48"
+      style="border-radius: 12px; margin-bottom: 12px"
+    />
+    <h1 style="color: #ffffff; font-size: 22px; margin: 0">GutnesPlace</h1>
+    <p style="color: #a5b4fc; font-size: 13px; margin: 4px 0 0">
+      Tu marketplace de confianza
+    </p>
+  </div>
+  <div
+    style="
+      background: #ffffff;
+      padding: 32px 24px;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <h2 style="color: #1e293b; font-size: 18px; margin: 0 0 8px">
+      Restablecer contraseña
+    </h2>
+    <p
+      style="
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0 0 24px;
+      "
+    >
+      Has solicitado restablecer tu contraseña. Haz clic en el botón para crear
+      una nueva.
+    </p>
+    <div style="text-align: center; margin: 24px 0">
+      <a
+        href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/dashboard/settings"
+        style="
+          display: inline-block;
+          background: linear-gradient(135deg, #4f46e5, #7c3aed);
+          color: #ffffff;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 14px;
+          padding: 12px 32px;
+          border-radius: 12px;
+        "
+      >
+        Restablecer contraseña
+      </a>
+    </div>
+    <p
+      style="
+        color: #94a3b8;
+        font-size: 12px;
+        line-height: 1.5;
+        margin: 24px 0 0;
+      "
+    >
+      Si no solicitaste esto, ignora este correo. El enlace expira en 1 hora.
+    </p>
+  </div>
+  <div
+    style="
+      background: #f8fafc;
+      border-radius: 0 0 16px 16px;
+      padding: 16px 24px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <p style="color: #94a3b8; font-size: 11px; margin: 0">
+      © 2026 GutnesPlace. Todos los derechos reservados.
+    </p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- TEMPLATE 5: Invite User (Invitación)                       -->
+<!-- Subject: Has sido invitado a GutnesPlace                    -->
+<!-- ════════════════════════════════════════════════════════════ -->
+
+<div
+  style="
+    max-width: 520px;
+    margin: 0 auto;
+    font-family:
+      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
+      sans-serif;
+  "
+>
+  <div
+    style="
+      background: linear-gradient(135deg, #1e1b4b, #4c1d95);
+      border-radius: 16px 16px 0 0;
+      padding: 32px 24px;
+      text-align: center;
+    "
+  >
+    <img
+      src="{{ .SiteURL }}/gutnes-logo.png"
+      alt="GutnesPlace"
+      width="48"
+      height="48"
+      style="border-radius: 12px; margin-bottom: 12px"
+    />
+    <h1 style="color: #ffffff; font-size: 22px; margin: 0">GutnesPlace</h1>
+    <p style="color: #a5b4fc; font-size: 13px; margin: 4px 0 0">
+      Tu marketplace de confianza
+    </p>
+  </div>
+  <div
+    style="
+      background: #ffffff;
+      padding: 32px 24px;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <h2 style="color: #1e293b; font-size: 18px; margin: 0 0 8px">
+      ¡Estás invitado! 🎉
+    </h2>
+    <p
+      style="
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0 0 24px;
+      "
+    >
+      Has sido invitado a unirte a GutnesPlace. Haz clic en el botón para
+      aceptar la invitación y crear tu cuenta.
+    </p>
+    <div style="text-align: center; margin: 24px 0">
+      <a
+        href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite&next=/dashboard"
+        style="
+          display: inline-block;
+          background: linear-gradient(135deg, #4f46e5, #7c3aed);
+          color: #ffffff;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 14px;
+          padding: 12px 32px;
+          border-radius: 12px;
+        "
+      >
+        Aceptar invitación
+      </a>
+    </div>
+    <p
+      style="
+        color: #94a3b8;
+        font-size: 12px;
+        line-height: 1.5;
+        margin: 24px 0 0;
+      "
+    >
+      Si no esperabas esta invitación, ignora este correo.
+    </p>
+  </div>
+  <div
+    style="
+      background: #f8fafc;
+      border-radius: 0 0 16px 16px;
+      padding: 16px 24px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+    "
+  >
+    <p style="color: #94a3b8; font-size: 11px; margin: 0">
+      © 2026 GutnesPlace. Todos los derechos reservados.
+    </p>
+  </div>
+</div>

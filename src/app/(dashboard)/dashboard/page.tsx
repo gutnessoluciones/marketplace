@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
+import { Icon } from "@/components/icons";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -12,7 +13,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role, stripe_onboarding_complete")
+    .select("role, stripe_onboarding_complete, display_name")
     .eq("id", user.id)
     .single();
 
@@ -41,69 +42,240 @@ export default async function DashboardPage() {
     count: number | null;
   };
 
+  // Products count for sellers
+  let productCount = 0;
+  if (isSeller) {
+    const { count } = await supabase
+      .from("products")
+      .select("id", { count: "exact", head: true })
+      .eq("seller_id", user.id);
+    productCount = count ?? 0;
+  }
+
+  // Revenue for sellers
+  let totalRevenue = 0;
+  if (isSeller) {
+    const { data: paidOrders } = await supabase
+      .from("orders")
+      .select("total_amount")
+      .eq("seller_id", user.id)
+      .eq("status", "paid");
+    totalRevenue = paidOrders?.reduce((sum, o) => sum + o.total_amount, 0) ?? 0;
+  }
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Panel Principal</h1>
+    <div className="max-w-5xl">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-slate-800">
+          ¡Hola, {profile?.display_name}!
+        </h1>
+        <p className="text-sm text-slate-400 mt-1">
+          {isSeller
+            ? "Aquí tienes un resumen de tu actividad"
+            : "Aquí puedes ver tus compras y actividad"}
+        </p>
+      </div>
 
       {/* Aviso de onboarding Stripe */}
       {isSeller && !profile?.stripe_onboarding_complete && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-          <p className="text-sm font-medium text-amber-800">
-            Completa la configuración de Stripe para empezar a recibir pagos.
-          </p>
+        <div className="bg-linear-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-6 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold text-amber-800">
+              <Icon name="alertTriangle" className="w-4 h-4 inline mr-1" />{" "}
+              Configura Stripe para recibir pagos
+            </p>
+            <p className="text-xs text-amber-600 mt-0.5">
+              Completa la configuración para que tus clientes puedan pagar.
+            </p>
+          </div>
           <Link
             href="/dashboard/settings"
-            className="text-sm underline text-amber-700 mt-1 inline-block"
+            className="shrink-0 bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-amber-600 transition-colors"
           >
-            Ir a Configuración
+            Configurar
           </Link>
         </div>
       )}
 
-      {/* Estadísticas */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="border rounded-xl p-5 bg-gray-50/50">
-          <p className="text-sm text-gray-500">Total de Pedidos</p>
-          <p className="text-3xl font-bold mt-1">{totalOrders ?? 0}</p>
+        <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+              {isSeller ? "Total Pedidos" : "Mis Compras"}
+            </span>
+            <span className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-400">
+              <Icon name="receipt" className="w-4 h-4" />
+            </span>
+          </div>
+          <p className="text-3xl font-bold text-slate-800">
+            {totalOrders ?? 0}
+          </p>
         </div>
+
+        {isSeller && (
+          <>
+            <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  Productos
+                </span>
+                <span className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-400">
+                  <Icon name="package" className="w-4 h-4" />
+                </span>
+              </div>
+              <p className="text-3xl font-bold text-slate-800">
+                {productCount}
+              </p>
+            </div>
+            <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                  Ingresos
+                </span>
+                <span className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-400">
+                  <Icon name="dollar" className="w-4 h-4" />
+                </span>
+              </div>
+              <p className="text-3xl font-bold text-slate-800">
+                {formatPrice(totalRevenue)}
+              </p>
+            </div>
+          </>
+        )}
+
+        {!isSeller && (
+          <div className="bg-linear-to-br from-indigo-600 to-violet-600 rounded-2xl p-5 text-white col-span-2 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold opacity-90">
+                ¿Buscas algo nuevo?
+              </p>
+              <p className="text-xs opacity-70 mt-0.5">
+                Explora cientos de productos únicos
+              </p>
+            </div>
+            <Link
+              href="/products"
+              className="bg-white text-indigo-700 px-5 py-2 rounded-lg text-sm font-bold hover:bg-indigo-50 transition-colors"
+            >
+              Explorar
+            </Link>
+          </div>
+        )}
       </div>
 
-      {/* Pedidos Recientes */}
-      <h2 className="text-lg font-semibold mb-3">Pedidos Recientes</h2>
-      {recentOrders && recentOrders.length > 0 ? (
-        <div className="border rounded-xl divide-y">
-          {recentOrders.map((order) => (
-            <Link
-              key={order.id}
-              href={`/dashboard/orders`}
-              className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors rounded-lg"
-            >
-              <div>
-                <p className="text-sm font-medium">
-                  {order.product?.title ?? "Product"}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {new Date(order.created_at).toLocaleDateString()}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-medium">
-                  {formatPrice(order.total_amount)}
-                </p>
-                <p className="text-xs capitalize text-gray-500">
-                  {order.status === "paid"
-                    ? "Pagado"
-                    : order.status === "pending"
-                      ? "Pendiente"
-                      : order.status}
-                </p>
-              </div>
-            </Link>
-          ))}
+      {/* Quick Actions for Sellers */}
+      {isSeller && (
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <Link
+            href="/dashboard/products/new"
+            className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group"
+          >
+            <span className="text-2xl block mb-2 text-slate-400">
+              <Icon name="plus" className="w-6 h-6" />
+            </span>
+            <p className="text-sm font-semibold text-slate-700 group-hover:text-indigo-700 transition-colors">
+              Añadir Producto
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Publica un nuevo artículo
+            </p>
+          </Link>
+          <Link
+            href="/dashboard/products"
+            className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group"
+          >
+            <span className="text-2xl block mb-2 text-slate-400">
+              <Icon name="clipboard" className="w-6 h-6" />
+            </span>
+            <p className="text-sm font-semibold text-slate-700 group-hover:text-indigo-700 transition-colors">
+              Gestionar Productos
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Edita precios, stock y más
+            </p>
+          </Link>
         </div>
-      ) : (
-        <p className="text-sm text-gray-500">Aún no hay pedidos.</p>
       )}
+
+      {/* Recent Orders */}
+      <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+          <h2 className="text-base font-semibold text-slate-800">
+            {isSeller ? "Últimos pedidos" : "Últimas compras"}
+          </h2>
+          <Link
+            href="/dashboard/orders"
+            className="text-xs text-indigo-600 font-medium hover:text-indigo-800 transition-colors"
+          >
+            Ver todos →
+          </Link>
+        </div>
+        {recentOrders && recentOrders.length > 0 ? (
+          <div className="divide-y divide-slate-50">
+            {recentOrders.map((order) => (
+              <div
+                key={order.id}
+                className="flex items-center justify-between p-4 hover:bg-slate-50/50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
+                    <Icon name="receipt" className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-700">
+                      {order.product?.title ?? "Producto"}
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      {new Date(order.created_at).toLocaleDateString("es-ES", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right flex items-center gap-3">
+                  <span
+                    className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                      order.status === "paid"
+                        ? "bg-emerald-50 text-emerald-700"
+                        : order.status === "pending"
+                          ? "bg-amber-50 text-amber-700"
+                          : "bg-slate-50 text-slate-600"
+                    }`}
+                  >
+                    {order.status === "paid"
+                      ? "Pagado"
+                      : order.status === "pending"
+                        ? "Pendiente"
+                        : order.status}
+                  </span>
+                  <p className="text-sm font-semibold text-slate-800">
+                    {formatPrice(order.total_amount)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-10 text-center">
+            <span className="text-4xl block mb-3 text-slate-300">
+              <Icon name="inbox" className="w-10 h-10 mx-auto" />
+            </span>
+            <p className="text-sm text-slate-400">Aún no hay pedidos.</p>
+            {!isSeller && (
+              <Link
+                href="/products"
+                className="text-sm text-indigo-600 font-medium mt-2 inline-block hover:text-indigo-800"
+              >
+                Explorar productos →
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

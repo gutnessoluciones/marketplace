@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { StripeConnectButton } from "@/components/layout/stripe-connect-button";
+import { AddressManager } from "@/components/settings/address-manager";
+import { ProfileEditor } from "@/components/settings/profile-editor";
+import { Icon } from "@/components/icons";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -15,35 +18,101 @@ export default async function SettingsPage() {
     .eq("id", user.id)
     .single();
 
-  return (
-    <div className="max-w-lg">
-      <h1 className="text-2xl font-bold mb-6">Configuración</h1>
+  if (!profile) redirect("/login");
 
-      <div className="border rounded-xl p-5 mb-6">
-        <h2 className="font-semibold mb-3">Cuenta</h2>
-        <p className="text-sm text-gray-600">Correo: {user.email}</p>
-        <p className="text-sm text-gray-600 capitalize">
-          Rol: {profile?.role === "seller" ? "Vendedor" : "Comprador"}
+  const isSeller = profile.role === "seller";
+
+  return (
+    <div className="max-w-2xl">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-slate-800">Configuración</h1>
+        <p className="text-sm text-slate-400 mt-0.5">
+          Gestiona tu cuenta y preferencias
         </p>
       </div>
 
-      {profile?.role === "seller" && (
-        <div className="border rounded-xl p-5">
-          <h2 className="font-semibold mb-3">Pagos con Stripe</h2>
-          {profile.stripe_onboarding_complete ? (
-            <p className="text-sm text-emerald-600 font-medium">
-              ✓ Stripe conectado. Puedes recibir pagos.
-            </p>
-          ) : (
-            <>
-              <p className="text-sm text-gray-600 mb-3">
-                Conecta tu cuenta de Stripe para empezar a recibir pagos.
-              </p>
-              <StripeConnectButton />
-            </>
-          )}
+      {/* Profile Editor (interactive) */}
+      <ProfileEditor profile={profile} email={user.email ?? ""} />
+
+      {/* Stripe Section (Sellers Only) */}
+      {isSeller && (
+        <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden mb-6">
+          <div className="p-6 border-b border-slate-50">
+            <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+              Pagos con Stripe
+            </h2>
+          </div>
+          <div className="p-6">
+            {profile?.stripe_onboarding_complete ? (
+              <div className="flex items-center gap-3 bg-emerald-50 rounded-xl p-4">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                  <Icon name="check" className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-emerald-800">
+                    Stripe conectado
+                  </p>
+                  <p className="text-xs text-emerald-600">
+                    Ya puedes recibir pagos de tus clientes.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center gap-3 bg-amber-50 rounded-xl p-4 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                    <Icon name="zap" className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-amber-800">
+                      Conecta tu cuenta de Stripe
+                    </p>
+                    <p className="text-xs text-amber-600">
+                      Necesario para empezar a recibir pagos por tus ventas.
+                    </p>
+                  </div>
+                </div>
+                <StripeConnectButton />
+              </div>
+            )}
+          </div>
         </div>
       )}
+
+      {/* Account Details */}
+      <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden mb-6">
+        <div className="p-6 border-b border-slate-50">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+            Datos de la cuenta
+          </h2>
+        </div>
+        <div className="divide-y divide-slate-50">
+          <div className="p-4 flex justify-between items-center">
+            <div>
+              <p className="text-xs text-slate-400">Email</p>
+              <p className="text-sm text-slate-700">{user.email}</p>
+            </div>
+          </div>
+          <div className="p-4 flex justify-between items-center">
+            <div>
+              <p className="text-xs text-slate-400">ID de usuario</p>
+              <p className="text-xs text-slate-700 font-mono">{user.id}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Addresses Section */}
+      <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-slate-50">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+            Direcciones de envío
+          </h2>
+        </div>
+        <div className="p-6">
+          <AddressManager />
+        </div>
+      </div>
     </div>
   );
 }

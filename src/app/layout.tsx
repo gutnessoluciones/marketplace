@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Marketplace — Compra y vende productos únicos",
+  title: "GutnesPlace — Compra y vende productos únicos",
   description:
-    "Descubre productos únicos de vendedores independientes. Compra y vende en nuestra comunidad.",
+    "Descubre productos únicos de vendedores independientes. Compra y vende en GutnesPlace.",
 };
 
 export default function RootLayout({

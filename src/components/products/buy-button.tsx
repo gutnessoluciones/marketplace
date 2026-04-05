@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Icon } from "@/components/icons";
 
 export function BuyButton({
   productId,
@@ -60,9 +61,17 @@ export function BuyButton({
     <button
       onClick={handleBuy}
       disabled={!inStock || loading}
-      className="w-full bg-black text-white py-3 rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      className="w-full bg-emerald-600 text-white py-4 rounded-xl text-sm font-bold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/30 hover:scale-[1.01] active:scale-[0.99]"
     >
-      {!inStock ? "Sin Stock" : loading ? "Procesando..." : "Comprar Ahora"}
+      {!inStock ? (
+        "Sin Stock"
+      ) : loading ? (
+        "Procesando..."
+      ) : (
+        <>
+          <Icon name="cart" className="w-4 h-4 inline mr-1" /> Comprar Ahora
+        </>
+      )}
     </button>
   );
 }

@@ -2,10 +2,24 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
+import { Icon } from "@/components/icons";
+import { ImageUpload } from "@/components/products/image-upload";
+
+const CATEGORIES = [
+  { value: "electronica", label: "Electrónica" },
+  { value: "ropa", label: "Moda" },
+  { value: "hogar", label: "Hogar" },
+  { value: "deportes", label: "Deportes" },
+  { value: "libros", label: "Libros" },
+  { value: "arte", label: "Arte" },
+  { value: "otros", label: "Otros" },
+];
 
 export default function NewProductPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [images, setImages] = useState<string[]>([]);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -21,9 +35,11 @@ export default function NewProductPage() {
       body: JSON.stringify({
         title: formData.get("title"),
         description: formData.get("description"),
-        price: Math.round(Number(formData.get("price")) * 100), // dollars → cents
+        price: Math.round(Number(formData.get("price")) * 100),
         category: formData.get("category") || undefined,
         stock: Number(formData.get("stock")) || 1,
+        images,
+        status: formData.get("status") || "active",
       }),
     });
 
@@ -39,98 +55,221 @@ export default function NewProductPage() {
   }
 
   return (
-    <div className="max-w-lg">
-      <h1 className="text-2xl font-bold mb-6">Nuevo Producto</h1>
+    <div className="max-w-2xl">
+      <div className="flex items-center gap-3 mb-6">
+        <Link
+          href="/dashboard/products"
+          className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors"
+        >
+          <svg
+            className="w-4 h-4 text-slate-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Nuevo Producto</h1>
+          <p className="text-sm text-slate-400">
+            Rellena la info de tu producto
+          </p>
+        </div>
+      </div>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4 border border-red-100">
+        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-xl mb-4 border border-red-100">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium mb-1.5">
-            Título
-          </label>
-          <input
-            id="title"
-            name="title"
-            required
-            minLength={3}
-            placeholder="Nombre del producto"
-            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Basic Info */}
+        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+            Información básica
+          </h2>
 
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium mb-1.5"
-          >
-            Descripción
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            rows={4}
-            placeholder="Describe tu producto..."
-            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="price" className="block text-sm font-medium mb-1.5">
-              Precio (USD)
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-slate-700 mb-1.5"
+            >
+              Título *
             </label>
             <input
-              id="price"
-              name="price"
-              type="number"
-              step="0.01"
-              min="0.50"
+              id="title"
+              name="title"
               required
-              className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
+              minLength={3}
+              placeholder="Nombre del producto"
+              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
             />
           </div>
+
           <div>
-            <label htmlFor="stock" className="block text-sm font-medium mb-1.5">
-              Stock
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-slate-700 mb-1.5"
+            >
+              Descripción
             </label>
-            <input
-              id="stock"
-              name="stock"
-              type="number"
-              min="0"
-              defaultValue={1}
-              className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
+            <textarea
+              id="description"
+              name="description"
+              rows={4}
+              placeholder="Describe tu producto en detalle..."
+              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50 resize-none"
             />
+          </div>
+
+          <div>
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-slate-700 mb-1.5"
+            >
+              Categoría
+            </label>
+            <select
+              id="category"
+              name="category"
+              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+            >
+              <option value="">Selecciona categoría</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="category"
-            className="block text-sm font-medium mb-1.5"
-          >
-            Categoría
-          </label>
-          <input
-            id="category"
-            name="category"
-            className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-colors"
-            placeholder="ej. electrónica, ropa"
-          />
+        {/* Pricing */}
+        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+            Precio y stock
+          </h2>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="price"
+                className="block text-sm font-medium text-slate-700 mb-1.5"
+              >
+                Precio (USD) *
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">
+                  $
+                </span>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  step="0.01"
+                  min="0.50"
+                  required
+                  placeholder="0.00"
+                  className="w-full border border-slate-200 rounded-xl pl-8 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="stock"
+                className="block text-sm font-medium text-slate-700 mb-1.5"
+              >
+                Stock
+              </label>
+              <input
+                id="stock"
+                name="stock"
+                type="number"
+                min="0"
+                defaultValue={1}
+                className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Estado
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="status"
+                  value="active"
+                  defaultChecked
+                  className="peer sr-only"
+                />
+                <div className="border-2 border-slate-200 rounded-xl p-3 text-center cursor-pointer peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all hover:border-slate-300">
+                  <span className="text-xs font-semibold text-slate-600">
+                    <Icon
+                      name="checkCircle"
+                      className="w-3.5 h-3.5 inline mr-1"
+                    />
+                    Activo
+                  </span>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Visible en tienda
+                  </p>
+                </div>
+              </label>
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="status"
+                  value="draft"
+                  className="peer sr-only"
+                />
+                <div className="border-2 border-slate-200 rounded-xl p-3 text-center cursor-pointer peer-checked:border-slate-500 peer-checked:bg-slate-50 transition-all hover:border-slate-300">
+                  <span className="text-xs font-semibold text-slate-600">
+                    <Icon name="pencil" className="w-3.5 h-3.5 inline mr-1" />
+                    Borrador
+                  </span>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Solo tú lo ves
+                  </p>
+                </div>
+              </label>
+            </div>
+          </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-black text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-50 transition-colors"
-        >
-          {loading ? "Creando..." : "Crear Producto"}
-        </button>
+        {/* Images */}
+        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+            Imágenes
+          </h2>
+          <ImageUpload images={images} onChange={setImages} />
+        </div>
+
+        {/* Submit */}
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex-1 bg-linear-to-r from-indigo-600 to-violet-600 text-white py-3 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all shadow-sm"
+          >
+            {loading ? "Creando producto..." : "Crear Producto"}
+          </button>
+          <Link
+            href="/dashboard/products"
+            className="px-6 py-3 border border-slate-200 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+          >
+            Cancelar
+          </Link>
+        </div>
       </form>
     </div>
   );

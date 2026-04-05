@@ -13,7 +13,7 @@ export class PaymentsService {
     const { data: order } = await this.supabase
       .from("orders")
       .select(
-        "*, seller:profiles!seller_id(stripe_account_id), product:products(title, images)"
+        "*, seller:profiles!seller_id(stripe_account_id), product:products(title, images)",
       )
       .eq("id", orderId)
       .eq("buyer_id", buyerId)
@@ -26,7 +26,7 @@ export class PaymentsService {
     }
 
     const platformFee = Math.round(
-      order.total_amount * PLATFORM_FEE_PERCENT / 100
+      (order.total_amount * PLATFORM_FEE_PERCENT) / 100,
     );
 
     const session = await stripe.checkout.sessions.create({
@@ -54,8 +54,8 @@ export class PaymentsService {
         order_id: order.id,
         buyer_id: buyerId,
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/orders/${order.id}?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/orders/${order.id}?cancelled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/orders/${order.id}?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/products/${order.product_id}?cancelled=true`,
     });
 
     await this.supabase
@@ -70,6 +70,29 @@ export class PaymentsService {
     const orderId = session.metadata?.order_id;
     if (!orderId) return;
 
+    const paymentIntent = await stripe.paymentIntents.retrieve(
+      session.payment_intent as string,
+    );
+
+    // Verify payment amount matches the order
+    const { data: order } = await supabaseAdmin
+      .from("orders")
+      .select("total_amount, quantity")
+      .eq("id", orderId)
+      .single();
+
+    if (!order) {
+      console.error(`Webhook: order ${orderId} not found`);
+      return;
+    }
+
+    if (paymentIntent.amount < order.total_amount) {
+      console.error(
+        `Webhook amount mismatch for order ${orderId}: expected ${order.total_amount}, got ${paymentIntent.amount}`,
+      );
+      return;
+    }
+
     await supabaseAdmin
       .from("orders")
       .update({
@@ -77,10 +100,6 @@ export class PaymentsService {
         stripe_payment_intent_id: session.payment_intent as string,
       })
       .eq("id", orderId);
-
-    const paymentIntent = await stripe.paymentIntents.retrieve(
-      session.payment_intent as string
-    );
 
     const fee = paymentIntent.application_fee_amount || 0;
     await supabaseAdmin.from("payments").insert({
@@ -93,17 +112,36 @@ export class PaymentsService {
     });
 
     // Decrement stock
-    const { data: order } = await supabaseAdmin
+    const { data: stockOrder } = await supabaseAdmin
       .from("orders")
       .select("product_id, quantity")
       .eq("id", orderId)
       .single();
 
-    if (order) {
+    if (stockOrder) {
       await supabaseAdmin.rpc("decrement_stock", {
-        p_id: order.product_id,
-        qty: order.quantity,
+        p_id: stockOrder.product_id,
+        qty: stockOrder.quantity,
       });
+
+      // Create notification for seller
+      const { data: fullOrder } = await supabaseAdmin
+        .from("orders")
+        .select("seller_id, product:products!inner(title)")
+        .eq("id", orderId)
+        .single();
+
+      if (fullOrder?.seller_id) {
+        const productTitle = (fullOrder.product as unknown as { title: string })
+          ?.title;
+        await supabaseAdmin.from("notifications").insert({
+          user_id: fullOrder.seller_id,
+          type: "order_paid",
+          title: "¡Nueva venta!",
+          message: `Se ha vendido "${productTitle ?? "Producto"}". Revisa tus pedidos.`,
+          data: { order_id: orderId },
+        });
+      }
     }
   }
 
