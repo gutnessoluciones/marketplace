@@ -110,7 +110,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </h2>
           <Link
             href="/products"
-            className="text-sm text-flamencalia-red hover:underline font-medium"
+            className="text-sm text-flamencalia-albero hover:underline font-medium"
           >
             ← Volver a productos
           </Link>
@@ -145,8 +145,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const sellerAvgRating =
     sellerReviews.length > 0
       ? (
-          sellerReviews.reduce((s, r) => s + r.rating, 0) /
-          sellerReviews.length
+          sellerReviews.reduce((s, r) => s + r.rating, 0) / sellerReviews.length
         ).toFixed(1)
       : null;
 
@@ -199,9 +198,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="bg-white border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-1.5 text-xs text-neutral-400">
-            <Link href="/" className="hover:text-neutral-600 transition-colors">Inicio</Link>
+            <Link href="/" className="hover:text-neutral-600 transition-colors">
+              Inicio
+            </Link>
             <span>/</span>
-            <Link href="/products" className="hover:text-neutral-600 transition-colors">Productos</Link>
+            <Link
+              href="/products"
+              className="hover:text-neutral-600 transition-colors"
+            >
+              Productos
+            </Link>
             {product.category && (
               <>
                 <span>/</span>
@@ -225,7 +231,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* ── Left: Gallery ── */}
           <div className="lg:col-span-7">
-            <ProductGallery images={product.images ?? []} title={product.title} />
+            <ProductGallery
+              images={product.images ?? []}
+              title={product.title}
+            />
           </div>
 
           {/* ── Right: Product info ── */}
@@ -238,13 +247,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   {product.category && (
                     <Link
                       href={`/products?category=${product.category}`}
-                      className="text-xs font-medium text-flamencalia-red bg-flamencalia-red/5 px-2.5 py-1 rounded-full hover:bg-flamencalia-red/10 transition-colors"
+                      className="text-xs font-medium text-flamencalia-albero bg-flamencalia-albero/10 px-2.5 py-1 rounded-full hover:bg-flamencalia-albero/15 transition-colors"
                     >
                       {CATEGORY_LABELS[product.category] ?? product.category}
                     </Link>
                   )}
                   {product.condition && (
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-neutral-600 bg-neutral-100 px-2.5 py-1 rounded-full">
                       <Icon name="check" className="w-3 h-3" />
                       {CONDITION_LABELS[product.condition] ?? product.condition}
                     </span>
@@ -264,13 +273,21 @@ export default async function ProductDetailPage({ params }: PageProps) {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Icon
                             key={star}
-                            name={star <= Math.round(Number(avgRating)) ? "starFilled" : "star"}
+                            name={
+                              star <= Math.round(Number(avgRating))
+                                ? "starFilled"
+                                : "star"
+                            }
                             className={`w-4 h-4 ${star <= Math.round(Number(avgRating)) ? "text-amber-400" : "text-neutral-200"}`}
                           />
                         ))}
                       </div>
-                      <span className="text-sm font-semibold text-neutral-700 ml-1">{avgRating}</span>
-                      <span className="text-xs text-neutral-400">({reviews.total})</span>
+                      <span className="text-sm font-semibold text-neutral-700 ml-1">
+                        {avgRating}
+                      </span>
+                      <span className="text-xs text-neutral-400">
+                        ({reviews.total})
+                      </span>
                     </div>
                   )}
                   {product.views_count > 0 && (
@@ -284,43 +301,58 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 {/* Price */}
                 <div className="mt-5 pt-5 border-t border-neutral-100">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl lg:text-4xl font-extrabold text-flamencalia-red">
+                    <span className="text-3xl lg:text-4xl font-extrabold text-flamencalia-black">
                       {formatPrice(product.price)}
                     </span>
                   </div>
                   <span
                     className={`inline-flex items-center gap-1.5 mt-2 text-xs font-medium ${
-                      product.stock > 0 ? "text-emerald-600" : "text-red-500"
+                      product.stock > 0
+                        ? "text-flamencalia-albero"
+                        : "text-neutral-400"
                     }`}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${product.stock > 0 ? "bg-emerald-500" : "bg-red-500"}`}
+                      className={`w-1.5 h-1.5 rounded-full ${product.stock > 0 ? "bg-flamencalia-albero" : "bg-neutral-400"}`}
                     />
-                    {product.stock > 0 ? `${product.stock} disponible${product.stock > 1 ? "s" : ""}` : "Agotado"}
+                    {product.stock > 0
+                      ? `${product.stock} disponible${product.stock > 1 ? "s" : ""}`
+                      : "Agotado"}
                   </span>
                 </div>
 
                 {/* Attributes */}
-                {(product.size || product.color || product.brand || product.material) && (
+                {(product.size ||
+                  product.color ||
+                  product.brand ||
+                  product.material) && (
                   <div className="mt-5 pt-5 border-t border-neutral-100">
                     <div className="grid grid-cols-2 gap-3">
                       {product.color && (
                         <div className="flex items-center gap-2.5">
                           <span
                             className="w-6 h-6 rounded-full border border-neutral-200 shadow-sm shrink-0"
-                            style={{ background: COLOR_HEX[product.color] ?? "#ccc" }}
+                            style={{
+                              background: COLOR_HEX[product.color] ?? "#ccc",
+                            }}
                           />
                           <div>
-                            <p className="text-[10px] text-neutral-400 uppercase tracking-wider">Color</p>
+                            <p className="text-[10px] text-neutral-400 uppercase tracking-wider">
+                              Color
+                            </p>
                             <p className="text-sm font-medium text-neutral-700 capitalize">
-                              {product.color === "marron" ? "Marrón" : product.color}
+                              {product.color === "marron"
+                                ? "Marrón"
+                                : product.color}
                             </p>
                           </div>
                         </div>
                       )}
                       {product.size && (
                         <div>
-                          <p className="text-[10px] text-neutral-400 uppercase tracking-wider">Talla</p>
+                          <p className="text-[10px] text-neutral-400 uppercase tracking-wider">
+                            Talla
+                          </p>
                           <p className="text-sm font-medium text-neutral-700">
                             {product.size === "unica" ? "Única" : product.size}
                           </p>
@@ -328,14 +360,22 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       )}
                       {product.brand && (
                         <div>
-                          <p className="text-[10px] text-neutral-400 uppercase tracking-wider">Marca</p>
-                          <p className="text-sm font-medium text-neutral-700">{product.brand}</p>
+                          <p className="text-[10px] text-neutral-400 uppercase tracking-wider">
+                            Marca
+                          </p>
+                          <p className="text-sm font-medium text-neutral-700">
+                            {product.brand}
+                          </p>
                         </div>
                       )}
                       {product.material && (
                         <div>
-                          <p className="text-[10px] text-neutral-400 uppercase tracking-wider">Material</p>
-                          <p className="text-sm font-medium text-neutral-700 capitalize">{product.material}</p>
+                          <p className="text-[10px] text-neutral-400 uppercase tracking-wider">
+                            Material
+                          </p>
+                          <p className="text-sm font-medium text-neutral-700 capitalize">
+                            {product.material}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -344,7 +384,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
                 {/* Buy button */}
                 <div className="mt-6 pt-5 border-t border-neutral-100">
-                  <BuyButton productId={product.id} inStock={product.stock > 0} />
+                  <BuyButton
+                    productId={product.id}
+                    inStock={product.stock > 0}
+                  />
                 </div>
               </div>
 
@@ -365,7 +408,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <Icon name="user" className="w-6 h-6 text-neutral-400" />
+                            <Icon
+                              name="user"
+                              className="w-6 h-6 text-neutral-400"
+                            />
                           </div>
                         )}
                       </div>
@@ -373,14 +419,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     <div className="flex-1 min-w-0">
                       <Link
                         href={`/sellers/${product.seller.id}`}
-                        className="font-semibold text-sm text-neutral-800 hover:text-flamencalia-red transition-colors"
+                        className="font-semibold text-sm text-neutral-800 hover:text-flamencalia-albero transition-colors"
                       >
                         {product.seller.display_name ?? "Vendedor"}
                       </Link>
                       <div className="flex items-center gap-3 mt-1 text-xs text-neutral-400">
                         {sellerAvgRating && (
                           <span className="flex items-center gap-0.5">
-                            <Icon name="starFilled" className="w-3 h-3 text-amber-400" />
+                            <Icon
+                              name="starFilled"
+                              className="w-3 h-3 text-amber-400"
+                            />
                             {sellerAvgRating} ({sellerReviews.length})
                           </span>
                         )}
@@ -389,7 +438,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     </div>
                     <Link
                       href={`/sellers/${product.seller.id}`}
-                      className="text-xs font-medium text-flamencalia-red border border-flamencalia-red/20 px-3 py-1.5 rounded-full hover:bg-flamencalia-red/5 transition-colors shrink-0"
+                      className="text-xs font-medium text-flamencalia-albero border border-flamencalia-albero/20 px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/5 transition-colors shrink-0"
                     >
                       Ver perfil
                     </Link>
@@ -420,7 +469,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <Icon name="star" className="w-4 h-4 text-neutral-400" />
               Reseñas
               {reviews.total ? (
-                <span className="text-xs font-normal text-neutral-400 ml-1">({reviews.total})</span>
+                <span className="text-xs font-normal text-neutral-400 ml-1">
+                  ({reviews.total})
+                </span>
               ) : null}
             </h2>
             {avgRating && (
@@ -429,12 +480,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Icon
                       key={star}
-                      name={star <= Math.round(Number(avgRating)) ? "starFilled" : "star"}
+                      name={
+                        star <= Math.round(Number(avgRating))
+                          ? "starFilled"
+                          : "star"
+                      }
                       className={`w-3.5 h-3.5 ${star <= Math.round(Number(avgRating)) ? "text-amber-400" : "text-neutral-200"}`}
                     />
                   ))}
                 </div>
-                <span className="text-sm font-bold text-amber-700">{avgRating}</span>
+                <span className="text-sm font-bold text-amber-700">
+                  {avgRating}
+                </span>
               </div>
             )}
           </div>
@@ -455,7 +512,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Icon name="user" className="w-4 h-4 text-neutral-400" />
+                        <Icon
+                          name="user"
+                          className="w-4 h-4 text-neutral-400"
+                        />
                       </div>
                     )}
                   </div>
@@ -485,7 +545,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </div>
           ) : (
             <div className="text-center py-8">
-              <Icon name="message" className="w-8 h-8 text-neutral-200 mx-auto mb-2" />
+              <Icon
+                name="message"
+                className="w-8 h-8 text-neutral-200 mx-auto mb-2"
+              />
               <p className="text-sm text-neutral-400">
                 Aún no hay reseñas para este producto.
               </p>

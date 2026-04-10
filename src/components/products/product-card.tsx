@@ -34,7 +34,7 @@ export function ProductCard({ product }: { product: Product }) {
         <button
           type="button"
           onClick={(e) => e.preventDefault()}
-          className="absolute top-2 right-2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-flamencalia-red hover:text-white shadow-sm"
+          className="absolute top-2 right-2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-flamencalia-albero hover:text-white shadow-sm"
         >
           <Icon name="heart" className="w-4 h-4" />
         </button>

@@ -243,7 +243,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                 />
                 <button
                   type="submit"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 bg-flamencalia-red text-white px-4 py-1.5 rounded-full text-xs font-bold hover:bg-flamencalia-red-dark transition-all"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 bg-flamencalia-black text-white px-4 py-1.5 rounded-full text-xs font-bold hover:bg-flamencalia-black/80 transition-all"
                 >
                   Buscar
                 </button>
@@ -322,7 +322,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             <select
               name="sort"
               defaultValue={sort ?? ""}
-              className="border border-neutral-200 rounded-lg px-3 py-1.5 text-xs text-neutral-600 bg-white focus:outline-none focus:ring-1 focus:ring-flamencalia-red/20"
+              className="border border-neutral-200 rounded-lg px-3 py-1.5 text-xs text-neutral-600 bg-white focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
             >
               {SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -333,7 +333,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             <noscript>
               <button
                 type="submit"
-                className="ml-1 text-xs text-flamencalia-red"
+                className="ml-1 text-xs text-flamencalia-albero"
               >
                 Aplicar
               </button>
@@ -422,7 +422,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                 seller: undefined,
                 page: undefined,
               })}
-              className="text-xs text-flamencalia-red font-medium hover:underline ml-1"
+              className="text-xs text-flamencalia-albero font-medium hover:underline ml-1"
             >
               Borrar todo
             </Link>
@@ -461,7 +461,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   defaultValue={priceMin ?? ""}
                   min="0"
                   step="1"
-                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-red/20"
+                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
                 />
                 <span className="text-neutral-300 text-xs">—</span>
                 <input
@@ -471,11 +471,11 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   defaultValue={priceMax ?? ""}
                   min="0"
                   step="1"
-                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-red/20"
+                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
                 />
                 <button
                   type="submit"
-                  className="p-1.5 bg-flamencalia-red text-white rounded-lg hover:bg-flamencalia-red-dark transition-colors shrink-0"
+                  className="p-1.5 bg-flamencalia-black text-white rounded-lg hover:bg-flamencalia-black/80 transition-colors shrink-0"
                 >
                   <Icon name="check" className="w-3.5 h-3.5" />
                 </button>
@@ -500,7 +500,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       title={c.label}
                       className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
                         isActive
-                          ? "border-flamencalia-red ring-2 ring-flamencalia-red/30 scale-110"
+                          ? "border-flamencalia-albero ring-2 ring-flamencalia-albero/30 scale-110"
                           : "border-neutral-200 hover:border-neutral-400"
                       }`}
                       style={{ background: c.hex }}
@@ -555,7 +555,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       })}
                       className={`block px-3 py-1.5 rounded-lg text-xs transition-all ${
                         isActive
-                          ? "bg-flamencalia-red/10 text-flamencalia-red font-semibold"
+                          ? "bg-flamencalia-red/10 text-flamencalia-albero font-semibold"
                           : "text-neutral-600 hover:bg-neutral-50"
                       }`}
                     >
@@ -594,11 +594,11 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   name="brand"
                   placeholder="Buscar marca..."
                   defaultValue={brand ?? ""}
-                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-red/20"
+                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
                 />
                 <button
                   type="submit"
-                  className="p-1.5 bg-flamencalia-red text-white rounded-lg hover:bg-flamencalia-red-dark transition-colors shrink-0"
+                  className="p-1.5 bg-flamencalia-black text-white rounded-lg hover:bg-flamencalia-black/80 transition-colors shrink-0"
                 >
                   <Icon name="search" className="w-3.5 h-3.5" />
                 </button>
@@ -622,7 +622,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                         })}
                         className={`flex-1 flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                           isActive
-                            ? "bg-flamencalia-red/10 text-flamencalia-red font-semibold"
+                            ? "bg-flamencalia-red/10 text-flamencalia-albero font-semibold"
                             : "text-neutral-600 hover:bg-neutral-50"
                         }`}
                       >
@@ -651,7 +651,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       </Link>
                       <Link
                         href={`/sellers/${s.id}`}
-                        className="p-1 rounded text-neutral-400 hover:text-flamencalia-red transition-colors shrink-0"
+                        className="p-1 rounded text-neutral-400 hover:text-flamencalia-albero transition-colors shrink-0"
                         title="Ver perfil"
                       >
                         <Icon name="eye" className="w-3 h-3" />
@@ -715,7 +715,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                 {(hasActiveFilters || category || q) && (
                   <Link
                     href="/products"
-                    className="inline-flex items-center gap-1.5 bg-flamencalia-red text-white px-5 py-2 rounded-full text-xs font-semibold hover:bg-flamencalia-red-dark transition-all"
+                    className="inline-flex items-center gap-1.5 bg-flamencalia-black text-white px-5 py-2 rounded-full text-xs font-semibold hover:bg-flamencalia-black/80 transition-all"
                   >
                     Ver todos
                   </Link>

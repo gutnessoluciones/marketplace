@@ -61,7 +61,7 @@ export function BuyButton({
     <button
       onClick={handleBuy}
       disabled={!inStock || loading}
-      className="w-full bg-emerald-600 text-white py-4 rounded-xl text-sm font-bold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/30 hover:scale-[1.01] active:scale-[0.99]"
+      className="w-full bg-flamencalia-black text-white py-4 rounded-xl text-sm font-bold hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-neutral-900/10 hover:shadow-neutral-900/20 hover:scale-[1.01] active:scale-[0.99]"
     >
       {!inStock ? (
         "Sin Stock"

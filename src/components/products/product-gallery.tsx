@@ -10,13 +10,15 @@ interface ProductGalleryProps {
 
 export function ProductGallery({ images, title }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [zoom, setZoom] = useState(false);
+  const [showZoom, setShowZoom] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
-  const imageRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  const activeImage = images[activeIndex] ?? null;
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!imageRef.current) return;
-    const rect = imageRef.current.getBoundingClientRect();
+    if (!mainRef.current) return;
+    const rect = mainRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setZoomPos({
@@ -25,8 +27,6 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
     });
   }, []);
 
-  const activeImage = images[activeIndex] ?? null;
-
   const goTo = (dir: -1 | 1) => {
     setActiveIndex((prev) => {
       const next = prev + dir;
@@ -34,7 +34,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       if (next >= images.length) return 0;
       return next;
     });
-    setZoom(false);
+    setShowZoom(false);
   };
 
   if (!images.length) {
@@ -48,149 +48,142 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Main image with zoom */}
-      <div
-        ref={imageRef}
-        className="relative aspect-square bg-neutral-100 rounded-2xl overflow-hidden cursor-zoom-in group"
-        onMouseEnter={() => setZoom(true)}
-        onMouseLeave={() => setZoom(false)}
-        onMouseMove={handleMouseMove}
-      >
-        {/* Base image */}
-        <img
-          src={activeImage!}
-          alt={`${title} - Foto ${activeIndex + 1}`}
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
-
-        {/* Zoom overlay */}
-        {zoom && (
-          <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
-            style={{
-              backgroundImage: `url(${activeImage})`,
-              backgroundSize: "250%",
-              backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
-              backgroundRepeat: "no-repeat",
-            }}
-          />
-        )}
-
-        {/* Magnifier cursor indicator */}
-        {zoom && (
-          <div
-            className="absolute w-28 h-28 rounded-full border-2 border-white/60 shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
-            style={{
-              left: `${zoomPos.x}%`,
-              top: `${zoomPos.y}%`,
-              transform: "translate(-50%, -50%)",
-              backgroundImage: `url(${activeImage})`,
-              backgroundSize: `${imageRef.current?.offsetWidth ? imageRef.current.offsetWidth * 3 : 2400}px`,
-              backgroundPosition: `${-((zoomPos.x / 100) * (imageRef.current?.offsetWidth ?? 800) * 3 - 56)}px ${-((zoomPos.y / 100) * (imageRef.current?.offsetHeight ?? 800) * 3 - 56)}px`,
-            }}
-          />
-        )}
-
-        {/* Zoom icon */}
-        <div className="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-          <Icon name="search" className="w-4 h-4 text-neutral-600" />
-        </div>
-
-        {/* Navigation arrows */}
+      <div className="flex gap-4">
+        {/* Thumbnails – vertical strip on left (desktop) */}
         {images.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                goTo(-1);
-              }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-105"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                goTo(1);
-              }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-105"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </button>
-          </>
-        )}
-
-        {/* Dot indicators */}
-        {images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-            {images.map((_, i) => (
+          <div className="hidden md:flex flex-col gap-2 shrink-0">
+            {images.map((img, i) => (
               <button
                 key={i}
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   setActiveIndex(i);
-                  setZoom(false);
+                  setShowZoom(false);
                 }}
-                className={`w-2 h-2 rounded-full transition-all ${
+                className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all hover:opacity-100 ${
                   i === activeIndex
-                    ? "bg-white scale-125 shadow"
-                    : "bg-white/50 hover:bg-white/80"
+                    ? "border-flamencalia-red opacity-100 ring-2 ring-flamencalia-red/20"
+                    : "border-neutral-200 opacity-60 hover:border-neutral-400"
                 }`}
-              />
+              >
+                <img src={img} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
+              </button>
             ))}
           </div>
         )}
 
-        {/* Image counter */}
-        {images.length > 1 && (
-          <div className="absolute top-3 left-3 bg-black/50 backdrop-blur text-white text-xs font-medium px-2.5 py-1 rounded-full">
-            {activeIndex + 1} / {images.length}
+        {/* Main image container */}
+        <div className="flex-1 relative">
+          <div
+            ref={mainRef}
+            className="relative aspect-square bg-neutral-50 rounded-2xl overflow-hidden cursor-crosshair group"
+            onMouseEnter={() => setShowZoom(true)}
+            onMouseLeave={() => setShowZoom(false)}
+            onMouseMove={handleMouseMove}
+          >
+            <img
+              src={activeImage!}
+              alt={`${title} - Foto ${activeIndex + 1}`}
+              className="w-full h-full object-cover"
+              draggable={false}
+            />
+
+            {/* Lens indicator on the image */}
+            {showZoom && (
+              <div
+                className="absolute w-32 h-32 border-2 border-flamencalia-albero/60 bg-flamencalia-albero/10 pointer-events-none transition-opacity opacity-0 group-hover:opacity-100"
+                style={{
+                  left: `${zoomPos.x}%`,
+                  top: `${zoomPos.y}%`,
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+            )}
+
+            {/* Zoom hint icon */}
+            <div className="absolute top-3 right-3 bg-white/80 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-neutral-500">
+              <Icon name="search" className="w-3.5 h-3.5" />
+              <span className="text-[10px] font-medium">Zoom</span>
+            </div>
+
+            {/* Nav arrows */}
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); goTo(-1); }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-105"
+                >
+                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M15 18l-6-6 6-6" /></svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); goTo(1); }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-105"
+                >
+                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M9 18l6-6-6-6" /></svg>
+                </button>
+              </>
+            )}
+
+            {/* Counter */}
+            {images.length > 1 && (
+              <div className="absolute top-3 left-3 bg-black/50 backdrop-blur text-white text-xs font-medium px-2.5 py-1 rounded-full">
+                {activeIndex + 1} / {images.length}
+              </div>
+            )}
+
+            {/* Dot indicators (mobile only) */}
+            {images.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 md:hidden">
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setActiveIndex(i); }}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      i === activeIndex ? "bg-white scale-125 shadow" : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Zoomed panel – appears to the right on hover */}
+          {showZoom && activeImage && (
+            <div
+              className="hidden lg:block absolute left-full top-0 ml-4 w-[500px] h-[500px] rounded-2xl overflow-hidden border border-neutral-200 shadow-xl bg-white z-20"
+            >
+              <div
+                className="w-full h-full"
+                style={{
+                  backgroundImage: `url(${activeImage})`,
+                  backgroundSize: "300%",
+                  backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Thumbnails */}
+      {/* Mobile thumbnails – horizontal strip */}
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex gap-2 overflow-x-auto pb-1 md:hidden">
           {images.map((img, i) => (
             <button
               key={i}
               type="button"
-              onClick={() => {
-                setActiveIndex(i);
-                setZoom(false);
-              }}
-              className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all hover:opacity-100 ${
+              onClick={() => { setActiveIndex(i); setShowZoom(false); }}
+              className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
                 i === activeIndex
-                  ? "border-flamencalia-red opacity-100 ring-2 ring-flamencalia-red/20"
-                  : "border-transparent opacity-60 hover:border-neutral-300"
+                  ? "border-flamencalia-red opacity-100"
+                  : "border-transparent opacity-50"
               }`}
             >
-              <img
-                src={img}
-                alt={`Foto ${i + 1}`}
-                className="w-full h-full object-cover"
-              />
+              <img src={img} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
             </button>
           ))}
         </div>
