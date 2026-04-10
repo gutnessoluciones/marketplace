@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/products/product-card";
 import { Icon } from "@/components/icons";
-import { UserNav } from "@/components/layout/user-nav";
+import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
 
 interface PageProps {
@@ -62,46 +62,7 @@ export default async function SellerProfilePage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-flamencalia-cream">
-      {/* Header */}
-      <header className="bg-flamencalia-black sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="h-14 flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 shrink-0">
-              <Image
-                src="/cliente/marca-flamencalia.svg"
-                alt="FLAMENCALIA"
-                width={140}
-                height={28}
-                className="h-5 w-auto object-contain invert"
-              />
-              <Image
-                src="/cliente/Abanico.svg"
-                alt="Flamencalia"
-                width={32}
-                height={32}
-                className="w-8 h-8"
-              />
-            </Link>
-
-            <form action="/products" method="GET" className="flex-1 max-w-2xl">
-              <div className="relative">
-                <Icon
-                  name="search"
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400"
-                />
-                <input
-                  type="text"
-                  name="q"
-                  placeholder="Buscar vestidos, mantones, complementos..."
-                  className="w-full bg-white rounded-full pl-10 pr-4 py-2 text-sm text-neutral-700 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-flamencalia-albero/50 border border-transparent focus:border-flamencalia-albero transition-all"
-                />
-              </div>
-            </form>
-
-            <UserNav variant="dark" />
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Profile header */}

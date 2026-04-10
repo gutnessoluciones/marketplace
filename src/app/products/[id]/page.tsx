@@ -9,7 +9,7 @@ import { BuyButton } from "@/components/products/buy-button";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ViewTracker } from "@/components/products/view-tracker";
 import { Icon } from "@/components/icons";
-import { UserNav } from "@/components/layout/user-nav";
+import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
 
 const COLOR_HEX: Record<string, string> = {
@@ -100,9 +100,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
     product = await productsService.getById(id);
   } catch {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-flamencalia-cream flex items-center justify-center">
         <div className="text-center">
-          <div className="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-5">
+          <div className="w-20 h-20 bg-flamencalia-albero-pale/30 rounded-full flex items-center justify-center mx-auto mb-5">
             <Icon name="search" className="w-8 h-8 text-neutral-300" />
           </div>
           <h2 className="text-lg font-semibold mb-2 text-neutral-700">
@@ -160,42 +160,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
     .limit(4);
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-flamencalia-cream">
       <ViewTracker productId={product.id} />
 
-      {/* Header */}
-      <header className="bg-flamencalia-black sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <Image
-              src="/cliente/marca-flamencalia.svg"
-              alt="FLAMENCALIA"
-              width={140}
-              height={28}
-              className="h-5 w-auto object-contain invert"
-            />
-            <Image
-              src="/cliente/Abanico.svg"
-              alt=""
-              width={28}
-              height={28}
-              className="w-7 h-7"
-            />
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/products"
-              className="text-sm font-medium text-flamencalia-albero hover:text-white transition-colors"
-            >
-              Explorar
-            </Link>
-            <UserNav variant="dark" />
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Breadcrumb */}
-      <div className="bg-white border-b border-neutral-200">
+      <div className="bg-flamencalia-white border-b border-flamencalia-albero-pale/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-1.5 text-xs text-neutral-400">
             <Link href="/" className="hover:text-neutral-600 transition-colors">
@@ -241,7 +212,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <div className="lg:col-span-5">
             <div className="sticky top-20 space-y-6">
               {/* Main info card */}
-              <div className="bg-white rounded-2xl border border-neutral-200 p-6 lg:p-8">
+              <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/30 p-6 lg:p-8">
                 {/* Category + condition */}
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   {product.category && (
@@ -253,7 +224,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     </Link>
                   )}
                   {product.condition && (
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-neutral-600 bg-neutral-100 px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-flamencalia-black/60 bg-flamencalia-albero-pale/30 px-2.5 py-1 rounded-full">
                       <Icon name="check" className="w-3 h-3" />
                       {CONDITION_LABELS[product.condition] ?? product.condition}
                     </span>
@@ -299,7 +270,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 </div>
 
                 {/* Price */}
-                <div className="mt-5 pt-5 border-t border-neutral-100">
+                <div className="mt-5 pt-5 border-t border-flamencalia-albero-pale/30">
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl lg:text-4xl font-extrabold text-flamencalia-black">
                       {formatPrice(product.price)}
@@ -313,7 +284,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     }`}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${product.stock > 0 ? "bg-flamencalia-albero" : "bg-neutral-400"}`}
+                      className={`w-1.5 h-1.5 rounded-full ${product.stock > 0 ? "bg-flamencalia-albero" : "bg-flamencalia-black/40"}`}
                     />
                     {product.stock > 0
                       ? `${product.stock} disponible${product.stock > 1 ? "s" : ""}`
@@ -326,12 +297,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   product.color ||
                   product.brand ||
                   product.material) && (
-                  <div className="mt-5 pt-5 border-t border-neutral-100">
+                  <div className="mt-5 pt-5 border-t border-flamencalia-albero-pale/30">
                     <div className="grid grid-cols-2 gap-3">
                       {product.color && (
                         <div className="flex items-center gap-2.5">
                           <span
-                            className="w-6 h-6 rounded-full border border-neutral-200 shadow-sm shrink-0"
+                            className="w-6 h-6 rounded-full border border-flamencalia-albero-pale/50 shadow-sm shrink-0"
                             style={{
                               background: COLOR_HEX[product.color] ?? "#ccc",
                             }}
@@ -383,7 +354,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 )}
 
                 {/* Buy button */}
-                <div className="mt-6 pt-5 border-t border-neutral-100">
+                <div className="mt-6 pt-5 border-t border-flamencalia-albero-pale/30">
                   <BuyButton
                     productId={product.id}
                     inStock={product.stock > 0}
@@ -393,13 +364,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
               {/* Seller card */}
               {product.seller && (
-                <div className="bg-white rounded-2xl border border-neutral-200 p-5">
+                <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/30 p-5">
                   <div className="flex items-start gap-3">
                     <Link
                       href={`/sellers/${product.seller.id}`}
                       className="shrink-0"
                     >
-                      <div className="w-12 h-12 rounded-full bg-neutral-100 overflow-hidden ring-2 ring-neutral-100">
+                      <div className="w-12 h-12 rounded-full bg-flamencalia-albero-pale/30 overflow-hidden ring-2 ring-flamencalia-albero-pale/30">
                         {product.seller.avatar_url ? (
                           <img
                             src={product.seller.avatar_url}
@@ -451,7 +422,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
         {/* Description */}
         {product.description && (
-          <div className="mt-10 bg-white rounded-2xl border border-neutral-200 p-6 lg:p-8">
+          <div className="mt-10 bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/30 p-6 lg:p-8">
             <h2 className="text-base font-bold text-neutral-800 mb-4 flex items-center gap-2">
               <Icon name="receipt" className="w-4 h-4 text-neutral-400" />
               Descripción
@@ -463,7 +434,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         )}
 
         {/* Reviews section */}
-        <div className="mt-8 bg-white rounded-2xl border border-neutral-200 p-6 lg:p-8">
+        <div className="mt-8 bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/30 p-6 lg:p-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-bold text-neutral-800 flex items-center gap-2">
               <Icon name="star" className="w-4 h-4 text-neutral-400" />
@@ -501,9 +472,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
               {reviews.data.map((review) => (
                 <div
                   key={review.id}
-                  className="flex gap-3 pb-4 border-b border-neutral-100 last:border-0 last:pb-0"
+                  className="flex gap-3 pb-4 border-b border-flamencalia-albero-pale/30 last:border-0 last:pb-0"
                 >
-                  <div className="w-9 h-9 rounded-full bg-neutral-100 overflow-hidden shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-flamencalia-albero-pale/30 overflow-hidden shrink-0">
                     {review.buyer?.avatar_url ? (
                       <img
                         src={review.buyer.avatar_url}
@@ -570,9 +541,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   <Link
                     key={rpTyped.id}
                     href={`/products/${rpTyped.id}`}
-                    className="group bg-white rounded-xl overflow-hidden border border-neutral-200 hover:shadow-md transition-all"
+                    className="group bg-flamencalia-white rounded-xl overflow-hidden border border-flamencalia-albero-pale/30 hover:shadow-md transition-all"
                   >
-                    <div className="aspect-3/4 bg-neutral-100 overflow-hidden">
+                    <div className="aspect-3/4 bg-flamencalia-albero-pale/30 overflow-hidden">
                       {rpTyped.images?.length > 0 ? (
                         <img
                           src={rpTyped.images[0]}

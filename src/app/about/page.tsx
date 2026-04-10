@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@/components/icons";
-import { UserNav } from "@/components/layout/user-nav";
+import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
 
 export const metadata = {
@@ -13,30 +13,7 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen bg-flamencalia-cream">
-      {/* Header */}
-      <header className="bg-flamencalia-white sticky top-0 z-30 shadow-sm">
-        <div className="h-1.5 toldo-rayas" />
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
-            <Image
-              src="/cliente/flamencalia.jpg"
-              alt="Flamencalia"
-              width={40}
-              height={40}
-              className="rounded-lg"
-            />
-            <div className="hidden sm:block">
-              <span className="font-serif font-bold text-xl tracking-wide text-flamencalia-black">
-                FLAMENCALIA
-              </span>
-              <p className="text-[10px] text-flamencalia-red italic -mt-0.5">
-                &ldquo;Larga vida a tu Flamenca&rdquo;
-              </p>
-            </div>
-          </Link>
-          <UserNav variant="light" />
-        </nav>
-      </header>
+      <SiteHeader />
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-linear-to-br from-flamencalia-red via-flamencalia-red-dark to-flamencalia-black py-20 sm:py-28">

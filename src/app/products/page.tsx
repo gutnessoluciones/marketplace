@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ProductsService } from "@/services/products.service";
 import { ProductCard } from "@/components/products/product-card";
 import { Icon } from "@/components/icons";
-import { UserNav } from "@/components/layout/user-nav";
+import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
 
 export const metadata: Metadata = {
@@ -203,85 +203,8 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   );
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      {/* Header */}
-      <header className="bg-flamencalia-black sticky top-0 z-30">
-        <div className="max-w-350 mx-auto px-4 sm:px-6">
-          <div className="h-14 flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 shrink-0">
-              <Image
-                src="/cliente/marca-flamencalia.svg"
-                alt="FLAMENCALIA"
-                width={140}
-                height={28}
-                className="h-5 w-auto object-contain invert"
-              />
-              <Image
-                src="/cliente/Abanico.svg"
-                alt=""
-                width={28}
-                height={28}
-                className="w-7 h-7"
-              />
-            </Link>
-
-            <form action="/products" method="GET" className="flex-1 max-w-2xl">
-              {category && (
-                <input type="hidden" name="category" value={category} />
-              )}
-              <div className="relative">
-                <Icon
-                  name="search"
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400"
-                />
-                <input
-                  type="text"
-                  name="q"
-                  defaultValue={q}
-                  placeholder="Buscar vestidos, mantones, complementos..."
-                  className="w-full bg-white rounded-full pl-10 pr-24 py-2.5 text-sm text-neutral-700 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-flamencalia-albero/50 transition-all"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 bg-flamencalia-black text-white px-4 py-1.5 rounded-full text-xs font-bold hover:bg-flamencalia-black/80 transition-all"
-                >
-                  Buscar
-                </button>
-              </div>
-            </form>
-
-            <UserNav variant="dark" />
-          </div>
-        </div>
-      </header>
-
-      {/* Categories bar */}
-      <div className="bg-white border-b border-neutral-200 sticky top-14 z-20">
-        <div className="max-w-350 mx-auto px-4 sm:px-6">
-          <div className="flex gap-1 overflow-x-auto py-2.5 scrollbar-hide">
-            {CATEGORIES.map((cat) => {
-              const isActive = (category ?? "") === cat.slug;
-              return (
-                <Link
-                  key={cat.slug}
-                  href={buildUrl({
-                    category: cat.slug || undefined,
-                    page: undefined,
-                  })}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                    isActive
-                      ? "bg-flamencalia-black text-white"
-                      : "text-neutral-600 hover:bg-neutral-100"
-                  }`}
-                >
-                  <Icon name={cat.icon} className="w-3.5 h-3.5" />
-                  {cat.label}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-flamencalia-cream">
+      <SiteHeader activeCategory={category} defaultSearch={q} />
 
       <div className="max-w-350 mx-auto px-4 sm:px-6 py-6">
         {/* Title + sort */}
@@ -322,7 +245,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             <select
               name="sort"
               defaultValue={sort ?? ""}
-              className="border border-neutral-200 rounded-lg px-3 py-1.5 text-xs text-neutral-600 bg-white focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
+              className="border border-flamencalia-albero-pale/30 rounded-lg px-3 py-1.5 text-xs text-neutral-600 bg-white focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
             >
               {SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -348,7 +271,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             {color && (
               <Link
                 href={buildUrl({ color: undefined, page: undefined })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-neutral-200 rounded-full text-xs text-neutral-700 hover:border-red-300 hover:text-red-600 transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-full text-xs text-neutral-700 hover:border-flamencalia-albero hover:text-flamencalia-albero transition-colors"
               >
                 <span
                   className="w-3 h-3 rounded-full border border-neutral-200 shrink-0"
@@ -364,7 +287,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             {size && (
               <Link
                 href={buildUrl({ size: undefined, page: undefined })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-neutral-200 rounded-full text-xs text-neutral-700 hover:border-red-300 hover:text-red-600 transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-full text-xs text-neutral-700 hover:border-flamencalia-albero hover:text-flamencalia-albero transition-colors"
               >
                 Talla: {size === "unica" ? "Única" : size}{" "}
                 <span className="ml-0.5">✕</span>
@@ -373,7 +296,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             {condition && (
               <Link
                 href={buildUrl({ condition: undefined, page: undefined })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-neutral-200 rounded-full text-xs text-neutral-700 hover:border-red-300 hover:text-red-600 transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-full text-xs text-neutral-700 hover:border-flamencalia-albero hover:text-flamencalia-albero transition-colors"
               >
                 {CONDITIONS.find((c) => c.value === condition)?.label ??
                   condition}
@@ -383,7 +306,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             {brand && (
               <Link
                 href={buildUrl({ brand: undefined, page: undefined })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-neutral-200 rounded-full text-xs text-neutral-700 hover:border-red-300 hover:text-red-600 transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-full text-xs text-neutral-700 hover:border-flamencalia-albero hover:text-flamencalia-albero transition-colors"
               >
                 {brand} <span className="ml-0.5">✕</span>
               </Link>
@@ -395,7 +318,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   priceMax: undefined,
                   page: undefined,
                 })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-neutral-200 rounded-full text-xs text-neutral-700 hover:border-red-300 hover:text-red-600 transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-full text-xs text-neutral-700 hover:border-flamencalia-albero hover:text-flamencalia-albero transition-colors"
               >
                 {priceMin ? `${priceMin}€` : "0€"} –{" "}
                 {priceMax ? `${priceMax}€` : "∞"}
@@ -405,7 +328,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             {seller && (
               <Link
                 href={buildUrl({ seller: undefined, page: undefined })}
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-neutral-200 rounded-full text-xs text-neutral-700 hover:border-red-300 hover:text-red-600 transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-full text-xs text-neutral-700 hover:border-flamencalia-albero hover:text-flamencalia-albero transition-colors"
               >
                 {sellerProfile?.display_name ?? "Vendedor"}{" "}
                 <span className="ml-0.5">✕</span>
@@ -433,7 +356,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
           {/* ── Sidebar ── */}
           <aside className="hidden lg:block w-60 shrink-0 space-y-5">
             {/* Price Range */}
-            <div className="bg-white rounded-xl border border-neutral-200 p-4">
+            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
               <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
                 Precio
               </h3>
@@ -461,7 +384,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   defaultValue={priceMin ?? ""}
                   min="0"
                   step="1"
-                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
+                  className="w-full border border-flamencalia-albero-pale/30 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
                 />
                 <span className="text-neutral-300 text-xs">—</span>
                 <input
@@ -471,7 +394,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   defaultValue={priceMax ?? ""}
                   min="0"
                   step="1"
-                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
+                  className="w-full border border-flamencalia-albero-pale/30 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
                 />
                 <button
                   type="submit"
@@ -483,7 +406,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             </div>
 
             {/* Color */}
-            <div className="bg-white rounded-xl border border-neutral-200 p-4">
+            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
               <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
                 Color
               </h3>
@@ -501,7 +424,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
                         isActive
                           ? "border-flamencalia-albero ring-2 ring-flamencalia-albero/30 scale-110"
-                          : "border-neutral-200 hover:border-neutral-400"
+                          : "border-flamencalia-albero-pale/50 hover:border-flamencalia-albero"
                       }`}
                       style={{ background: c.hex }}
                     />
@@ -511,7 +434,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             </div>
 
             {/* Size */}
-            <div className="bg-white rounded-xl border border-neutral-200 p-4">
+            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
               <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
                 Talla
               </h3>
@@ -528,7 +451,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                         isActive
                           ? "bg-flamencalia-black text-white"
-                          : "bg-neutral-50 text-neutral-600 hover:bg-neutral-100"
+                          : "bg-flamencalia-cream text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30"
                       }`}
                     >
                       {s === "unica" ? "Única" : s}
@@ -539,7 +462,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             </div>
 
             {/* Condition */}
-            <div className="bg-white rounded-xl border border-neutral-200 p-4">
+            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
               <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
                 Estado
               </h3>
@@ -556,7 +479,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       className={`block px-3 py-1.5 rounded-lg text-xs transition-all ${
                         isActive
                           ? "bg-flamencalia-red/10 text-flamencalia-albero font-semibold"
-                          : "text-neutral-600 hover:bg-neutral-50"
+                          : "text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/20"
                       }`}
                     >
                       {c.label}
@@ -567,7 +490,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             </div>
 
             {/* Brand */}
-            <div className="bg-white rounded-xl border border-neutral-200 p-4">
+            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
               <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
                 Marca / Diseñador
               </h3>
@@ -594,7 +517,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   name="brand"
                   placeholder="Buscar marca..."
                   defaultValue={brand ?? ""}
-                  className="w-full border border-neutral-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
+                  className="w-full border border-flamencalia-albero-pale/30 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
                 />
                 <button
                   type="submit"
@@ -606,7 +529,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             </div>
 
             {/* Sellers */}
-            <div className="bg-white rounded-xl border border-neutral-200 p-4">
+            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
               <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
                 Vendedores
               </h3>
@@ -623,7 +546,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                         className={`flex-1 flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
                           isActive
                             ? "bg-flamencalia-red/10 text-flamencalia-albero font-semibold"
-                            : "text-neutral-600 hover:bg-neutral-50"
+                            : "text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/20"
                         }`}
                       >
                         <div className="w-5 h-5 rounded-full bg-neutral-100 overflow-hidden shrink-0">
@@ -678,7 +601,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                     {page > 1 && (
                       <Link
                         href={buildUrl({ page: String(page - 1) })}
-                        className="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-xs font-medium hover:bg-neutral-50 transition-all text-neutral-700"
+                        className="px-4 py-2 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-lg text-xs font-medium hover:bg-flamencalia-albero-pale/20 transition-all text-flamencalia-black/70"
                       >
                         ← Anterior
                       </Link>
@@ -689,7 +612,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                     {page < totalPages && (
                       <Link
                         href={buildUrl({ page: String(page + 1) })}
-                        className="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-xs font-medium hover:bg-neutral-50 transition-all text-neutral-700"
+                        className="px-4 py-2 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-lg text-xs font-medium hover:bg-flamencalia-albero-pale/20 transition-all text-flamencalia-black/70"
                       >
                         Siguiente →
                       </Link>
@@ -699,7 +622,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
               </>
             ) : (
               <div className="text-center py-20">
-                <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-flamencalia-albero-pale/30 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Icon name="search" className="w-7 h-7 text-neutral-300" />
                 </div>
                 <h3 className="text-base font-semibold text-neutral-700 mb-1">

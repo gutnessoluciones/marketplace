@@ -1,21 +1,38 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/icons";
 
+interface UserProfile {
+  display_name: string;
+  avatar_url: string | null;
+}
+
 export function UserNav({ variant = "dark" }: { variant?: "dark" | "light" }) {
-  const [user, setUser] = useState<{ email?: string } | null>(null);
+  const [user, setUser] = useState<{ email?: string; id?: string } | null>(
+    null,
+  );
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       setUser(data.user);
+      if (data.user) {
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("display_name, avatar_url")
+          .eq("id", data.user.id)
+          .single();
+        if (prof) setProfile(prof);
+      }
       setLoading(false);
     });
   }, []);
@@ -67,17 +84,29 @@ export function UserNav({ variant = "dark" }: { variant?: "dark" | "light" }) {
             : "text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/50 hover:text-flamencalia-red"
         }`}
       >
-        <div
-          className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-            isDark
-              ? "bg-flamencalia-albero text-flamencalia-black"
-              : "bg-flamencalia-red/10 text-flamencalia-red"
-          }`}
-        >
-          {user.email?.charAt(0).toUpperCase()}
-        </div>
-        <span className="hidden sm:inline max-w-24 truncate">
-          {user.email?.split("@")[0]}
+        {profile?.avatar_url ? (
+          <Image
+            src={profile.avatar_url}
+            alt={profile.display_name || "Avatar"}
+            width={28}
+            height={28}
+            className="w-7 h-7 rounded-full object-cover"
+          />
+        ) : (
+          <div
+            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+              isDark
+                ? "bg-flamencalia-albero text-flamencalia-black"
+                : "bg-flamencalia-red/10 text-flamencalia-red"
+            }`}
+          >
+            {(profile?.display_name || user.email || "?")
+              .charAt(0)
+              .toUpperCase()}
+          </div>
+        )}
+        <span className="hidden sm:inline max-w-28 truncate">
+          {profile?.display_name || user.email?.split("@")[0]}
         </span>
       </button>
 
