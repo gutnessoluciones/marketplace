@@ -36,7 +36,7 @@ export default async function SellerProfilePage({ params }: PageProps) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, display_name, avatar_url, created_at")
+    .select("id, display_name, avatar_url, bio, location, website, created_at")
     .eq("id", id)
     .single();
 
@@ -125,6 +125,11 @@ export default async function SellerProfilePage({ params }: PageProps) {
               <h1 className="text-2xl sm:text-3xl font-bold font-serif text-flamencalia-black">
                 {profile.display_name ?? "Vendedor"}
               </h1>
+              {profile.bio && (
+                <p className="text-sm text-neutral-600 mt-2 max-w-xl">
+                  {profile.bio}
+                </p>
+              )}
               <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-neutral-500">
                 <span className="flex items-center gap-1.5">
                   <Icon name="package" className="w-4 h-4" />
@@ -135,6 +140,27 @@ export default async function SellerProfilePage({ params }: PageProps) {
                   <Icon name="fan" className="w-4 h-4" />
                   Miembro desde {memberSince}
                 </span>
+                {profile.location && (
+                  <span className="flex items-center gap-1.5">
+                    <Icon name="mapPin" className="w-4 h-4" />
+                    {profile.location}
+                  </span>
+                )}
+                {profile.website && (
+                  <a
+                    href={
+                      profile.website.startsWith("http")
+                        ? profile.website
+                        : `https://${profile.website}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-flamencalia-red hover:text-flamencalia-red-dark transition-colors"
+                  >
+                    <Icon name="globe" className="w-4 h-4" />
+                    Web
+                  </a>
+                )}
               </div>
               <Link
                 href={`/products?seller=${profile.id}`}

@@ -6,6 +6,8 @@ export interface Profile {
   avatar_url: string | null;
   bio: string | null;
   phone: string | null;
+  location: string | null;
+  website: string | null;
   stripe_account_id: string | null;
   stripe_onboarding_complete: boolean;
   created_at: string;
@@ -44,7 +46,12 @@ export interface Product {
   currency: string;
   images: string[];
   status: ProductStatus;
-  category: string | null;
+  category: string;
+  color: string | null;
+  size: string | null;
+  condition: string | null;
+  brand: string | null;
+  material: string | null;
   stock: number;
   created_at: string;
   updated_at: string;

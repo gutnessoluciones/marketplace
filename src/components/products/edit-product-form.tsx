@@ -8,13 +8,59 @@ import { ImageUpload } from "@/components/products/image-upload";
 import Link from "next/link";
 
 const CATEGORIES = [
-  { value: "electronica", label: "Electrónica" },
-  { value: "ropa", label: "Moda" },
-  { value: "hogar", label: "Hogar" },
-  { value: "deportes", label: "Deportes" },
-  { value: "libros", label: "Libros" },
-  { value: "arte", label: "Arte" },
-  { value: "otros", label: "Otros" },
+  { value: "feria", label: "Feria" },
+  { value: "camino", label: "Camino" },
+  { value: "complementos-flamencos", label: "Complementos Flamencos" },
+  { value: "invitada-flamenca", label: "Invitada Flamenca" },
+  { value: "moda-infantil", label: "Moda Infantil" },
+  { value: "equitacion", label: "Equitación" },
+  { value: "zapatos", label: "Zapatos" },
+];
+
+const COLORS = [
+  { value: "blanco", label: "Blanco" },
+  { value: "negro", label: "Negro" },
+  { value: "rojo", label: "Rojo" },
+  { value: "rosa", label: "Rosa" },
+  { value: "fucsia", label: "Fucsia" },
+  { value: "naranja", label: "Naranja" },
+  { value: "amarillo", label: "Amarillo" },
+  { value: "verde", label: "Verde" },
+  { value: "azul", label: "Azul" },
+  { value: "morado", label: "Morado" },
+  { value: "burdeos", label: "Burdeos" },
+  { value: "dorado", label: "Dorado" },
+  { value: "plateado", label: "Plateado" },
+  { value: "beige", label: "Beige" },
+  { value: "marron", label: "Marrón" },
+  { value: "multicolor", label: "Multicolor" },
+];
+
+const SIZES = [
+  "XXS",
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "3XL",
+  "34",
+  "36",
+  "38",
+  "40",
+  "42",
+  "44",
+  "46",
+  "48",
+  "unica",
+];
+
+const CONDITIONS = [
+  { value: "nuevo", label: "Nuevo con etiqueta" },
+  { value: "como-nuevo", label: "Como nuevo" },
+  { value: "bueno", label: "Buen estado" },
+  { value: "aceptable", label: "Aceptable" },
 ];
 
 export function EditProductForm({ product }: { product: Product }) {
@@ -37,7 +83,12 @@ export function EditProductForm({ product }: { product: Product }) {
         title: formData.get("title"),
         description: formData.get("description"),
         price: Math.round(Number(formData.get("price")) * 100),
-        category: formData.get("category") || undefined,
+        category: formData.get("category") as string,
+        color: formData.get("color") || null,
+        size: formData.get("size") || null,
+        condition: formData.get("condition") || null,
+        brand: (formData.get("brand") as string)?.trim() || null,
+        material: (formData.get("material") as string)?.trim() || null,
         stock: Number(formData.get("stock")) || 0,
         images,
         status: formData.get("status") || "active",
@@ -126,21 +177,129 @@ export function EditProductForm({ product }: { product: Product }) {
               htmlFor="category"
               className="block text-sm font-medium text-neutral-700 mb-1.5"
             >
-              Categoría
+              Categoría *
             </label>
             <select
               id="category"
               name="category"
               defaultValue={product.category ?? ""}
+              required
               className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
             >
-              <option value="">Selecciona categoría</option>
+              <option value="">Selecciona categoría *</option>
               {CATEGORIES.map((cat) => (
                 <option key={cat.value} value={cat.value}>
                   {cat.label}
                 </option>
               ))}
             </select>
+          </div>
+        </div>
+
+        {/* Attributes */}
+        <div className="bg-white border border-neutral-100 rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
+            Atributos del producto
+          </h2>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="color"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
+              >
+                Color
+              </label>
+              <select
+                id="color"
+                name="color"
+                defaultValue={product.color ?? ""}
+                className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
+              >
+                <option value="">Selecciona color</option>
+                {COLORS.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="size"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
+              >
+                Talla
+              </label>
+              <select
+                id="size"
+                name="size"
+                defaultValue={product.size ?? ""}
+                className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
+              >
+                <option value="">Selecciona talla</option>
+                {SIZES.map((s) => (
+                  <option key={s} value={s}>
+                    {s === "unica" ? "Talla única" : s}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="condition"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
+              >
+                Estado del artículo
+              </label>
+              <select
+                id="condition"
+                name="condition"
+                defaultValue={product.condition ?? ""}
+                className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
+              >
+                <option value="">Selecciona estado</option>
+                {CONDITIONS.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="brand"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
+              >
+                Marca / Diseñador
+              </label>
+              <input
+                id="brand"
+                name="brand"
+                defaultValue={product.brand ?? ""}
+                placeholder="Ej: Lina, Pol Núñez..."
+                className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="material"
+              className="block text-sm font-medium text-neutral-700 mb-1.5"
+            >
+              Material
+            </label>
+            <input
+              id="material"
+              name="material"
+              defaultValue={product.material ?? ""}
+              placeholder="Ej: Algodón, Seda, Encaje..."
+              className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
+            />
           </div>
         </div>
 

@@ -202,6 +202,40 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 </span>
               </div>
 
+              {/* Product attributes */}
+              {(product.condition || product.size || product.color || product.brand || product.material) && (
+                <div className="flex flex-wrap gap-2 mt-5 pt-5 border-t">
+                  {product.condition && (
+                    <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-xs font-medium px-3 py-1.5 rounded-full">
+                      <Icon name="check" className="w-3 h-3" />
+                      {product.condition === "nuevo" ? "Nuevo" : product.condition === "como-nuevo" ? "Como nuevo" : product.condition === "bueno" ? "Buen estado" : "Aceptable"}
+                    </span>
+                  )}
+                  {product.size && (
+                    <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full">
+                      Talla: {product.size === "unica" ? "Única" : product.size}
+                    </span>
+                  )}
+                  {product.color && (
+                    <span className="inline-flex items-center gap-1.5 bg-purple-50 text-purple-700 text-xs font-medium px-3 py-1.5 rounded-full capitalize">
+                      <span className="w-3 h-3 rounded-full border border-purple-200" style={{ background: product.color === "blanco" ? "#FFF" : product.color === "negro" ? "#1A1A1A" : product.color === "rojo" ? "#C8102E" : product.color === "rosa" ? "#F4A6C0" : product.color === "fucsia" ? "#D6006E" : product.color === "naranja" ? "#F28C28" : product.color === "amarillo" ? "#F5D100" : product.color === "verde" ? "#2E8B57" : product.color === "azul" ? "#2563EB" : product.color === "morado" ? "#7C3AED" : product.color === "burdeos" ? "#722F37" : product.color === "dorado" ? "#D4A843" : product.color === "plateado" ? "#C0C0C0" : product.color === "beige" ? "#E8D5B7" : product.color === "marron" ? "#8B5E34" : "#ccc" }} />
+                      {product.color === "marron" ? "Marrón" : product.color}
+                    </span>
+                  )}
+                  {product.brand && (
+                    <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 text-xs font-medium px-3 py-1.5 rounded-full">
+                      <Icon name="tag" className="w-3 h-3" />
+                      {product.brand}
+                    </span>
+                  )}
+                  {product.material && (
+                    <span className="inline-flex items-center gap-1.5 bg-neutral-100 text-neutral-600 text-xs font-medium px-3 py-1.5 rounded-full">
+                      {product.material}
+                    </span>
+                  )}
+                </div>
+              )}
+
               {product.description && (
                 <p className="text-sm text-gray-600 mt-6 leading-relaxed whitespace-pre-line border-t pt-6">
                   {product.description}
