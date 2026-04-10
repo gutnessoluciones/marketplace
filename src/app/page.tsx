@@ -5,6 +5,7 @@ import { formatPrice } from "@/lib/utils";
 import { Icon } from "@/components/icons";
 import { UserNav } from "@/components/layout/user-nav";
 import { Footer } from "@/components/layout/footer";
+import { BannerCarousel } from "@/components/layout/banner-carousel";
 
 const CATEGORIES = [
   { slug: "feria", label: "Feria", icon: "fan" },
@@ -149,107 +150,92 @@ export default async function HomePage() {
         </div>
       </header>
 
-      {/* ═══ HERO BANNER — Estilo Caseta de Feria ═══ */}
-      <section className="relative overflow-hidden">
-        {/* Fondo gradiente cream → albero cálido */}
-        <div className="absolute inset-0 bg-linear-to-br from-flamencalia-cream via-flamencalia-albero-pale to-flamencalia-cream" />
-
-        {/* Lunares de feria — sutil */}
-        <div className="absolute inset-0 opacity-[0.06] lunares-pattern-dark" />
-
-        {/* Farolillos */}
-        <div className="absolute top-4 left-[10%] farolillo">
-          <div className="w-6 h-8 bg-flamencalia-red rounded-full opacity-30" />
-        </div>
-        <div
-          className="absolute top-6 left-[30%] farolillo"
-          style={{ animationDelay: "0.5s" }}
-        >
-          <div className="w-5 h-7 bg-flamencalia-albero rounded-full opacity-25" />
-        </div>
-        <div
-          className="absolute top-3 right-[20%] farolillo"
-          style={{ animationDelay: "1s" }}
-        >
-          <div className="w-6 h-8 bg-flamencalia-red rounded-full opacity-20" />
-        </div>
-        <div
-          className="absolute top-5 right-[40%] farolillo"
-          style={{ animationDelay: "1.5s" }}
-        >
-          <div className="w-4 h-6 bg-flamencalia-albero rounded-full opacity-25" />
+      {/* ═══ HERO BANNER — Carrusel de colección ═══ */}
+      <section className="relative overflow-hidden bg-flamencalia-black">
+        {/* Carrusel de fondo a pantalla completa */}
+        <div className="absolute inset-0">
+          <BannerCarousel />
         </div>
 
-        <div className="relative py-14 sm:py-20 lg:py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Slogan SVG centrado arriba */}
-            <div className="flex justify-center mb-8 animate-fade-in-up">
+        {/* Overlay oscuro para legibilidad */}
+        <div className="absolute inset-0 bg-black/50" />
+
+        <div className="relative py-20 sm:py-28 lg:py-36">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            {/* Slogan SVG */}
+            <div className="flex justify-center mb-6 animate-fade-in-up">
               <Image
                 src="/cliente/slogan.svg"
                 alt="Larga vida a tu Flamenca"
                 width={600}
                 height={80}
-                className="object-contain w-full max-w-md sm:max-w-lg h-auto"
+                className="object-contain w-full max-w-xs sm:max-w-md h-auto invert drop-shadow-lg"
                 priority
               />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-              {/* Lado izquierdo: texto */}
-              <div>
-                <div className="inline-flex items-center gap-2 bg-flamencalia-red/10 text-flamencalia-red text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-flamencalia-red/20 animate-fade-in-up">
-                  <Icon name="fan" className="w-4 h-4" /> Marketplace de Moda
-                  Flamenca
-                </div>
-                <h1
-                  className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-flamencalia-black animate-fade-in-up"
-                  style={{ animationDelay: "0.1s" }}
-                >
-                  Viste tu
-                  <span className="text-flamencalia-red"> flamenca</span>
-                  <br />
-                  con estilo
-                </h1>
-                <p
-                  className="mt-4 text-base sm:text-lg text-flamencalia-black/60 max-w-lg animate-fade-in-up"
-                  style={{ animationDelay: "0.2s" }}
-                >
-                  Vestidos, mantones, flores y complementos de diseñadores y de
-                  la comunidad flamenca. Compra, vende y dale larga vida a tu
-                  flamenca.
-                </p>
-                <div
-                  className="mt-8 flex flex-wrap gap-3 animate-fade-in-up"
-                  style={{ animationDelay: "0.3s" }}
-                >
-                  <Link
-                    href="/products"
-                    className="bg-flamencalia-red text-white px-8 py-3.5 rounded-full text-sm font-bold hover:bg-flamencalia-red-dark transition-all hover:shadow-lg hover:shadow-flamencalia-red/30 hover:-translate-y-0.5"
-                  >
-                    Explorar Productos
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="border-2 border-flamencalia-black/20 text-flamencalia-black px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-flamencalia-black/5 transition-all hover:-translate-y-0.5"
-                  >
-                    Vender Ahora
-                  </Link>
-                </div>
-              </div>
+            <h1
+              className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-white drop-shadow-lg animate-fade-in-up"
+              style={{ animationDelay: "0.1s" }}
+            >
+              Viste tu
+              <span className="text-flamencalia-albero-light">
+                {" "}
+                flamenca
+              </span>{" "}
+              con estilo
+            </h1>
+            <p
+              className="mt-4 text-base sm:text-lg text-white/80 max-w-2xl mx-auto animate-fade-in-up"
+              style={{ animationDelay: "0.2s" }}
+            >
+              Vestidos, mantones, flores y complementos de diseñadores y de la
+              comunidad flamenca. Compra, vende y dale larga vida a tu flamenca.
+            </p>
 
-              {/* Lado derecho: abanico grande */}
-              <div
-                className="hidden lg:flex items-center justify-center animate-fade-in-up"
-                style={{ animationDelay: "0.4s" }}
-              >
-                <Image
-                  src="/cliente/Abanico.svg"
-                  alt="Flamencalia — abanico"
-                  width={400}
-                  height={400}
-                  className="object-contain w-full max-w-sm h-auto drop-shadow-xl animate-float"
+            {/* ★ BUSCADOR GRANDE ★ */}
+            <form
+              action="/products"
+              method="GET"
+              className="mt-8 animate-fade-in-up"
+              style={{ animationDelay: "0.3s" }}
+            >
+              <div className="relative max-w-2xl mx-auto">
+                <Icon
+                  name="search"
+                  className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-flamencalia-red"
                 />
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Buscar vestidos, mantones, complementos, diseñadores..."
+                  className="w-full bg-white/95 backdrop-blur-sm rounded-full pl-13 sm:pl-14 pr-36 py-4 sm:py-5 text-base sm:text-lg text-flamencalia-black placeholder-neutral-400 focus:outline-none focus:ring-4 focus:ring-flamencalia-albero/30 shadow-2xl border border-white/20 transition-all"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-flamencalia-red text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:bg-flamencalia-red-dark transition-all hover:shadow-lg"
+                >
+                  Buscar
+                </button>
               </div>
+            </form>
+
+            <div
+              className="mt-6 flex flex-wrap justify-center gap-3 animate-fade-in-up"
+              style={{ animationDelay: "0.4s" }}
+            >
+              <Link
+                href="/products"
+                className="bg-flamencalia-albero text-flamencalia-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-flamencalia-albero-light transition-all hover:shadow-lg hover:-translate-y-0.5"
+              >
+                Explorar Productos
+              </Link>
+              <Link
+                href="/register"
+                className="border-2 border-white/40 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white/15 backdrop-blur-sm transition-all hover:-translate-y-0.5"
+              >
+                Vender Ahora
+              </Link>
             </div>
           </div>
         </div>
@@ -282,7 +268,7 @@ export default async function HomePage() {
               {topSellers.map((seller) => (
                 <Link
                   key={seller.id}
-                  href={`/products?seller=${seller.id}`}
+                  href={`/sellers/${seller.id}`}
                   className="flex flex-col items-center gap-2 shrink-0 group"
                 >
                   <div className="w-20 h-20 rounded-full bg-flamencalia-albero-pale/50 border-2 border-flamencalia-albero-pale group-hover:border-flamencalia-red overflow-hidden transition-colors flex items-center justify-center">
