@@ -211,3 +211,38 @@ select:focus {
   border-color: var(--flamencalia-red);
   box-shadow: 0 12px 40px rgba(200, 16, 46, 0.12);
 }
+
+/* Lunares de feria (polka dots) */
+.lunares-pattern {
+  background-image: radial-gradient(
+    circle,
+    var(--flamencalia-white) 2px,
+    transparent 2px
+  );
+  background-size: 24px 24px;
+}
+
+/* Glass card shine sweep */
+@keyframes glass-shine {
+  0% {
+    transform: translateX(-100%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(12deg);
+  }
+}
+.glass-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.3) 45%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 60%
+  );
+  animation: glass-shine 6s ease-in-out infinite;
+  border-radius: inherit;
+  pointer-events: none;
+}

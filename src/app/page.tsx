@@ -60,19 +60,27 @@ export default async function HomePage() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
             <Image
-              src="/cliente/flamencalia.jpg"
+              src="/cliente/Abanico.svg"
               alt="Flamencalia"
-              width={40}
-              height={40}
-              className="rounded-lg"
+              width={36}
+              height={36}
+              className="w-9 h-9"
             />
-            <div className="hidden sm:block">
-              <span className="font-serif font-bold text-xl tracking-wide text-flamencalia-black">
-                FLAMENCALIA
-              </span>
-              <p className="text-[10px] text-flamencalia-red italic -mt-0.5">
-                &ldquo;Larga vida a tu Flamenca&rdquo;
-              </p>
+            <div className="hidden sm:flex flex-col">
+              <Image
+                src="/cliente/marca-flamencalia.svg"
+                alt="FLAMENCALIA"
+                width={140}
+                height={28}
+                className="h-5 w-auto object-contain"
+              />
+              <Image
+                src="/cliente/slogan.svg"
+                alt="Larga vida a tu Flamenca"
+                width={140}
+                height={14}
+                className="h-2.5 w-auto object-contain mt-0.5"
+              />
             </div>
           </Link>
 
@@ -127,6 +135,9 @@ export default async function HomePage() {
       <section className="relative overflow-hidden">
         {/* Fondo gradiente rojo feria */}
         <div className="absolute inset-0 bg-linear-to-br from-flamencalia-red via-flamencalia-red-dark to-flamencalia-black" />
+
+        {/* Lunares de feria — sutil */}
+        <div className="absolute inset-0 opacity-[0.04] lunares-pattern" />
 
         {/* Patrón de rayas verticales sutil */}
         <div className="absolute inset-0 opacity-10">
@@ -209,33 +220,43 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Lado derecho: marca + abanico */}
+              {/* Lado derecho: marca + abanico en tarjeta cristal */}
               <div
-                className="hidden lg:flex flex-col items-center justify-center gap-4 animate-fade-in-up"
+                className="hidden lg:flex items-center justify-center animate-fade-in-up"
                 style={{ animationDelay: "0.4s" }}
               >
-                <Image
-                  src="/cliente/marca-flamencalia.svg"
-                  alt="FLAMENCALIA"
-                  width={400}
-                  height={120}
-                  className="object-contain drop-shadow-2xl w-full max-w-sm h-auto"
-                  priority
-                />
-                <Image
-                  src="/cliente/Abanico.svg"
-                  alt="Flamencalia — abanico"
-                  width={300}
-                  height={300}
-                  className="object-contain drop-shadow-2xl w-full max-w-xs h-auto"
-                />
-                <Image
-                  src="/cliente/slogan.svg"
-                  alt="Larga vida a tu Flamenca"
-                  width={400}
-                  height={80}
-                  className="object-contain drop-shadow-lg w-full max-w-sm h-auto"
-                />
+                <div className="relative group">
+                  {/* Glow exterior */}
+                  <div className="absolute -inset-4 bg-flamencalia-albero/20 rounded-4xl blur-2xl group-hover:bg-flamencalia-albero/30 transition-all duration-700" />
+
+                  {/* Tarjeta cristal */}
+                  <div className="relative overflow-hidden bg-flamencalia-cream/90 backdrop-blur-md rounded-3xl px-10 py-9 shadow-2xl shadow-black/20 border border-flamencalia-albero-pale/60 flex flex-col items-center gap-5 animate-float glass-shine">
+                    <Image
+                      src="/cliente/marca-flamencalia.svg"
+                      alt="FLAMENCALIA"
+                      width={400}
+                      height={120}
+                      className="object-contain w-full max-w-65 h-auto"
+                      priority
+                    />
+                    <div className="w-16 h-px bg-flamencalia-albero/40" />
+                    <Image
+                      src="/cliente/Abanico.svg"
+                      alt="Flamencalia — abanico"
+                      width={300}
+                      height={300}
+                      className="object-contain w-full max-w-45 h-auto drop-shadow-lg"
+                    />
+                    <div className="w-16 h-px bg-flamencalia-albero/40" />
+                    <Image
+                      src="/cliente/slogan.svg"
+                      alt="Larga vida a tu Flamenca"
+                      width={400}
+                      height={80}
+                      className="object-contain w-full max-w-60 h-auto"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
