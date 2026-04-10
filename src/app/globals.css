@@ -222,6 +222,16 @@ select:focus {
   background-size: 24px 24px;
 }
 
+/* Lunares oscuros (para fondo claro) */
+.lunares-pattern-dark {
+  background-image: radial-gradient(
+    circle,
+    var(--flamencalia-red) 2px,
+    transparent 2px
+  );
+  background-size: 24px 24px;
+}
+
 /* Glass card shine sweep */
 @keyframes glass-shine {
   0% {

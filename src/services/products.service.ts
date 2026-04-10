@@ -14,7 +14,13 @@ interface CreateProductInput {
 export class ProductsService {
   constructor(private supabase: SupabaseClient) {}
 
-  async list(page = 1, limit = 20, category?: string, q?: string) {
+  async list(
+    page = 1,
+    limit = 20,
+    category?: string,
+    q?: string,
+    sellerId?: string,
+  ) {
     let query = this.supabase
       .from("products")
       .select("*, seller:profiles!seller_id(id, display_name, avatar_url)", {
@@ -25,6 +31,7 @@ export class ProductsService {
       .range((page - 1) * limit, page * limit - 1);
 
     if (category) query = query.eq("category", category);
+    if (sellerId) query = query.eq("seller_id", sellerId);
     if (q) {
       // Use full-text search if available, fallback to ilike
       const ftsQuery = q.trim().split(/\s+/).join(" & ");
@@ -45,6 +52,7 @@ export class ProductsService {
         .range((page - 1) * limit, page * limit - 1);
 
       if (category) fallbackQuery = fallbackQuery.eq("category", category);
+      if (sellerId) fallbackQuery = fallbackQuery.eq("seller_id", sellerId);
       if (q) fallbackQuery = fallbackQuery.ilike("title", `%${q}%`);
 
       const fallback = await fallbackQuery;

@@ -16,16 +16,6 @@ const CATEGORIES = [
   { slug: "zapatos", label: "Zapatos", icon: "shoe" },
 ];
 
-const SUBCATEGORIES_COMPLEMENTOS = [
-  { slug: "mantones", label: "Mantones", icon: "mantilla" },
-  { slug: "flores", label: "Flores", icon: "flower" },
-  { slug: "pendientes", label: "Pendientes", icon: "earring" },
-  { slug: "accesorios-pelo", label: "Accesorios pelo", icon: "hairClip" },
-  { slug: "broches", label: "Broches", icon: "sparkle" },
-  { slug: "sombreros", label: "Sombreros", icon: "hat" },
-  { slug: "panuelos", label: "Pañuelos", icon: "scarf" },
-];
-
 export default async function HomePage() {
   const supabase = await createClient();
 
@@ -50,6 +40,42 @@ export default async function HomePage() {
     .order("price", { ascending: true })
     .limit(4);
 
+  // Top sellers: profiles that have active products, ordered by product count
+  const { data: topSellersRaw } = await supabase
+    .from("products")
+    .select(
+      "seller_id, seller:profiles!seller_id(id, display_name, avatar_url)",
+    )
+    .eq("status", "active");
+
+  const sellerMap = new Map<
+    string,
+    {
+      id: string;
+      display_name: string | null;
+      avatar_url: string | null;
+      product_count: number;
+    }
+  >();
+  for (const p of topSellersRaw ?? []) {
+    const raw = p.seller as unknown;
+    const s = (Array.isArray(raw) ? raw[0] : raw) as {
+      id: string;
+      display_name: string | null;
+      avatar_url: string | null;
+    } | null;
+    if (!s) continue;
+    const existing = sellerMap.get(s.id);
+    if (existing) {
+      existing.product_count++;
+    } else {
+      sellerMap.set(s.id, { ...s, product_count: 1 });
+    }
+  }
+  const topSellers = Array.from(sellerMap.values())
+    .sort((a, b) => b.product_count - a.product_count)
+    .slice(0, 10);
+
   return (
     <div className="flex flex-col min-h-screen bg-flamencalia-cream">
       {/* ═══ HEADER ═══ */}
@@ -57,31 +83,23 @@ export default async function HomePage() {
         {/* Top decorative toldo */}
         <div className="h-1.5 toldo-rayas" />
 
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-3 shrink-0">
+            <Image
+              src="/cliente/marca-flamencalia.svg"
+              alt="FLAMENCALIA"
+              width={220}
+              height={44}
+              className="h-8 sm:h-10 w-auto object-contain"
+              priority
+            />
             <Image
               src="/cliente/Abanico.svg"
               alt="Flamencalia"
-              width={36}
-              height={36}
-              className="w-9 h-9"
+              width={48}
+              height={48}
+              className="w-10 h-10 sm:w-12 sm:h-12"
             />
-            <div className="hidden sm:flex flex-col">
-              <Image
-                src="/cliente/marca-flamencalia.svg"
-                alt="FLAMENCALIA"
-                width={140}
-                height={28}
-                className="h-5 w-auto object-contain"
-              />
-              <Image
-                src="/cliente/slogan.svg"
-                alt="Larga vida a tu Flamenca"
-                width={140}
-                height={14}
-                className="h-2.5 w-auto object-contain mt-0.5"
-              />
-            </div>
           </Link>
 
           {/* Search bar */}
@@ -133,68 +151,67 @@ export default async function HomePage() {
 
       {/* ═══ HERO BANNER — Estilo Caseta de Feria ═══ */}
       <section className="relative overflow-hidden">
-        {/* Fondo gradiente rojo feria */}
-        <div className="absolute inset-0 bg-linear-to-br from-flamencalia-red via-flamencalia-red-dark to-flamencalia-black" />
+        {/* Fondo gradiente cream → albero cálido */}
+        <div className="absolute inset-0 bg-linear-to-br from-flamencalia-cream via-flamencalia-albero-pale to-flamencalia-cream" />
 
         {/* Lunares de feria — sutil */}
-        <div className="absolute inset-0 opacity-[0.04] lunares-pattern" />
-
-        {/* Patrón de rayas verticales sutil */}
-        <div className="absolute inset-0 opacity-10">
-          <div
-            className="absolute top-0 left-0 right-0 h-full"
-            style={{
-              backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 48px, rgba(255,255,255,0.1) 48px, rgba(255,255,255,0.1) 50px)`,
-            }}
-          />
-        </div>
+        <div className="absolute inset-0 opacity-[0.06] lunares-pattern-dark" />
 
         {/* Farolillos */}
         <div className="absolute top-4 left-[10%] farolillo">
-          <div className="w-6 h-8 bg-flamencalia-albero rounded-full opacity-60" />
+          <div className="w-6 h-8 bg-flamencalia-red rounded-full opacity-30" />
         </div>
         <div
           className="absolute top-6 left-[30%] farolillo"
           style={{ animationDelay: "0.5s" }}
         >
-          <div className="w-5 h-7 bg-flamencalia-red-light rounded-full opacity-40" />
+          <div className="w-5 h-7 bg-flamencalia-albero rounded-full opacity-25" />
         </div>
         <div
           className="absolute top-3 right-[20%] farolillo"
           style={{ animationDelay: "1s" }}
         >
-          <div className="w-6 h-8 bg-flamencalia-albero rounded-full opacity-50" />
+          <div className="w-6 h-8 bg-flamencalia-red rounded-full opacity-20" />
         </div>
         <div
           className="absolute top-5 right-[40%] farolillo"
           style={{ animationDelay: "1.5s" }}
         >
-          <div className="w-4 h-6 bg-flamencalia-albero-light rounded-full opacity-40" />
+          <div className="w-4 h-6 bg-flamencalia-albero rounded-full opacity-25" />
         </div>
 
-        <div className="relative py-16 sm:py-24 lg:py-28">
+        <div className="relative py-14 sm:py-20 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Slogan SVG centrado arriba */}
+            <div className="flex justify-center mb-8 animate-fade-in-up">
+              <Image
+                src="/cliente/slogan.svg"
+                alt="Larga vida a tu Flamenca"
+                width={600}
+                height={80}
+                className="object-contain w-full max-w-md sm:max-w-lg h-auto"
+                priority
+              />
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
               {/* Lado izquierdo: texto */}
               <div>
-                <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-white/20 animate-fade-in-up">
+                <div className="inline-flex items-center gap-2 bg-flamencalia-red/10 text-flamencalia-red text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-flamencalia-red/20 animate-fade-in-up">
                   <Icon name="fan" className="w-4 h-4" /> Marketplace de Moda
                   Flamenca
                 </div>
                 <h1
-                  className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-white drop-shadow-lg animate-fade-in-up"
+                  className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-flamencalia-black animate-fade-in-up"
                   style={{ animationDelay: "0.1s" }}
                 >
                   Viste tu
-                  <span className="text-flamencalia-albero-light">
-                    {" "}
-                    flamenca
-                  </span>
+                  <span className="text-flamencalia-red"> flamenca</span>
                   <br />
                   con estilo
                 </h1>
                 <p
-                  className="mt-4 text-base sm:text-lg text-white/80 max-w-lg animate-fade-in-up"
+                  className="mt-4 text-base sm:text-lg text-flamencalia-black/60 max-w-lg animate-fade-in-up"
                   style={{ animationDelay: "0.2s" }}
                 >
                   Vestidos, mantones, flores y complementos de diseñadores y de
@@ -207,56 +224,31 @@ export default async function HomePage() {
                 >
                   <Link
                     href="/products"
-                    className="bg-flamencalia-albero text-flamencalia-black px-8 py-3.5 rounded-full text-sm font-bold hover:bg-flamencalia-albero-light transition-all hover:shadow-lg hover:shadow-flamencalia-albero/30 hover:-translate-y-0.5"
+                    className="bg-flamencalia-red text-white px-8 py-3.5 rounded-full text-sm font-bold hover:bg-flamencalia-red-dark transition-all hover:shadow-lg hover:shadow-flamencalia-red/30 hover:-translate-y-0.5"
                   >
                     Explorar Productos
                   </Link>
                   <Link
                     href="/register"
-                    className="border-2 border-white/40 text-white px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-white/15 backdrop-blur-sm transition-all hover:-translate-y-0.5"
+                    className="border-2 border-flamencalia-black/20 text-flamencalia-black px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-flamencalia-black/5 transition-all hover:-translate-y-0.5"
                   >
                     Vender Ahora
                   </Link>
                 </div>
               </div>
 
-              {/* Lado derecho: marca + abanico en tarjeta cristal */}
+              {/* Lado derecho: abanico grande */}
               <div
                 className="hidden lg:flex items-center justify-center animate-fade-in-up"
                 style={{ animationDelay: "0.4s" }}
               >
-                <div className="relative group">
-                  {/* Glow exterior */}
-                  <div className="absolute -inset-4 bg-flamencalia-albero/20 rounded-4xl blur-2xl group-hover:bg-flamencalia-albero/30 transition-all duration-700" />
-
-                  {/* Tarjeta cristal */}
-                  <div className="relative overflow-hidden bg-flamencalia-cream/90 backdrop-blur-md rounded-3xl px-10 py-9 shadow-2xl shadow-black/20 border border-flamencalia-albero-pale/60 flex flex-col items-center gap-5 animate-float glass-shine">
-                    <Image
-                      src="/cliente/marca-flamencalia.svg"
-                      alt="FLAMENCALIA"
-                      width={400}
-                      height={120}
-                      className="object-contain w-full max-w-65 h-auto"
-                      priority
-                    />
-                    <div className="w-16 h-px bg-flamencalia-albero/40" />
-                    <Image
-                      src="/cliente/Abanico.svg"
-                      alt="Flamencalia — abanico"
-                      width={300}
-                      height={300}
-                      className="object-contain w-full max-w-45 h-auto drop-shadow-lg"
-                    />
-                    <div className="w-16 h-px bg-flamencalia-albero/40" />
-                    <Image
-                      src="/cliente/slogan.svg"
-                      alt="Larga vida a tu Flamenca"
-                      width={400}
-                      height={80}
-                      className="object-contain w-full max-w-60 h-auto"
-                    />
-                  </div>
-                </div>
+                <Image
+                  src="/cliente/Abanico.svg"
+                  alt="Flamencalia — abanico"
+                  width={400}
+                  height={400}
+                  className="object-contain w-full max-w-sm h-auto drop-shadow-xl animate-float"
+                />
               </div>
             </div>
           </div>
@@ -275,55 +267,53 @@ export default async function HomePage() {
 
       {/* ═══ MAIN CONTENT ═══ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2 relative z-10 pb-12">
-        {/* ── Categorías Principales ── */}
+        {/* ── Vendedores Destacados ── */}
         <section className="mb-10">
-          <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
-            {CATEGORIES.map((cat, i) => (
-              <Link
-                key={cat.slug}
-                href={`/products?category=${cat.slug}`}
-                className="bg-flamencalia-white rounded-2xl p-4 text-center hover:shadow-lg transition-all hover:-translate-y-1.5 border border-flamencalia-albero-pale/50 group category-glow animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.05}s` }}
-              >
-                <span className="block mb-2 group-hover:scale-110 transition-transform text-flamencalia-red/60 group-hover:text-flamencalia-red">
-                  <Icon
-                    name={cat.icon}
-                    className="w-7 h-7 sm:w-8 sm:h-8 mx-auto"
-                  />
-                </span>
-                <span className="text-[11px] sm:text-xs font-semibold text-flamencalia-black/70 group-hover:text-flamencalia-red transition-colors leading-tight">
-                  {cat.label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Complementos Flamencos (subcategorías) ── */}
-        <section className="mb-10">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-5">
             <div className="h-px flex-1 bg-flamencalia-albero-pale" />
             <h2 className="font-serif text-lg font-bold text-flamencalia-black flex items-center gap-2">
-              <Icon name="flower" className="w-5 h-5 text-flamencalia-red" />
-              Complementos Flamencos
+              <Icon name="fan" className="w-5 h-5 text-flamencalia-red" />
+              Vendedores &amp; Diseñadores
             </h2>
             <div className="h-px flex-1 bg-flamencalia-albero-pale" />
           </div>
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
-            {SUBCATEGORIES_COMPLEMENTOS.map((sub) => (
-              <Link
-                key={sub.slug}
-                href={`/products?category=complementos-flamencos&sub=${sub.slug}`}
-                className="flex items-center gap-2 bg-flamencalia-white border border-flamencalia-albero-pale/50 rounded-full px-4 py-2 text-sm font-medium text-flamencalia-black/70 hover:bg-flamencalia-red hover:text-white hover:border-flamencalia-red transition-all whitespace-nowrap group"
-              >
-                <Icon
-                  name={sub.icon}
-                  className="w-4 h-4 text-flamencalia-red group-hover:text-white transition-colors"
-                />
-                {sub.label}
-              </Link>
-            ))}
-          </div>
+          {topSellers && topSellers.length > 0 ? (
+            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+              {topSellers.map((seller) => (
+                <Link
+                  key={seller.id}
+                  href={`/products?seller=${seller.id}`}
+                  className="flex flex-col items-center gap-2 shrink-0 group"
+                >
+                  <div className="w-20 h-20 rounded-full bg-flamencalia-albero-pale/50 border-2 border-flamencalia-albero-pale group-hover:border-flamencalia-red overflow-hidden transition-colors flex items-center justify-center">
+                    {seller.avatar_url ? (
+                      <img
+                        src={seller.avatar_url}
+                        alt={seller.display_name ?? "Vendedor"}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Icon
+                        name="user"
+                        className="w-8 h-8 text-flamencalia-albero"
+                      />
+                    )}
+                  </div>
+                  <span className="text-xs font-medium text-flamencalia-black/70 group-hover:text-flamencalia-red transition-colors text-center max-w-20 truncate">
+                    {seller.display_name ?? "Vendedor"}
+                  </span>
+                  <span className="text-[10px] text-neutral-400">
+                    {seller.product_count} producto
+                    {seller.product_count !== 1 ? "s" : ""}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-neutral-400 text-center py-4">
+              Pronto verás aquí a los mejores vendedores y diseñadores.
+            </p>
+          )}
         </section>
 
         {/* ── Productos Destacados ── */}

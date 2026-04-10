@@ -109,6 +109,12 @@ const paths: Record<string, ReactNode> = {
     </>
   ),
   // ── Utility icons ──
+  user: (
+    <>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </>
+  ),
   monitor: (
     <>
       <rect x="2" y="3" width="20" height="14" rx="2" />
