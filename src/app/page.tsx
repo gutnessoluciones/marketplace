@@ -125,10 +125,10 @@ export default async function HomePage() {
 
       {/* ═══ HERO BANNER — Estilo Caseta de Feria ═══ */}
       <section className="relative overflow-hidden">
-        {/* Fondo con patrón de rayas suave */}
+        {/* Fondo gradiente rojo feria */}
         <div className="absolute inset-0 bg-linear-to-br from-flamencalia-red via-flamencalia-red-dark to-flamencalia-black" />
 
-        {/* Patrón decorativo */}
+        {/* Patrón de rayas verticales sutil */}
         <div className="absolute inset-0 opacity-10">
           <div
             className="absolute top-0 left-0 right-0 h-full"
@@ -138,7 +138,7 @@ export default async function HomePage() {
           />
         </div>
 
-        {/* Farolillos decorativos */}
+        {/* Farolillos */}
         <div className="absolute top-4 left-[10%] farolillo">
           <div className="w-6 h-8 bg-flamencalia-albero rounded-full opacity-60" />
         </div>
@@ -209,30 +209,33 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Lado derecho: logo + eslogan */}
+              {/* Lado derecho: marca + abanico */}
               <div
-                className="hidden lg:flex flex-col items-center justify-center animate-fade-in-up"
+                className="hidden lg:flex flex-col items-center justify-center gap-4 animate-fade-in-up"
                 style={{ animationDelay: "0.4s" }}
               >
-                <div className="relative">
-                  {/* Círculo decorativo de fondo */}
-                  <div className="absolute -inset-8 bg-white/5 rounded-full blur-2xl" />
-                  <Image
-                    src="/cliente/flamencalia.jpg"
-                    alt="Flamencalia"
-                    width={220}
-                    height={220}
-                    className="relative rounded-2xl shadow-2xl shadow-black/30 border-2 border-white/20"
-                    priority
-                  />
-                </div>
-                <h2 className="font-serif text-4xl font-bold text-white mt-8 tracking-widest drop-shadow-lg">
-                  FLAMENCALIA
-                </h2>
-                <div className="w-20 h-0.5 bg-flamencalia-albero mx-auto mt-3 rounded-full" />
-                <p className="text-flamencalia-albero-light text-lg italic mt-3 tracking-wide">
-                  &ldquo;Larga vida a tu Flamenca&rdquo;
-                </p>
+                <Image
+                  src="/cliente/marca-flamencalia.svg"
+                  alt="FLAMENCALIA"
+                  width={400}
+                  height={120}
+                  className="object-contain drop-shadow-2xl w-full max-w-sm h-auto"
+                  priority
+                />
+                <Image
+                  src="/cliente/Abanico.svg"
+                  alt="Flamencalia — abanico"
+                  width={300}
+                  height={300}
+                  className="object-contain drop-shadow-2xl w-full max-w-xs h-auto"
+                />
+                <Image
+                  src="/cliente/slogan.svg"
+                  alt="Larga vida a tu Flamenca"
+                  width={400}
+                  height={80}
+                  className="object-contain drop-shadow-lg w-full max-w-sm h-auto"
+                />
               </div>
             </div>
           </div>
