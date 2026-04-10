@@ -163,44 +163,76 @@ export default async function HomePage() {
 
         <div className="relative py-16 sm:py-24 lg:py-28">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-white/20 animate-fade-in-up">
-                <Icon name="fan" className="w-4 h-4" /> Marketplace de Moda
-                Flamenca
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+              {/* Lado izquierdo: texto */}
+              <div>
+                <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-white/20 animate-fade-in-up">
+                  <Icon name="fan" className="w-4 h-4" /> Marketplace de Moda
+                  Flamenca
+                </div>
+                <h1
+                  className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-white drop-shadow-lg animate-fade-in-up"
+                  style={{ animationDelay: "0.1s" }}
+                >
+                  Viste tu
+                  <span className="text-flamencalia-albero-light">
+                    {" "}
+                    flamenca
+                  </span>
+                  <br />
+                  con estilo
+                </h1>
+                <p
+                  className="mt-4 text-base sm:text-lg text-white/80 max-w-lg animate-fade-in-up"
+                  style={{ animationDelay: "0.2s" }}
+                >
+                  Vestidos, mantones, flores y complementos de diseñadores y de
+                  la comunidad flamenca. Compra, vende y dale larga vida a tu
+                  flamenca.
+                </p>
+                <div
+                  className="mt-8 flex flex-wrap gap-3 animate-fade-in-up"
+                  style={{ animationDelay: "0.3s" }}
+                >
+                  <Link
+                    href="/products"
+                    className="bg-flamencalia-albero text-flamencalia-black px-8 py-3.5 rounded-full text-sm font-bold hover:bg-flamencalia-albero-light transition-all hover:shadow-lg hover:shadow-flamencalia-albero/30 hover:-translate-y-0.5"
+                  >
+                    Explorar Productos
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="border-2 border-white/40 text-white px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-white/15 backdrop-blur-sm transition-all hover:-translate-y-0.5"
+                  >
+                    Vender Ahora
+                  </Link>
+                </div>
               </div>
-              <h1
-                className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-white drop-shadow-lg animate-fade-in-up"
-                style={{ animationDelay: "0.1s" }}
-              >
-                Viste tu
-                <span className="text-flamencalia-albero-light"> flamenca</span>
-                <br />
-                con estilo
-              </h1>
-              <p
-                className="mt-4 text-base sm:text-lg text-white/80 max-w-lg animate-fade-in-up"
-                style={{ animationDelay: "0.2s" }}
-              >
-                Vestidos, mantones, flores y complementos de diseñadores y de la
-                comunidad flamenca. Compra, vende y dale larga vida a tu
-                flamenca.
-              </p>
+
+              {/* Lado derecho: logo + eslogan */}
               <div
-                className="mt-8 flex flex-wrap gap-3 animate-fade-in-up"
-                style={{ animationDelay: "0.3s" }}
+                className="hidden lg:flex flex-col items-center justify-center animate-fade-in-up"
+                style={{ animationDelay: "0.4s" }}
               >
-                <Link
-                  href="/products"
-                  className="bg-flamencalia-albero text-flamencalia-black px-8 py-3.5 rounded-full text-sm font-bold hover:bg-flamencalia-albero-light transition-all hover:shadow-lg hover:shadow-flamencalia-albero/30 hover:-translate-y-0.5"
-                >
-                  Explorar Productos
-                </Link>
-                <Link
-                  href="/register"
-                  className="border-2 border-white/40 text-white px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-white/15 backdrop-blur-sm transition-all hover:-translate-y-0.5"
-                >
-                  Vender Ahora
-                </Link>
+                <div className="relative">
+                  {/* Círculo decorativo de fondo */}
+                  <div className="absolute -inset-8 bg-white/5 rounded-full blur-2xl" />
+                  <Image
+                    src="/cliente/flamencalia.jpg"
+                    alt="Flamencalia"
+                    width={220}
+                    height={220}
+                    className="relative rounded-2xl shadow-2xl shadow-black/30 border-2 border-white/20"
+                    priority
+                  />
+                </div>
+                <h2 className="font-serif text-4xl font-bold text-white mt-8 tracking-widest drop-shadow-lg">
+                  FLAMENCALIA
+                </h2>
+                <div className="w-20 h-0.5 bg-flamencalia-albero mx-auto mt-3 rounded-full" />
+                <p className="text-flamencalia-albero-light text-lg italic mt-3 tracking-wide">
+                  &ldquo;Larga vida a tu Flamenca&rdquo;
+                </p>
               </div>
             </div>
           </div>

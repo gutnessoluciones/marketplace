@@ -18,7 +18,7 @@ async function main() {
     console.log("Profile not found, creating it...");
     const { error: profileErr } = await supabase.from("profiles").insert({
       id: "94e9509c-debb-4645-afa0-7ddeb80f01cc",
-      display_name: "Juan Vendedor",
+      display_name: "Flamencalia Sevilla",
       role: "seller",
     });
     if (profileErr) {
@@ -32,162 +32,167 @@ async function main() {
 
   const sellerId = "94e9509c-debb-4645-afa0-7ddeb80f01cc";
 
+  // 1b. Delete old products from this seller
+  console.log("Deleting old products...");
+  const { error: delErr } = await supabase
+    .from("products")
+    .delete()
+    .eq("seller_id", sellerId);
+  if (delErr) {
+    console.error("Error deleting old products:", delErr.message);
+  } else {
+    console.log("Old products deleted");
+  }
+
+  // Also update display name
+  await supabase
+    .from("profiles")
+    .update({ display_name: "Flamencalia Sevilla" })
+    .eq("id", sellerId);
+
   // 2. Create sample products
   const products = [
     {
       seller_id: sellerId,
-      title: "iPhone 15 Pro Max 256GB",
+      title: "Traje de Flamenca Rojo Lunares Blancos",
       description:
-        "iPhone 15 Pro Max en perfecto estado. Color Titanio Natural. Incluye caja original, cargador y funda de silicona. Batería al 97%. Sin arañazos ni golpes.",
-      price: 89900, // $899.00
-      category: "electronica",
-      stock: 3,
-      status: "active",
-      images: [
-        "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&q=80",
-      ],
-    },
-    {
-      seller_id: sellerId,
-      title: 'MacBook Air M2 15"',
-      description:
-        "MacBook Air con chip M2, pantalla de 15 pulgadas, 8GB RAM, 256GB SSD. Color Medianoche. Ideal para trabajo y estudio. Garantía Apple hasta 2027.",
-      price: 119900,
-      category: "electronica",
-      stock: 2,
-      status: "active",
-      images: [
-        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80",
-      ],
-    },
-    {
-      seller_id: sellerId,
-      title: "Zapatillas Nike Air Max 90",
-      description:
-        "Zapatillas Nike Air Max 90 clásicas. Talla 42 EU. Color blanco/negro/rojo. Nuevas sin estrenar, en caja original.",
-      price: 12990,
-      category: "ropa",
-      stock: 5,
-      status: "active",
-      images: [
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80",
-      ],
-    },
-    {
-      seller_id: sellerId,
-      title: "Cámara Sony Alpha A7 III",
-      description:
-        "Cámara mirrorless Sony A7 III con sensor full-frame de 24.2MP. Incluye objetivo 28-70mm f/3.5-5.6. Perfecta para fotografía y vídeo 4K.",
-      price: 149900,
-      category: "electronica",
+        "Precioso traje de flamenca en rojo con lunares blancos. Talla 38. Confección artesanal sevillana con 3 volantes en la falda y mangas con encaje. Usado solo una feria, en perfecto estado. Incluye percha especial.",
+      price: 35000,
+      category: "feria",
       stock: 1,
       status: "active",
       images: [
-        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80",
+        "https://images.unsplash.com/photo-1565036458-51e0a04b1e13?w=800&q=80",
       ],
     },
     {
       seller_id: sellerId,
-      title: "Sudadera Hoodie Premium Unisex",
+      title: "Mantón de Manila Bordado a Mano",
       description:
-        "Sudadera con capucha de algodón orgánico 100%. Corte oversize. Disponible en negro. Talla M/L. Interior afelpado, perfecta para el invierno.",
-      price: 4590,
-      category: "ropa",
-      stock: 12,
+        "Mantón de Manila artesanal con bordado de flores y flecos largos. Color negro con rosas rojas. 140x140 cm sin flecos. Pieza única, ideal para feria y eventos. Bordado a mano en seda natural.",
+      price: 28000,
+      category: "complementos",
+      stock: 2,
       status: "active",
       images: [
-        "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80",
+        "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
       ],
     },
     {
       seller_id: sellerId,
-      title: "Auriculares Sony WH-1000XM5",
+      title: "Pendientes Flamenca Coral y Oro",
       description:
-        "Auriculares inalámbricos con cancelación de ruido líder en la industria. 30 horas de batería. Sonido Hi-Res. Color negro. Como nuevos.",
-      price: 29900,
-      category: "electronica",
+        "Pendientes largos de coral natural engarzado en oro de ley. Diseño clásico de lágrima con racimo. Perfectos para complementar tu traje de flamenca. Largo total 7 cm.",
+      price: 8500,
+      category: "complementos",
       stock: 4,
       status: "active",
       images: [
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
+        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80",
       ],
     },
     {
       seller_id: sellerId,
-      title: "Lámpara de Mesa LED Moderna",
+      title: "Traje de Flamenca Verde Agua Canastero",
       description:
-        "Lámpara de escritorio LED con brazo articulado. 3 modos de luz (cálida, neutra, fría) y 10 niveles de brillo. Carga USB integrada. Diseño minimalista.",
-      price: 3490,
-      category: "hogar",
+        "Traje de flamenca tipo canastero en verde agua con encaje beige. Talla 40. Diseño exclusivo, solo se hicieron 5 unidades. Cuerpo entallado con escote barco. Perfecto para el Camino o Romería.",
+      price: 42000,
+      category: "camino",
+      stock: 1,
+      status: "active",
+      images: [
+        "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80",
+      ],
+    },
+    {
+      seller_id: sellerId,
+      title: "Flores de Flamenca - Ramillete Rosas Rojas",
+      description:
+        "Ramillete de 3 rosas rojas con capullos y hojas verdes. Tamaño grande, ideal para recogido alto. Fabricación artesanal en tela y organza. Se puede adaptar con peineta o pinza.",
+      price: 3500,
+      category: "complementos",
       stock: 8,
       status: "active",
       images: [
-        "https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?w=800&q=80",
+        "https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=800&q=80",
       ],
     },
     {
       seller_id: sellerId,
-      title: "Mochila Viaje 40L Impermeable",
+      title: "Zapatos de Flamenca Profesional",
       description:
-        'Mochila de viaje expandible de 40L. Material impermeable, compartimento para portátil de 17". Apertura tipo maleta. Ideal como equipaje de mano.',
-      price: 5990,
-      category: "deportes",
-      stock: 6,
-      status: "active",
-      images: [
-        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
-      ],
-    },
-    {
-      seller_id: sellerId,
-      title: "Teclado Mecánico RGB Gaming",
-      description:
-        "Teclado mecánico con switches Cherry MX Red. Retroiluminación RGB personalizable. Layout español. Estructura de aluminio. Cable USB-C desmontable.",
-      price: 7990,
-      category: "electronica",
+        "Zapatos de baile flamenco profesional con clavos. Piel natural color negro. Talla 37. Tacón de 6 cm reforzado. Suela cosida. Marca reconocida en el mundo del flamenco.",
+      price: 12000,
+      category: "zapatos",
       stock: 3,
       status: "active",
       images: [
-        "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&q=80",
+        "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=800&q=80",
       ],
     },
     {
       seller_id: sellerId,
-      title: "Set de Plantas Artificiales Decorativas",
+      title: "Abanico Pintado a Mano - Diseño Floral",
       description:
-        "Set de 3 plantas artificiales en macetas de cerámica blanca. Incluye: suculenta, helecho y eucalipto. Perfectas para decoración de interiores.",
-      price: 2490,
-      category: "hogar",
-      stock: 15,
+        "Abanico artesanal de madera de peral con país de tela pintado a mano. Motivos florales en tonos rojos y dorados. 23 cm cerrado. Una pieza de artesanía andaluza auténtica.",
+      price: 4500,
+      category: "complementos",
+      stock: 5,
       status: "active",
       images: [
-        "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=800&q=80",
+        "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=800&q=80",
       ],
     },
     {
       seller_id: sellerId,
-      title: "Balón de Fútbol Adidas Pro",
+      title: "Traje Corto de Caballero - Feria",
       description:
-        "Balón oficial de fútbol Adidas. Cosido a mano. Talla 5 reglamentaria. Usado en competiciones nacionales. Incluye inflador.",
-      price: 3990,
-      category: "deportes",
-      stock: 7,
+        "Traje corto de caballero para feria en gris marengo. Talla 50. Chaquetilla con alamares y pantalón de talle alto. Confección artesanal. Incluye fajín burdeos. Usado una sola vez.",
+      price: 38000,
+      category: "equitacion",
+      stock: 1,
       status: "active",
       images: [
-        "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?w=800&q=80",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
       ],
     },
     {
       seller_id: sellerId,
-      title: 'Libro "Sapiens" - Yuval Noah Harari',
+      title: "Peinecillo Dorado con Strass",
       description:
-        "Edición en español, tapa blanda. Bestseller mundial sobre la historia de la humanidad. Estado: como nuevo, sin subrayar.",
-      price: 1590,
-      category: "libros",
-      stock: 4,
+        "Peinecillo de flamenca en metal dorado con cristales de strass. Diseño de abanico. 8 cm de ancho. Perfecto para sujetar flores o mantilla. Brillo espectacular.",
+      price: 2800,
+      category: "complementos",
+      stock: 10,
       status: "active",
       images: [
-        "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&q=80",
+        "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=800&q=80",
+      ],
+    },
+    {
+      seller_id: sellerId,
+      title: "Vestido Flamenca Infantil Rosa",
+      description:
+        "Vestido de flamenca para niña de 4-5 años. Color rosa con topos blancos. 2 volantes. Incluye flor a juego para el pelo. Perfecto para que las pequeñas disfruten de la feria.",
+      price: 6500,
+      category: "infantil",
+      stock: 3,
+      status: "active",
+      images: [
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80",
+      ],
+    },
+    {
+      seller_id: sellerId,
+      title: "Sombrero Cordobés Negro",
+      description:
+        "Sombrero cordobés de fieltro negro. Talla 58. Ala ancha y copa baja. Fabricación nacional. Perfecto para feria, romería o eventos ecuestres. Estado impecable.",
+      price: 7500,
+      category: "complementos",
+      stock: 2,
+      status: "active",
+      images: [
+        "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?w=800&q=80",
       ],
     },
   ];
