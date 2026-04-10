@@ -52,6 +52,8 @@ export interface Product {
   condition: string | null;
   brand: string | null;
   material: string | null;
+  views_count: number;
+  likes_count: number;
   stock: number;
   created_at: string;
   updated_at: string;

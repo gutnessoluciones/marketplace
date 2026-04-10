@@ -57,8 +57,13 @@ export class ProductsService {
       query = query.order("price", { ascending: true });
     } else if (filters?.sort === "price-desc") {
       query = query.order("price", { ascending: false });
-    } else {
+    } else if (filters?.sort === "newest") {
       query = query.order("created_at", { ascending: false });
+    } else {
+      // Default: most popular first
+      query = query
+        .order("views_count", { ascending: false })
+        .order("created_at", { ascending: false });
     }
 
     if (q) {
@@ -98,8 +103,12 @@ export class ProductsService {
         fallbackQuery = fallbackQuery.order("price", { ascending: true });
       } else if (filters?.sort === "price-desc") {
         fallbackQuery = fallbackQuery.order("price", { ascending: false });
-      } else {
+      } else if (filters?.sort === "newest") {
         fallbackQuery = fallbackQuery.order("created_at", { ascending: false });
+      } else {
+        fallbackQuery = fallbackQuery
+          .order("views_count", { ascending: false })
+          .order("created_at", { ascending: false });
       }
 
       const fallback = await fallbackQuery;
