@@ -9,14 +9,14 @@ import { UserNav } from "@/components/layout/user-nav";
 import { Footer } from "@/components/layout/footer";
 
 export const metadata: Metadata = {
-  title: "Explorar Productos - GutnesPlace",
+  title: "Explorar Productos - Flamencalia",
   description:
-    "Descubre y compra productos únicos de vendedores independientes en GutnesPlace.",
+    "Descubre vestidos de flamenca, mantones, complementos y más en Flamencalia.",
   openGraph: {
-    title: "Explorar Productos - GutnesPlace",
+    title: "Explorar Productos - Flamencalia",
     description:
-      "Descubre y compra productos únicos de vendedores independientes en GutnesPlace.",
-    siteName: "GutnesPlace",
+      "Descubre vestidos de flamenca, mantones, complementos y más en Flamencalia.",
+    siteName: "Flamencalia",
   },
 };
 
@@ -26,13 +26,13 @@ interface PageProps {
 
 const CATEGORIES = [
   { slug: "", label: "Todos", icon: "tag" },
-  { slug: "electronica", label: "Electrónica", icon: "monitor" },
-  { slug: "ropa", label: "Ropa", icon: "shirt" },
-  { slug: "hogar", label: "Hogar", icon: "home" },
-  { slug: "deportes", label: "Deportes", icon: "medal" },
-  { slug: "libros", label: "Libros", icon: "book" },
-  { slug: "arte", label: "Arte", icon: "brush" },
-  { slug: "otros", label: "Otros", icon: "package" },
+  { slug: "feria", label: "Feria", icon: "fan" },
+  { slug: "camino", label: "Camino", icon: "flower" },
+  { slug: "complementos", label: "Complementos", icon: "earring" },
+  { slug: "invitada", label: "Invitada Flamenca", icon: "dress" },
+  { slug: "infantil", label: "Moda Infantil", icon: "child" },
+  { slug: "equitacion", label: "Equitación", icon: "horseshoe" },
+  { slug: "zapatos", label: "Zapatos", icon: "shoe" },
 ];
 
 export default async function ProductsPage({ searchParams }: PageProps) {
@@ -55,23 +55,17 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-flamencalia-cream">
       {/* Header */}
-      <header className="bg-indigo-950 sticky top-0 z-10">
+      <header className="bg-flamencalia-black sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-14 flex items-center gap-4">
             <Link
               href="/"
               className="flex items-center gap-2 text-white font-bold tracking-tight shrink-0"
             >
-              <Image
-                src="/gutnes-logo.png"
-                alt="GutnesPlace"
-                width={28}
-                height={28}
-                className="rounded-lg"
-              />
-              <span className="hidden sm:inline">GutnesPlace</span>
+              <Icon name="fan" className="w-7 h-7 text-flamencalia-red" />
+              <span className="hidden sm:inline font-serif">Flamencalia</span>
             </Link>
 
             {/* Search */}
@@ -82,14 +76,14 @@ export default async function ProductsPage({ searchParams }: PageProps) {
               <div className="relative">
                 <Icon
                   name="search"
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400"
                 />
                 <input
                   type="text"
                   name="q"
                   defaultValue={q}
-                  placeholder="Buscar productos, marcas y más..."
-                  className="w-full bg-white rounded-full pl-10 pr-4 py-2 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 border border-transparent focus:border-teal-400 transition-all"
+                  placeholder="Buscar vestidos, mantones, complementos..."
+                  className="w-full bg-white rounded-full pl-10 pr-4 py-2 text-sm text-neutral-700 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-flamencalia-albero/50 border border-transparent focus:border-flamencalia-albero transition-all"
                 />
               </div>
             </form>
@@ -102,10 +96,10 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Title */}
         <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800">
+          <h1 className="text-2xl sm:text-3xl font-bold font-serif tracking-tight text-flamencalia-black">
             {q ? `Resultados para "${q}"` : "Explorar Productos"}
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-neutral-400 mt-1">
             {result.total ?? 0} productos disponibles
           </p>
         </div>
@@ -123,8 +117,8 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                 })}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                   isActive
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-                    : "bg-white text-slate-600 border border-slate-200 hover:border-indigo-300 hover:shadow-sm"
+                    ? "bg-flamencalia-red text-white shadow-lg shadow-flamencalia-red/20"
+                    : "bg-white text-neutral-600 border border-neutral-200 hover:border-flamencalia-albero hover:shadow-sm"
                 }`}
               >
                 <Icon name={cat.icon} className="w-4 h-4" />
@@ -153,12 +147,12 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       category: category || undefined,
                       q: q || undefined,
                     })}
-                    className="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 hover:shadow-sm transition-all text-slate-700"
+                    className="px-5 py-2.5 bg-white border border-neutral-200 rounded-full text-sm font-medium hover:bg-neutral-50 hover:shadow-sm transition-all text-neutral-700"
                   >
                     ← Anterior
                   </Link>
                 )}
-                <span className="text-sm text-slate-400 px-4">
+                <span className="text-sm text-neutral-400 px-4">
                   Página {page} de {totalPages}
                 </span>
                 {page < totalPages && (
@@ -168,7 +162,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       category: category || undefined,
                       q: q || undefined,
                     })}
-                    className="px-5 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 hover:shadow-sm transition-all text-slate-700"
+                    className="px-5 py-2.5 bg-white border border-neutral-200 rounded-full text-sm font-medium hover:bg-neutral-50 hover:shadow-sm transition-all text-neutral-700"
                   >
                     Siguiente →
                   </Link>
@@ -178,13 +172,13 @@ export default async function ProductsPage({ searchParams }: PageProps) {
           </>
         ) : (
           <div className="text-center py-20">
-            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-5">
-              <Icon name="search" className="w-8 h-8 text-slate-300" />
+            <div className="w-20 h-20 bg-flamencalia-albero-pale/30 rounded-full flex items-center justify-center mx-auto mb-5">
+              <Icon name="search" className="w-8 h-8 text-neutral-300" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-700 mb-2">
+            <h3 className="text-lg font-semibold text-neutral-700 mb-2">
               No se encontraron productos
             </h3>
-            <p className="text-slate-400 text-sm mb-6">
+            <p className="text-neutral-400 text-sm mb-6">
               {q
                 ? `No hay resultados para "${q}".`
                 : category
@@ -194,7 +188,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             {(category || q) && (
               <Link
                 href="/products"
-                className="inline-flex items-center gap-2 bg-linear-to-r from-indigo-600 to-violet-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 transition-all"
+                className="inline-flex items-center gap-2 bg-flamencalia-red text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-flamencalia-red-dark transition-all"
               >
                 Ver todos los productos
               </Link>

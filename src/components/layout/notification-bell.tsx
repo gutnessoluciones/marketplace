@@ -72,7 +72,7 @@ export function NotificationBell() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="relative w-9 h-9 rounded-lg bg-slate-800/50 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors"
+        className="relative w-9 h-9 rounded-lg bg-flamencalia-black/50 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-neutral-700/50 transition-colors"
       >
         <Icon name="inbox" className="w-4.5 h-4.5" />
         {unread > 0 && (
@@ -83,16 +83,16 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-            <h3 className="text-sm font-semibold text-slate-700">
+        <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-neutral-200 rounded-2xl shadow-xl z-50 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-100">
+            <h3 className="text-sm font-semibold text-neutral-700">
               Notificaciones
             </h3>
             {unread > 0 && (
               <button
                 type="button"
                 onClick={markAllRead}
-                className="text-xs text-indigo-600 hover:underline"
+                className="text-xs text-flamencalia-red hover:underline"
               >
                 Marcar todo leído
               </button>
@@ -104,24 +104,24 @@ export function NotificationBell() {
               notifications.map((n) => (
                 <div
                   key={n.id}
-                  className={`px-4 py-3 border-b border-slate-50 last:border-b-0 ${
-                    !n.read ? "bg-indigo-50/50" : ""
+                  className={`px-4 py-3 border-b border-neutral-50 last:border-b-0 ${
+                    !n.read ? "bg-flamencalia-red/5/50" : ""
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <div
                       className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                        !n.read ? "bg-indigo-500" : "bg-transparent"
+                        !n.read ? "bg-flamencalia-red" : "bg-transparent"
                       }`}
                     />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-slate-700 truncate">
+                      <p className="text-sm font-medium text-neutral-700 truncate">
                         {n.title}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">
+                      <p className="text-xs text-neutral-500 mt-0.5 line-clamp-2">
                         {n.message}
                       </p>
-                      <p className="text-[10px] text-slate-400 mt-1">
+                      <p className="text-[10px] text-neutral-400 mt-1">
                         {timeAgo(n.created_at)}
                       </p>
                     </div>
@@ -132,9 +132,9 @@ export function NotificationBell() {
               <div className="px-4 py-8 text-center">
                 <Icon
                   name="inbox"
-                  className="w-8 h-8 text-slate-200 mx-auto mb-2"
+                  className="w-8 h-8 text-neutral-200 mx-auto mb-2"
                 />
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-neutral-400">
                   No tienes notificaciones
                 </p>
               </div>

@@ -80,7 +80,7 @@ export function ImageUpload({
           {images.map((url, i) => (
             <div
               key={url}
-              className="relative group aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-50"
+              className="relative group aspect-square rounded-xl overflow-hidden border border-neutral-200 bg-neutral-50"
             >
               <img
                 src={url}
@@ -88,7 +88,7 @@ export function ImageUpload({
                 className="w-full h-full object-cover"
               />
               {i === 0 && (
-                <span className="absolute top-1.5 left-1.5 bg-indigo-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                <span className="absolute top-1.5 left-1.5 bg-flamencalia-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">
                   Principal
                 </span>
               )}
@@ -97,7 +97,7 @@ export function ImageUpload({
                   <button
                     type="button"
                     onClick={() => moveImage(i, -1)}
-                    className="w-7 h-7 bg-white rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-100 text-xs"
+                    className="w-7 h-7 bg-white rounded-full flex items-center justify-center text-neutral-700 hover:bg-neutral-100 text-xs"
                   >
                     ←
                   </button>
@@ -121,7 +121,7 @@ export function ImageUpload({
                   <button
                     type="button"
                     onClick={() => moveImage(i, 1)}
-                    className="w-7 h-7 bg-white rounded-full flex items-center justify-center text-slate-700 hover:bg-slate-100 text-xs"
+                    className="w-7 h-7 bg-white rounded-full flex items-center justify-center text-neutral-700 hover:bg-neutral-100 text-xs"
                   >
                     →
                   </button>
@@ -134,7 +134,7 @@ export function ImageUpload({
 
       {/* Upload button */}
       {images.length < maxImages && (
-        <label className="flex items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl p-6 cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/50 transition-all group">
+        <label className="flex items-center justify-center gap-2 border-2 border-dashed border-neutral-200 rounded-xl p-6 cursor-pointer hover:border-flamencalia-red hover:bg-flamencalia-red/5/50 transition-all group">
           <input
             ref={inputRef}
             type="file"
@@ -145,7 +145,7 @@ export function ImageUpload({
             disabled={uploading}
           />
           {uploading ? (
-            <div className="flex items-center gap-2 text-indigo-600">
+            <div className="flex items-center gap-2 text-flamencalia-red">
               <svg
                 className="w-5 h-5 animate-spin"
                 viewBox="0 0 24 24"
@@ -171,9 +171,9 @@ export function ImageUpload({
             <>
               <Icon
                 name="plus"
-                className="w-5 h-5 text-slate-400 group-hover:text-indigo-500 transition-colors"
+                className="w-5 h-5 text-neutral-400 group-hover:text-flamencalia-red transition-colors"
               />
-              <span className="text-sm text-slate-500 group-hover:text-indigo-600 transition-colors">
+              <span className="text-sm text-neutral-500 group-hover:text-flamencalia-red transition-colors">
                 Añadir imágenes ({images.length}/{maxImages})
               </span>
             </>
@@ -182,7 +182,7 @@ export function ImageUpload({
       )}
 
       {error && <p className="text-xs text-red-500">{error}</p>}
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-neutral-400">
         JPG, PNG, WebP o GIF. Máximo 5MB por imagen.
       </p>
     </div>

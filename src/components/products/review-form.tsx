@@ -68,7 +68,7 @@ export function ReviewForm({ orderId, onSubmitted }: ReviewFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+        <label className="block text-sm font-medium text-neutral-700 mb-2">
           Puntuación
         </label>
         <div className="flex gap-1">
@@ -85,7 +85,7 @@ export function ReviewForm({ orderId, onSubmitted }: ReviewFormProps) {
                 className={
                   star <= (hover || rating)
                     ? "text-amber-400"
-                    : "text-slate-200"
+                    : "text-neutral-200"
                 }
               >
                 ★
@@ -93,7 +93,7 @@ export function ReviewForm({ orderId, onSubmitted }: ReviewFormProps) {
             </button>
           ))}
           {rating > 0 && (
-            <span className="text-sm text-slate-500 ml-2 self-center">
+            <span className="text-sm text-neutral-500 ml-2 self-center">
               {rating === 1
                 ? "Malo"
                 : rating === 2
@@ -111,7 +111,7 @@ export function ReviewForm({ orderId, onSubmitted }: ReviewFormProps) {
       <div>
         <label
           htmlFor="comment"
-          className="block text-sm font-medium text-slate-700 mb-1.5"
+          className="block text-sm font-medium text-neutral-700 mb-1.5"
         >
           Comentario (opcional)
         </label>
@@ -122,7 +122,7 @@ export function ReviewForm({ orderId, onSubmitted }: ReviewFormProps) {
           rows={3}
           maxLength={1000}
           placeholder="Cuéntanos tu experiencia con este producto..."
-          className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50 resize-none"
+          className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50 resize-none"
         />
       </div>
 
@@ -131,7 +131,7 @@ export function ReviewForm({ orderId, onSubmitted }: ReviewFormProps) {
       <button
         type="submit"
         disabled={loading || rating === 0}
-        className="w-full bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all"
+        className="w-full bg-flamencalia-red text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark disabled:opacity-50 transition-all"
       >
         {loading ? "Enviando..." : "Enviar Reseña"}
       </button>

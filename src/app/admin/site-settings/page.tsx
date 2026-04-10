@@ -110,7 +110,7 @@ export default function SiteSettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-flamencalia-red border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -118,11 +118,11 @@ export default function SiteSettingsPage() {
   return (
     <div className="max-w-3xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">
+        <h1 className="text-2xl font-bold text-flamencalia-black">
           Configuración del sitio
         </h1>
-        <p className="text-sm text-slate-400 mt-0.5">
-          Ajustes generales de GutnesPlace
+        <p className="text-sm text-neutral-400 mt-0.5">
+          Ajustes generales de Flamencalia
         </p>
       </div>
 
@@ -146,20 +146,20 @@ export default function SiteSettingsPage() {
           return (
             <div
               key={setting.key}
-              className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden"
+              className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden"
             >
-              <div className="p-5 border-b border-slate-50 flex items-center gap-3">
+              <div className="p-5 border-b border-neutral-50 flex items-center gap-3">
                 {meta && (
-                  <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                  <div className="w-8 h-8 rounded-lg bg-flamencalia-red/5 flex items-center justify-center text-flamencalia-red">
                     <Icon name={meta.icon} className="w-4 h-4" />
                   </div>
                 )}
                 <div>
-                  <h2 className="text-sm font-semibold text-slate-700">
+                  <h2 className="text-sm font-semibold text-neutral-700">
                     {meta?.label || setting.key}
                   </h2>
                   {setting.description && (
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-neutral-400">
                       {setting.description}
                     </p>
                   )}
@@ -168,7 +168,7 @@ export default function SiteSettingsPage() {
               <div className="p-5 space-y-4">
                 {Object.entries(values).map(([field, val]) => (
                   <div key={field}>
-                    <label className="block text-xs font-medium text-slate-500 mb-1.5">
+                    <label className="block text-xs font-medium text-neutral-500 mb-1.5">
                       {fieldLabels[field] || field}
                     </label>
                     {typeof val === "boolean" ? (
@@ -178,7 +178,7 @@ export default function SiteSettingsPage() {
                           handleFieldChange(setting.key, field, !val)
                         }
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                          val ? "bg-indigo-600" : "bg-slate-200"
+                          val ? "bg-flamencalia-red" : "bg-neutral-200"
                         }`}
                       >
                         <span
@@ -198,7 +198,7 @@ export default function SiteSettingsPage() {
                             Number(e.target.value),
                           )
                         }
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red"
                       />
                     ) : (
                       <input
@@ -209,8 +209,8 @@ export default function SiteSettingsPage() {
                         }
                         className={`${
                           field.includes("color")
-                            ? "h-10 w-20 p-1 rounded-lg border border-slate-200 cursor-pointer"
-                            : "w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                            ? "h-10 w-20 p-1 rounded-lg border border-neutral-200 cursor-pointer"
+                            : "w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red"
                         }`}
                       />
                     )}
@@ -219,7 +219,7 @@ export default function SiteSettingsPage() {
                 <button
                   onClick={() => handleSave(setting.key)}
                   disabled={saving === setting.key || isPending}
-                  className="mt-2 bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2 px-5 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all"
+                  className="mt-2 bg-flamencalia-red text-white py-2 px-5 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark disabled:opacity-50 transition-all"
                 >
                   {saving === setting.key ? "Guardando..." : "Guardar"}
                 </button>

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Política de Cookies - GutnesPlace",
+  title: "Política de Cookies - Flamencalia",
 };
 
 export default function CookiesPage() {
   return (
-    <article className="prose prose-slate max-w-none">
+    <article className="prose prose-neutral max-w-none">
       <h1>Política de Cookies</h1>
       <p className="lead">
         Última actualización:{" "}

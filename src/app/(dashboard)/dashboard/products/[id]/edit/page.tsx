@@ -26,10 +26,10 @@ export default async function EditProductPage({ params }: PageProps) {
         <div className="flex items-center gap-3 mb-6">
           <Link
             href="/dashboard/products"
-            className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors"
+            className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center hover:bg-neutral-200 transition-colors"
           >
             <svg
-              className="w-4 h-4 text-slate-500"
+              className="w-4 h-4 text-neutral-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -43,10 +43,10 @@ export default async function EditProductPage({ params }: PageProps) {
             </svg>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">
+            <h1 className="text-2xl font-bold text-flamencalia-black">
               Editar Producto
             </h1>
-            <p className="text-sm text-slate-400">{product.title}</p>
+            <p className="text-sm text-neutral-400">{product.title}</p>
           </div>
         </div>
         <EditProductForm product={product} />

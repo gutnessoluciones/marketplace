@@ -23,10 +23,10 @@ export async function generateMetadata({
 
   try {
     const product = await service.getById(id);
-    const title = `${product.title} - GutnesPlace`;
+    const title = `${product.title} - Flamencalia`;
     const description = product.description
       ? product.description.slice(0, 160)
-      : `Compra ${product.title} por ${formatPrice(product.price)} en GutnesPlace`;
+      : `Compra ${product.title} por ${formatPrice(product.price)} en Flamencalia`;
 
     return {
       title,
@@ -36,7 +36,7 @@ export async function generateMetadata({
         description,
         images: product.images?.length > 0 ? [product.images[0]] : [],
         type: "website",
-        siteName: "GutnesPlace",
+        siteName: "Flamencalia",
       },
       twitter: {
         card: "summary_large_image",
@@ -46,7 +46,7 @@ export async function generateMetadata({
       },
     };
   } catch {
-    return { title: "Producto no encontrado - GutnesPlace" };
+    return { title: "Producto no encontrado - Flamencalia" };
   }
 }
 
@@ -65,7 +65,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-5">
-            <span className="text-3xl text-slate-300">
+            <span className="text-3xl text-neutral-300">
               <Icon name="search" className="w-8 h-8" />
             </span>
           </div>
@@ -92,27 +92,21 @@ export default async function ProductDetailPage({ params }: PageProps) {
       : null;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-flamencalia-cream">
       {/* Header */}
-      <header className="bg-indigo-950 sticky top-0 z-10">
+      <header className="bg-flamencalia-black sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <Link
             href="/"
             className="flex items-center gap-2 text-white font-bold tracking-tight"
           >
-            <Image
-              src="/gutnes-logo.png"
-              alt="GutnesPlace"
-              width={28}
-              height={28}
-              className="rounded-lg"
-            />
-            <span className="hidden sm:inline">GutnesPlace</span>
+            <Icon name="fan" className="w-7 h-7 text-flamencalia-red" />
+            <span className="hidden sm:inline font-serif">Flamencalia</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link
               href="/products"
-              className="text-sm font-medium text-indigo-200 hover:text-white transition-colors"
+              className="text-sm font-medium text-flamencalia-albero hover:text-white transition-colors"
             >
               Explorar
             </Link>

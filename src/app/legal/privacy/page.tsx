@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Política de Privacidad - GutnesPlace",
+  title: "Política de Privacidad - Flamencalia",
 };
 
 export default function PrivacyPage() {
   return (
-    <article className="prose prose-slate max-w-none">
+    <article className="prose prose-neutral max-w-none">
       <h1>Política de Privacidad</h1>
       <p className="lead">
         Última actualización:{" "}
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
 
       <h2>1. Responsable del tratamiento</h2>
       <p>
-        GutnesPlace, accesible desde gutnes.es, es responsable del tratamiento
+        Flamencalia, accesible desde flamencalia.com, es responsable del tratamiento
         de los datos personales recogidos a través de esta plataforma.
       </p>
 
@@ -87,8 +87,8 @@ export default function PrivacyPage() {
       <h2>7. Contacto</h2>
       <p>
         Para cualquier consulta sobre privacidad, puedes contactarnos en{" "}
-        <a href="https://gutnes.es" target="_blank" rel="noopener noreferrer">
-          gutnes.es
+        <a href="https://flamencalia.com" target="_blank" rel="noopener noreferrer">
+          flamencalia.com
         </a>
         .
       </p>

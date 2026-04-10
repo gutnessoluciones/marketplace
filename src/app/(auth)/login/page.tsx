@@ -51,10 +51,10 @@ function LoginForm() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-center mb-1 text-slate-800">
+      <h1 className="font-serif text-2xl font-bold text-center mb-1 text-flamencalia-black">
         Bienvenido de nuevo
       </h1>
-      <p className="text-sm text-slate-400 text-center mb-6">
+      <p className="text-sm text-neutral-400 text-center mb-6">
         Inicia sesión en tu cuenta
       </p>
 
@@ -68,7 +68,7 @@ function LoginForm() {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-slate-700 mb-1.5"
+            className="block text-sm font-medium text-flamencalia-black/80 mb-1.5"
           >
             Correo electrónico
           </label>
@@ -78,14 +78,14 @@ function LoginForm() {
             type="email"
             required
             placeholder="tu@email.com"
-            className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+            className="w-full border border-flamencalia-albero-pale rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-flamencalia-cream/50"
           />
         </div>
 
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-slate-700 mb-1.5"
+            className="block text-sm font-medium text-flamencalia-black/80 mb-1.5"
           >
             Contraseña
           </label>
@@ -96,24 +96,24 @@ function LoginForm() {
             required
             minLength={8}
             placeholder="Mínimo 8 caracteres"
-            className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+            className="w-full border border-flamencalia-albero-pale rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-flamencalia-cream/50"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all shadow-sm"
+          className="w-full bg-flamencalia-red text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark disabled:opacity-50 transition-all shadow-sm"
         >
           {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
         </button>
       </form>
 
-      <p className="text-sm text-center mt-6 text-slate-400">
+      <p className="text-sm text-center mt-6 text-neutral-400">
         ¿No tienes cuenta?{" "}
         <Link
           href="/register"
-          className="font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
+          className="font-medium text-flamencalia-red hover:text-flamencalia-red-dark transition-colors"
         >
           Regístrate
         </Link>

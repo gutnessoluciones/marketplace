@@ -42,23 +42,17 @@ export default async function AdminLayout({
   const isOwnerOrDev = auth.role === "owner" || auth.role === "dev";
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
-      <aside className="w-64 bg-linear-to-b from-slate-900 to-slate-800 p-5 flex flex-col shrink-0">
+    <div className="min-h-screen flex bg-flamencalia-cream">
+      <aside className="w-64 bg-linear-to-b from-flamencalia-black to-flamencalia-red-dark p-5 flex flex-col shrink-0">
         <Link
           href="/admin"
           className="flex items-center gap-2 text-lg font-bold tracking-tight text-white mb-8 px-1"
         >
-          <Image
-            src="/gutnes-logo.png"
-            alt="GutnesPlace"
-            width={32}
-            height={32}
-            className="rounded-lg"
-          />
+          <Icon name="fan" className="w-8 h-8 text-flamencalia-red-light" />
           <span>
             Admin
-            <span className="text-xs font-normal text-slate-400 block -mt-0.5">
-              GutnesPlace
+            <span className="text-xs font-normal text-flamencalia-albero block -mt-0.5">
+              Flamencalia
             </span>
           </span>
         </Link>
@@ -68,7 +62,7 @@ export default async function AdminLayout({
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-300 hover:bg-white/10 hover:text-white transition-all"
             >
               <Icon name={item.icon} className="w-4.5 h-4.5" />
               {item.label}
@@ -97,14 +91,14 @@ export default async function AdminLayout({
           <div className="pt-4 mt-4 border-t border-white/10">
             <Link
               href="/dashboard"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-white/10 hover:text-white transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-400 hover:bg-white/10 hover:text-white transition-all"
             >
               <Icon name="chart" className="w-4.5 h-4.5" />
               Dashboard
             </Link>
             <Link
               href="/"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-white/10 hover:text-white transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-400 hover:bg-white/10 hover:text-white transition-all"
             >
               <Icon name="store" className="w-4.5 h-4.5" />
               Ver tienda

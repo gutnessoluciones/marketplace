@@ -91,9 +91,9 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
   const initial = displayName?.charAt(0).toUpperCase() ?? "U";
 
   return (
-    <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden mb-6">
-      <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+    <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden mb-6">
+      <div className="p-6 border-b border-neutral-50 flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
           Perfil
         </h2>
       </div>
@@ -110,10 +110,10 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
               <img
                 src={avatarUrl}
                 alt={displayName}
-                className="w-20 h-20 rounded-full object-cover ring-2 ring-slate-100"
+                className="w-20 h-20 rounded-full object-cover ring-2 ring-neutral-100"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-linear-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white font-bold text-2xl ring-2 ring-slate-100">
+              <div className="w-20 h-20 rounded-full bg-linear-to-br from-flamencalia-red to-flamencalia-red flex items-center justify-center text-white font-bold text-2xl ring-2 ring-neutral-100">
                 {initial}
               </div>
             )}
@@ -133,15 +133,15 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
             />
           </button>
           <div>
-            <p className="text-sm font-semibold text-slate-800">
+            <p className="text-sm font-semibold text-flamencalia-black">
               {displayName}
             </p>
-            <p className="text-xs text-slate-400">{email}</p>
+            <p className="text-xs text-neutral-400">{email}</p>
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading}
-              className="text-xs text-indigo-600 hover:text-indigo-700 mt-1 font-medium"
+              className="text-xs text-flamencalia-red hover:text-flamencalia-red-dark mt-1 font-medium"
             >
               {uploading ? "Subiendo..." : "Cambiar foto"}
             </button>
@@ -151,7 +151,7 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
         {/* Fields */}
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1.5">
+            <label className="block text-xs font-medium text-neutral-500 mb-1.5">
               Nombre
             </label>
             <input
@@ -161,12 +161,12 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
               required
               minLength={2}
               maxLength={100}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1.5">
+            <label className="block text-xs font-medium text-neutral-500 mb-1.5">
               Bio
             </label>
             <textarea
@@ -179,15 +179,15 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
                   ? "Cuéntale a tus clientes sobre ti..."
                   : "Cuéntanos algo sobre ti..."
               }
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all resize-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all resize-none"
             />
-            <p className="text-xs text-slate-300 mt-1 text-right">
+            <p className="text-xs text-neutral-300 mt-1 text-right">
               {bio.length}/500
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1.5">
+            <label className="block text-xs font-medium text-neutral-500 mb-1.5">
               Teléfono
             </label>
             <input
@@ -196,27 +196,27 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
               onChange={(e) => setPhone(e.target.value)}
               maxLength={20}
               placeholder="+34 600 000 000"
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all"
             />
           </div>
         </div>
 
         {/* Info cards */}
         <div className="grid grid-cols-2 gap-4 mt-5">
-          <div className="bg-slate-50 rounded-xl p-4">
-            <p className="text-xs text-slate-400 mb-1">Rol</p>
+          <div className="bg-neutral-50 rounded-xl p-4">
+            <p className="text-xs text-neutral-400 mb-1">Rol</p>
             <div className="flex items-center gap-2">
-              <span className="text-slate-400">
+              <span className="text-neutral-400">
                 <Icon name={isSeller ? "store" : "cart"} className="w-5 h-5" />
               </span>
-              <p className="text-sm font-semibold text-slate-700">
+              <p className="text-sm font-semibold text-neutral-700">
                 {isSeller ? "Vendedor" : "Comprador"}
               </p>
             </div>
           </div>
-          <div className="bg-slate-50 rounded-xl p-4">
-            <p className="text-xs text-slate-400 mb-1">Miembro desde</p>
-            <p className="text-sm font-semibold text-slate-700">
+          <div className="bg-neutral-50 rounded-xl p-4">
+            <p className="text-xs text-neutral-400 mb-1">Miembro desde</p>
+            <p className="text-sm font-semibold text-neutral-700">
               {new Date(profile.created_at).toLocaleDateString("es-ES", {
                 month: "long",
                 year: "numeric",
@@ -242,7 +242,7 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
         <button
           type="submit"
           disabled={saving || isPending || !displayName.trim()}
-          className="mt-5 w-full bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2.5 px-4 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all"
+          className="mt-5 w-full bg-flamencalia-red text-white py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark disabled:opacity-50 transition-all"
         >
           {saving ? "Guardando..." : "Guardar cambios"}
         </button>

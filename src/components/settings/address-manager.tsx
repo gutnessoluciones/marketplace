@@ -99,7 +99,7 @@ export function AddressManager() {
 
   if (loading) {
     return (
-      <div className="p-6 text-center text-sm text-slate-400">
+      <div className="p-6 text-center text-sm text-neutral-400">
         Cargando direcciones...
       </div>
     );
@@ -119,29 +119,29 @@ export function AddressManager() {
           {addresses.map((addr) => (
             <div
               key={addr.id}
-              className="flex items-start justify-between border border-slate-100 rounded-xl p-4"
+              className="flex items-start justify-between border border-neutral-100 rounded-xl p-4"
             >
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-sm font-semibold text-slate-700">
+                  <p className="text-sm font-semibold text-neutral-700">
                     {addr.label}
                   </p>
                   {addr.is_default && (
-                    <span className="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-medium">
+                    <span className="text-[10px] bg-flamencalia-red/5 text-flamencalia-red px-2 py-0.5 rounded-full font-medium">
                       Predeterminada
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-slate-600">{addr.full_name}</p>
-                <p className="text-xs text-slate-400">
+                <p className="text-sm text-neutral-600">{addr.full_name}</p>
+                <p className="text-xs text-neutral-400">
                   {addr.line1}
                   {addr.line2 ? `, ${addr.line2}` : ""}
                 </p>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-neutral-400">
                   {addr.postal_code} {addr.city}, {addr.state}
                 </p>
                 {addr.phone && (
-                  <p className="text-xs text-slate-400 mt-0.5">{addr.phone}</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">{addr.phone}</p>
                 )}
               </div>
               <div className="flex gap-1.5">
@@ -151,9 +151,9 @@ export function AddressManager() {
                     setEditing(addr);
                     setShowForm(true);
                   }}
-                  className="w-7 h-7 rounded-lg bg-slate-50 flex items-center justify-center hover:bg-slate-100 transition-colors"
+                  className="w-7 h-7 rounded-lg bg-neutral-50 flex items-center justify-center hover:bg-neutral-100 transition-colors"
                 >
-                  <Icon name="pencil" className="w-3.5 h-3.5 text-slate-400" />
+                  <Icon name="pencil" className="w-3.5 h-3.5 text-neutral-400" />
                 </button>
                 <button
                   type="button"
@@ -181,31 +181,31 @@ export function AddressManager() {
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 mb-1">
                 Etiqueta
               </label>
               <input
                 name="label"
                 defaultValue={editing?.label ?? "Casa"}
                 placeholder="Casa, Oficina..."
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 mb-1">
                 Nombre completo *
               </label>
               <input
                 name="full_name"
                 required
                 defaultValue={editing?.full_name ?? ""}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
+            <label className="block text-xs font-medium text-neutral-600 mb-1">
               Dirección *
             </label>
             <input
@@ -213,66 +213,66 @@ export function AddressManager() {
               required
               defaultValue={editing?.line1 ?? ""}
               placeholder="Calle, número..."
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+              className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
+            <label className="block text-xs font-medium text-neutral-600 mb-1">
               Apt, piso, puerta (opcional)
             </label>
             <input
               name="line2"
               defaultValue={editing?.line2 ?? ""}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+              className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
             />
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 mb-1">
                 Ciudad *
               </label>
               <input
                 name="city"
                 required
                 defaultValue={editing?.city ?? ""}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 mb-1">
                 Provincia *
               </label>
               <input
                 name="state"
                 required
                 defaultValue={editing?.state ?? ""}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 mb-1">
                 C.P. *
               </label>
               <input
                 name="postal_code"
                 required
                 defaultValue={editing?.postal_code ?? ""}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 mb-1">
                 País
               </label>
               <select
                 name="country"
                 defaultValue={editing?.country ?? "ES"}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               >
                 <option value="ES">España</option>
                 <option value="MX">México</option>
@@ -283,14 +283,14 @@ export function AddressManager() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 mb-1">
                 Teléfono
               </label>
               <input
                 name="phone"
                 type="tel"
                 defaultValue={editing?.phone ?? ""}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               />
             </div>
           </div>
@@ -300,9 +300,9 @@ export function AddressManager() {
               name="is_default"
               type="checkbox"
               defaultChecked={editing?.is_default ?? addresses.length === 0}
-              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+              className="rounded border-neutral-300 text-flamencalia-red focus:ring-flamencalia-red"
             />
-            <span className="text-sm text-slate-600">
+            <span className="text-sm text-neutral-600">
               Usar como dirección predeterminada
             </span>
           </label>
@@ -311,7 +311,7 @@ export function AddressManager() {
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all"
+              className="flex-1 bg-flamencalia-red text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark disabled:opacity-50 transition-all"
             >
               {saving
                 ? "Guardando..."
@@ -325,7 +325,7 @@ export function AddressManager() {
                 setShowForm(false);
                 setEditing(null);
               }}
-              className="px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+              className="px-4 py-2.5 border border-neutral-200 rounded-xl text-sm font-medium text-neutral-600 hover:bg-neutral-50 transition-colors"
             >
               Cancelar
             </button>
@@ -335,7 +335,7 @@ export function AddressManager() {
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl p-4 text-sm text-slate-500 hover:border-indigo-400 hover:text-indigo-600 transition-all"
+          className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-neutral-200 rounded-xl p-4 text-sm text-neutral-500 hover:border-flamencalia-red hover:text-flamencalia-red transition-all"
         >
           <Icon name="plus" className="w-4 h-4" />
           Añadir dirección

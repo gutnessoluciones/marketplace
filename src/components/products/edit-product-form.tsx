@@ -83,15 +83,15 @@ export function EditProductForm({ product }: { product: Product }) {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Info */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-4">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+        <div className="bg-white border border-neutral-100 rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
             Información básica
           </h2>
 
           <div>
             <label
               htmlFor="title"
-              className="block text-sm font-medium text-slate-700 mb-1.5"
+              className="block text-sm font-medium text-neutral-700 mb-1.5"
             >
               Título *
             </label>
@@ -101,14 +101,14 @@ export function EditProductForm({ product }: { product: Product }) {
               defaultValue={product.title}
               required
               minLength={3}
-              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+              className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
             />
           </div>
 
           <div>
             <label
               htmlFor="description"
-              className="block text-sm font-medium text-slate-700 mb-1.5"
+              className="block text-sm font-medium text-neutral-700 mb-1.5"
             >
               Descripción
             </label>
@@ -117,14 +117,14 @@ export function EditProductForm({ product }: { product: Product }) {
               name="description"
               rows={4}
               defaultValue={product.description ?? ""}
-              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50 resize-none"
+              className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50 resize-none"
             />
           </div>
 
           <div>
             <label
               htmlFor="category"
-              className="block text-sm font-medium text-slate-700 mb-1.5"
+              className="block text-sm font-medium text-neutral-700 mb-1.5"
             >
               Categoría
             </label>
@@ -132,7 +132,7 @@ export function EditProductForm({ product }: { product: Product }) {
               id="category"
               name="category"
               defaultValue={product.category ?? ""}
-              className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+              className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
             >
               <option value="">Selecciona categoría</option>
               {CATEGORIES.map((cat) => (
@@ -145,8 +145,8 @@ export function EditProductForm({ product }: { product: Product }) {
         </div>
 
         {/* Pricing */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-4">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+        <div className="bg-white border border-neutral-100 rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
             Precio y stock
           </h2>
 
@@ -154,12 +154,12 @@ export function EditProductForm({ product }: { product: Product }) {
             <div>
               <label
                 htmlFor="price"
-                className="block text-sm font-medium text-slate-700 mb-1.5"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
               >
                 Precio (USD) *
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
                   $
                 </span>
                 <input
@@ -170,14 +170,14 @@ export function EditProductForm({ product }: { product: Product }) {
                   min="0.50"
                   defaultValue={(product.price / 100).toFixed(2)}
                   required
-                  className="w-full border border-slate-200 rounded-xl pl-8 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+                  className="w-full border border-neutral-200 rounded-xl pl-8 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
                 />
               </div>
             </div>
             <div>
               <label
                 htmlFor="stock"
-                className="block text-sm font-medium text-slate-700 mb-1.5"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
               >
                 Stock
               </label>
@@ -187,13 +187,13 @@ export function EditProductForm({ product }: { product: Product }) {
                 type="number"
                 min="0"
                 defaultValue={product.stock}
-                className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-neutral-700 mb-1.5">
               Estado
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -205,8 +205,8 @@ export function EditProductForm({ product }: { product: Product }) {
                   defaultChecked={product.status === "active"}
                   className="peer sr-only"
                 />
-                <div className="border-2 border-slate-200 rounded-xl p-3 text-center cursor-pointer peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all hover:border-slate-300">
-                  <span className="text-xs font-semibold text-slate-600">
+                <div className="border-2 border-neutral-200 rounded-xl p-3 text-center cursor-pointer peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all hover:border-neutral-300">
+                  <span className="text-xs font-semibold text-neutral-600">
                     <Icon
                       name="checkCircle"
                       className="w-3.5 h-3.5 inline mr-1"
@@ -223,8 +223,8 @@ export function EditProductForm({ product }: { product: Product }) {
                   defaultChecked={product.status === "draft"}
                   className="peer sr-only"
                 />
-                <div className="border-2 border-slate-200 rounded-xl p-3 text-center cursor-pointer peer-checked:border-slate-500 peer-checked:bg-slate-50 transition-all hover:border-slate-300">
-                  <span className="text-xs font-semibold text-slate-600">
+                <div className="border-2 border-neutral-200 rounded-xl p-3 text-center cursor-pointer peer-checked:border-neutral-500 peer-checked:bg-neutral-50 transition-all hover:border-neutral-300">
+                  <span className="text-xs font-semibold text-neutral-600">
                     <Icon name="pencil" className="w-3.5 h-3.5 inline mr-1" />
                     Borrador
                   </span>
@@ -235,8 +235,8 @@ export function EditProductForm({ product }: { product: Product }) {
         </div>
 
         {/* Images */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-4">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+        <div className="bg-white border border-neutral-100 rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
             Imágenes
           </h2>
           <ImageUpload images={images} onChange={setImages} />
@@ -247,7 +247,7 @@ export function EditProductForm({ product }: { product: Product }) {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 bg-linear-to-r from-indigo-600 to-violet-600 text-white py-3 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all shadow-sm"
+            className="flex-1 bg-flamencalia-red text-white py-3 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark disabled:opacity-50 transition-all shadow-sm"
           >
             {loading ? "Guardando..." : "Guardar Cambios"}
           </button>

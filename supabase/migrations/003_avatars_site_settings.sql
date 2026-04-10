@@ -44,11 +44,11 @@ CREATE TABLE IF NOT EXISTS site_settings (
 
 -- Seed default settings
 INSERT INTO site_settings (key, value, description) VALUES
-  ('general', '{"site_name": "GutnesPlace", "tagline": "Compra y vende productos únicos", "contact_email": "", "logo_url": "/gutnes-logo.png"}', 'Configuración general del sitio'),
+  ('general', '{"site_name": "Flamencalia", "tagline": "Larga vida a tu Flamenca", "contact_email": "info@flamencalia.com", "logo_url": "/cliente/flamencalia.jpg"}', 'Configuración general del sitio'),
   ('fees', '{"platform_fee_percent": 10, "min_payout": 500}', 'Comisiones y pagos'),
-  ('appearance', '{"primary_color": "#4f46e5", "accent_color": "#2dd4bf", "hero_image": "/fondobanner.jpg"}', 'Apariencia del sitio'),
-  ('features', '{"reviews_enabled": true, "registration_open": true, "maintenance_mode": false}', 'Funcionalidades del sitio'),
-  ('seo', '{"meta_title": "GutnesPlace — Compra y vende productos únicos", "meta_description": "Descubre productos únicos de vendedores independientes.", "og_image": ""}', 'SEO y metadatos')
+  ('appearance', '{"primary_color": "#C8102E", "accent_color": "#D4A843", "hero_image": ""}', 'Apariencia del sitio'),
+  ('features', '{"reviews_enabled": true, "registration_open": true, "maintenance_mode": false, "product_approval_required": true}', 'Funcionalidades del sitio'),
+  ('seo', '{"meta_title": "Flamencalia — Larga vida a tu Flamenca", "meta_description": "Marketplace de moda flamenca: vestidos, mantones, flores, complementos y más. Compra a diseñadores y a la comunidad.", "og_image": ""}', 'SEO y metadatos')
 ON CONFLICT (key) DO NOTHING;
 
 -- Only admins (or service role) can manage site_settings

@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "GutnesPlace — Compra y vende productos únicos",
+  title: "Flamencalia — Larga vida a tu Flamenca",
   description:
-    "Descubre productos únicos de vendedores independientes. Compra y vende en GutnesPlace.",
+    "Marketplace de moda flamenca: vestidos de flamenca, mantones, flores, complementos y más. Compra a diseñadores y a la comunidad flamenca.",
+  keywords: [
+    "flamenca",
+    "vestidos de flamenca",
+    "mantones",
+    "feria de abril",
+    "moda flamenca",
+    "complementos flamencos",
+  ],
 };
 
 export default function RootLayout({
@@ -26,9 +36,9 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col bg-flamencalia-cream text-foreground">
         {children}
       </body>
     </html>

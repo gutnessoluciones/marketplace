@@ -40,15 +40,15 @@ export function UserNav({ variant = "dark" }: { variant?: "dark" | "light" }) {
           href="/login"
           className={
             isDark
-              ? "text-indigo-200 text-xs sm:text-sm hover:text-white transition-colors"
-              : "text-slate-600 text-xs sm:text-sm hover:text-slate-900 transition-colors"
+              ? "text-flamencalia-albero-pale text-xs sm:text-sm hover:text-white transition-colors"
+              : "text-flamencalia-black/70 text-xs sm:text-sm hover:text-flamencalia-red transition-colors"
           }
         >
           Entrar
         </Link>
         <Link
           href="/register"
-          className="hidden sm:inline-flex text-xs bg-teal-400 text-indigo-950 px-4 py-1.5 rounded-full font-bold hover:bg-teal-300 transition-colors"
+          className="hidden sm:inline-flex text-xs bg-flamencalia-red text-white px-4 py-1.5 rounded-full font-bold hover:bg-flamencalia-red-dark transition-colors"
         >
           Registrarse
         </Link>
@@ -63,15 +63,15 @@ export function UserNav({ variant = "dark" }: { variant?: "dark" | "light" }) {
         onClick={() => setOpen(!open)}
         className={`flex items-center gap-2 text-sm font-medium rounded-full px-3 py-1.5 transition-colors ${
           isDark
-            ? "text-indigo-200 hover:bg-white/10 hover:text-white"
-            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            ? "text-flamencalia-albero-pale hover:bg-white/10 hover:text-white"
+            : "text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/50 hover:text-flamencalia-red"
         }`}
       >
         <div
           className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
             isDark
-              ? "bg-teal-400 text-indigo-950"
-              : "bg-indigo-100 text-indigo-700"
+              ? "bg-flamencalia-albero text-flamencalia-black"
+              : "bg-flamencalia-red/10 text-flamencalia-red"
           }`}
         >
           {user.email?.charAt(0).toUpperCase()}
@@ -84,35 +84,38 @@ export function UserNav({ variant = "dark" }: { variant?: "dark" | "light" }) {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+          <div className="absolute right-0 mt-2 w-48 bg-flamencalia-white rounded-xl shadow-lg border border-flamencalia-albero-pale/50 py-1.5 z-50">
             <Link
               href="/dashboard"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"
             >
-              <Icon name="chart" className="w-4 h-4 text-slate-400" />
+              <Icon name="chart" className="w-4 h-4 text-flamencalia-albero" />
               Mi Panel
             </Link>
             <Link
               href="/dashboard/orders"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"
             >
-              <Icon name="receipt" className="w-4 h-4 text-slate-400" />
+              <Icon
+                name="receipt"
+                className="w-4 h-4 text-flamencalia-albero"
+              />
               Mis Pedidos
             </Link>
             <Link
               href="/dashboard/settings"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"
             >
-              <Icon name="gear" className="w-4 h-4 text-slate-400" />
+              <Icon name="gear" className="w-4 h-4 text-flamencalia-albero" />
               Configuración
             </Link>
-            <div className="border-t border-slate-100 my-1" />
+            <div className="border-t border-flamencalia-albero-pale/50 my-1" />
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full"
+              className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-red hover:bg-flamencalia-red/5 transition-colors w-full"
             >
               <svg
                 className="w-4 h-4"

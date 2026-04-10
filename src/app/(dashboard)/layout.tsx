@@ -8,7 +8,7 @@ import { Icon } from "@/components/icons";
 
 const sellerNav = [
   { href: "/dashboard", label: "Panel Principal", icon: "chart" },
-  { href: "/dashboard/products", label: "Mis Productos", icon: "package" },
+  { href: "/dashboard/products", label: "Mis Productos", icon: "dress" },
   { href: "/dashboard/orders", label: "Pedidos", icon: "receipt" },
   { href: "/dashboard/settings", label: "Configuración", icon: "gear" },
 ];
@@ -41,21 +41,28 @@ export default async function DashboardLayout({
   const navItems = isSeller ? sellerNav : buyerNav;
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
+    <div className="min-h-screen flex bg-flamencalia-cream">
       {/* Sidebar */}
-      <aside className="w-64 bg-linear-to-b from-indigo-950 to-slate-900 p-5 flex flex-col shrink-0">
+      <aside className="w-64 bg-linear-to-b from-flamencalia-black to-flamencalia-red-dark p-5 flex flex-col shrink-0">
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-bold tracking-tight text-white mb-8 px-1"
+          className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-white mb-8 px-1"
         >
           <Image
-            src="/gutnes-logo.png"
-            alt="GutnesPlace"
-            width={32}
-            height={32}
+            src="/cliente/flamencalia.jpg"
+            alt="Flamencalia"
+            width={36}
+            height={36}
             className="rounded-lg"
           />
-          GutnesPlace
+          <div>
+            <span className="font-serif text-base tracking-wide">
+              FLAMENCALIA
+            </span>
+            <p className="text-[9px] text-flamencalia-albero-light italic -mt-0.5">
+              &ldquo;Larga vida a tu Flamenca&rdquo;
+            </p>
+          </div>
         </Link>
 
         <nav className="space-y-1 flex-1">
@@ -63,10 +70,10 @@ export default async function DashboardLayout({
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-indigo-200 hover:bg-white/10 hover:text-white transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-flamencalia-albero-pale hover:bg-white/10 hover:text-white transition-all"
             >
               <span className="text-base">
-                <Icon name={item.icon} className="w-[18px] h-[18px]" />
+                <Icon name={item.icon} className="w-4.5 h-4.5" />
               </span>
               {item.label}
             </Link>
@@ -74,10 +81,10 @@ export default async function DashboardLayout({
           <div className="pt-4 mt-4 border-t border-white/10">
             <Link
               href="/products"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-indigo-300/60 hover:bg-white/10 hover:text-white transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-flamencalia-albero/50 hover:bg-white/10 hover:text-white transition-all"
             >
               <span className="text-base">
-                <Icon name="store" className="w-[18px] h-[18px]" />
+                <Icon name="store" className="w-4.5 h-4.5" />
               </span>
               Ver tienda
             </Link>
@@ -86,15 +93,15 @@ export default async function DashboardLayout({
 
         <div className="border-t border-white/10 pt-4">
           <div className="flex items-center gap-3 px-1 mb-3">
-            <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-9 h-9 rounded-full bg-flamencalia-albero flex items-center justify-center text-flamencalia-black font-bold text-sm">
               {profile?.display_name?.charAt(0).toUpperCase() ?? "U"}
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-white truncate">
                 {profile?.display_name}
               </p>
-              <p className="text-xs text-indigo-300/60">
-                {isSeller ? "Vendedor" : "Comprador"}
+              <p className="text-xs text-flamencalia-albero/60">
+                {isSeller ? "Proveedor" : "Cliente"}
               </p>
             </div>
             <NotificationBell />

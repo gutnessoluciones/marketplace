@@ -1,22 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
-  --foreground: #171717;
+  --background: #fff9f0;
+  --foreground: #1a1a1a;
+  --flamencalia-red: #c8102e;
+  --flamencalia-red-dark: #9b0d23;
+  --flamencalia-red-light: #e8384f;
+  --flamencalia-albero: #d4a843;
+  --flamencalia-albero-light: #e8c872;
+  --flamencalia-albero-pale: #f5e6c0;
+  --flamencalia-cream: #fff9f0;
+  --flamencalia-black: #1a1a1a;
+  --flamencalia-white: #ffffff;
+  --flamencalia-farolillo: #e8000d;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-flamencalia-red: var(--flamencalia-red);
+  --color-flamencalia-red-dark: var(--flamencalia-red-dark);
+  --color-flamencalia-red-light: var(--flamencalia-red-light);
+  --color-flamencalia-albero: var(--flamencalia-albero);
+  --color-flamencalia-albero-light: var(--flamencalia-albero-light);
+  --color-flamencalia-albero-pale: var(--flamencalia-albero-pale);
+  --color-flamencalia-cream: var(--flamencalia-cream);
+  --color-flamencalia-black: var(--flamencalia-black);
+  --color-flamencalia-white: var(--flamencalia-white);
+  --color-flamencalia-farolillo: var(--flamencalia-farolillo);
+  --font-sans: var(--font-dm-sans);
+  --font-serif: var(--font-playfair);
 }
 
 body {
@@ -45,7 +58,7 @@ body {
 
 /* Selection color */
 ::selection {
-  background-color: #10b981;
+  background-color: var(--flamencalia-red);
   color: white;
 }
 
@@ -54,4 +67,147 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
+}
+
+/* ======== Caseta de Feria decorations ======== */
+
+/* Toldo de rayas (striped awning) */
+.toldo-rayas {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--flamencalia-red) 0px,
+    var(--flamencalia-red) 28px,
+    var(--flamencalia-white) 28px,
+    var(--flamencalia-white) 56px
+  );
+}
+
+/* Scalloped bottom edge for toldo */
+.toldo-borde {
+  position: relative;
+}
+.toldo-borde::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: radial-gradient(
+    circle at 12px 0,
+    transparent 12px,
+    var(--flamencalia-red) 12px
+  );
+  background-size: 24px 12px;
+  background-position: -12px 0;
+}
+
+/* Farolillo animation */
+@keyframes farolillo-swing {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+.farolillo {
+  animation: farolillo-swing 3s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+/* Gentle float animation */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+/* Pulse heart for favorites */
+@keyframes heart-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.15);
+  }
+}
+.animate-heart {
+  animation: heart-beat 0.6s ease-in-out;
+}
+
+/* Fade-in-up for sections */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+/* Slide in from left */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-slide-in-left {
+  animation: slide-in-left 0.4s ease-out forwards;
+}
+
+/* Category card hover glow */
+.category-glow:hover {
+  box-shadow: 0 8px 32px rgba(200, 16, 46, 0.15);
+}
+
+/* Product card red accent border on hover */
+.product-card-hover:hover {
+  border-color: var(--flamencalia-red);
+  box-shadow: 0 12px 40px rgba(200, 16, 46, 0.12);
 }

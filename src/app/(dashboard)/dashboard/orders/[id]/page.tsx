@@ -16,13 +16,13 @@ const STATUS_MAP: Record<
   shipped: { label: "Enviado", color: "bg-blue-50 text-blue-700", step: 2 },
   delivered: {
     label: "Entregado",
-    color: "bg-violet-50 text-violet-700",
+    color: "bg-flamencalia-albero-pale/30 text-flamencalia-red-dark",
     step: 3,
   },
   cancelled: { label: "Cancelado", color: "bg-red-50 text-red-700", step: -1 },
   refunded: {
     label: "Reembolsado",
-    color: "bg-slate-100 text-slate-600",
+    color: "bg-neutral-100 text-neutral-600",
     step: -1,
   },
 };
@@ -63,7 +63,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
   const isBuyer = order.buyer_id === user.id;
   const status = STATUS_MAP[order.status] ?? {
     label: order.status,
-    color: "bg-slate-100 text-slate-600",
+    color: "bg-neutral-100 text-neutral-600",
     step: -1,
   };
 
@@ -84,10 +84,10 @@ export default async function OrderDetailPage({ params }: PageProps) {
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/dashboard/orders"
-          className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors"
+          className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center hover:bg-neutral-200 transition-colors"
         >
           <svg
-            className="w-4 h-4 text-slate-500"
+            className="w-4 h-4 text-neutral-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -101,10 +101,10 @@ export default async function OrderDetailPage({ params }: PageProps) {
           </svg>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">
+          <h1 className="text-2xl font-bold text-flamencalia-black">
             Detalle del Pedido
           </h1>
-          <p className="text-xs text-slate-400 font-mono">
+          <p className="text-xs text-neutral-400 font-mono">
             #{order.id.slice(0, 8)}
           </p>
         </div>
@@ -112,7 +112,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
       {/* Status Progress */}
       {status.step >= 0 && (
-        <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 mb-4">
+        <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-6 mb-4">
           <div className="flex items-center justify-between">
             {STEPS.map((step, i) => (
               <div key={step.label} className="flex items-center flex-1">
@@ -122,15 +122,15 @@ export default async function OrderDetailPage({ params }: PageProps) {
                       i < status.step
                         ? "bg-emerald-500 text-white"
                         : i === status.step
-                          ? "bg-indigo-600 text-white"
-                          : "bg-slate-100 text-slate-400"
+                          ? "bg-flamencalia-red text-white"
+                          : "bg-neutral-100 text-neutral-400"
                     }`}
                   >
                     <Icon name={step.icon} className="w-5 h-5" />
                   </div>
                   <span
                     className={`text-xs mt-1.5 font-medium ${
-                      i <= status.step ? "text-indigo-700" : "text-slate-400"
+                      i <= status.step ? "text-flamencalia-red-dark" : "text-neutral-400"
                     }`}
                   >
                     {step.label}
@@ -139,7 +139,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 {i < STEPS.length - 1 && (
                   <div
                     className={`flex-1 h-0.5 mx-3 rounded ${
-                      i < status.step ? "bg-emerald-500" : "bg-slate-100"
+                      i < status.step ? "bg-emerald-500" : "bg-neutral-100"
                     }`}
                   />
                 )}
@@ -153,12 +153,12 @@ export default async function OrderDetailPage({ params }: PageProps) {
         {/* Main Info */}
         <div className="lg:col-span-2 space-y-4">
           {/* Product */}
-          <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5">
-            <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+          <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5">
+            <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">
               Producto
             </h2>
             <div className="flex gap-4">
-              <div className="w-20 h-20 rounded-xl bg-slate-100 shrink-0 overflow-hidden">
+              <div className="w-20 h-20 rounded-xl bg-neutral-100 shrink-0 overflow-hidden">
                 {order.product?.images?.length > 0 ? (
                   <img
                     src={order.product.images[0]}
@@ -166,7 +166,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-300">
+                  <div className="w-full h-full flex items-center justify-center text-neutral-300">
                     <Icon name="package" className="w-8 h-8" />
                   </div>
                 )}
@@ -174,14 +174,14 @@ export default async function OrderDetailPage({ params }: PageProps) {
               <div className="min-w-0">
                 <Link
                   href={`/products/${order.product_id}`}
-                  className="text-sm font-semibold text-slate-800 hover:text-indigo-600 transition-colors"
+                  className="text-sm font-semibold text-flamencalia-black hover:text-flamencalia-red transition-colors"
                 >
                   {order.product?.title ?? "Producto"}
                 </Link>
-                <p className="text-sm text-slate-500 mt-0.5">
+                <p className="text-sm text-neutral-500 mt-0.5">
                   Cantidad: {order.quantity}
                 </p>
-                <p className="text-lg font-bold text-indigo-700 mt-2">
+                <p className="text-lg font-bold text-flamencalia-red-dark mt-2">
                   {formatPrice(order.total_amount)}
                 </p>
               </div>
@@ -190,13 +190,13 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
           {/* Tracking Info */}
           {(order.tracking_number || order.tracking_url) && (
-            <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5">
-              <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
+            <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5">
+              <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">
                 Seguimiento
               </h2>
               {order.tracking_number && (
-                <p className="text-sm text-slate-700">
-                  <span className="text-slate-500">Nº de seguimiento:</span>{" "}
+                <p className="text-sm text-neutral-700">
+                  <span className="text-neutral-500">Nº de seguimiento:</span>{" "}
                   <span className="font-mono font-medium">
                     {order.tracking_number}
                   </span>
@@ -207,7 +207,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
                   href={order.tracking_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:underline mt-2"
+                  className="inline-flex items-center gap-1 text-sm text-flamencalia-red hover:underline mt-2"
                 >
                   Ver seguimiento →
                 </a>
@@ -219,8 +219,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
           {isBuyer &&
             (order.status === "paid" || order.status === "delivered") &&
             !hasReviewed && (
-              <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5">
-                <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+              <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5">
+                <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">
                   Deja tu reseña
                 </h2>
                 <ReviewForm orderId={order.id} />
@@ -239,13 +239,13 @@ export default async function OrderDetailPage({ params }: PageProps) {
         {/* Sidebar */}
         <div className="space-y-4">
           {/* Order Summary */}
-          <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5">
-            <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+          <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5">
+            <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">
               Resumen
             </h2>
             <div className="space-y-2.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-slate-500">Estado</span>
+                <span className="text-neutral-500">Estado</span>
                 <span
                   className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${status.color}`}
                 >
@@ -253,8 +253,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Fecha</span>
-                <span className="text-slate-700">
+                <span className="text-neutral-500">Fecha</span>
+                <span className="text-neutral-700">
                   {new Date(order.created_at).toLocaleDateString("es-ES", {
                     day: "numeric",
                     month: "short",
@@ -263,25 +263,25 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Cantidad</span>
-                <span className="text-slate-700">{order.quantity}</span>
+                <span className="text-neutral-500">Cantidad</span>
+                <span className="text-neutral-700">{order.quantity}</span>
               </div>
-              <div className="border-t border-slate-100 pt-2.5 flex justify-between font-semibold">
-                <span className="text-slate-700">Total</span>
-                <span className="text-indigo-700">
+              <div className="border-t border-neutral-100 pt-2.5 flex justify-between font-semibold">
+                <span className="text-neutral-700">Total</span>
+                <span className="text-flamencalia-red-dark">
                   {formatPrice(order.total_amount)}
                 </span>
               </div>
               {isSeller && (
                 <>
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-400">Comisión plataforma</span>
-                    <span className="text-slate-400">
+                    <span className="text-neutral-400">Comisión plataforma</span>
+                    <span className="text-neutral-400">
                       -{formatPrice(order.platform_fee)}
                     </span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-slate-500 font-medium">
+                    <span className="text-neutral-500 font-medium">
                       Tu ganancia
                     </span>
                     <span className="text-emerald-600 font-medium">
@@ -295,11 +295,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
 
           {/* Seller Info (buyer view) */}
           {isBuyer && order.seller && (
-            <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5">
-              <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
+            <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5">
+              <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">
                 Vendedor
               </h2>
-              <p className="text-sm font-medium text-slate-700">
+              <p className="text-sm font-medium text-neutral-700">
                 {order.seller.display_name}
               </p>
             </div>
@@ -308,8 +308,8 @@ export default async function OrderDetailPage({ params }: PageProps) {
           {/* Seller Actions */}
           {isSeller &&
             (order.status === "paid" || order.status === "shipped") && (
-              <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5">
-                <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+              <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5">
+                <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">
                   Acciones
                 </h2>
                 <OrderStatusUpdate

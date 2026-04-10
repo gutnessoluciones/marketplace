@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Términos y Condiciones - GutnesPlace",
+  title: "Términos y Condiciones - Flamencalia",
 };
 
 export default function TermsPage() {
   return (
-    <article className="prose prose-slate max-w-none">
+    <article className="prose prose-neutral max-w-none">
       <h1>Términos y Condiciones</h1>
       <p className="lead">
         Última actualización:{" "}
@@ -19,14 +19,14 @@ export default function TermsPage() {
 
       <h2>1. Aceptación de los términos</h2>
       <p>
-        Al acceder y utilizar GutnesPlace, aceptas estos términos y condiciones
+        Al acceder y utilizar Flamencalia, aceptas estos términos y condiciones
         en su totalidad. Si no estás de acuerdo, no debes utilizar la
         plataforma.
       </p>
 
       <h2>2. Descripción del servicio</h2>
       <p>
-        GutnesPlace es un marketplace online que conecta vendedores
+        Flamencalia es un marketplace online que conecta vendedores
         independientes con compradores. Actuamos como intermediario facilitando
         las transacciones entre las partes.
       </p>
@@ -47,7 +47,7 @@ export default function TermsPage() {
           Deben cumplir con todas las leyes aplicables de comercio electrónico.
         </li>
         <li>
-          GutnesPlace cobra una comisión del 10% sobre cada venta completada.
+          Flamencalia cobra una comisión del 10% sobre cada venta completada.
         </li>
         <li>Los pagos se procesan a través de Stripe Connect.</li>
       </ul>
@@ -57,7 +57,7 @@ export default function TermsPage() {
         <li>
           Las compras se realizan directamente entre comprador y vendedor.
         </li>
-        <li>GutnesPlace no es responsable de la calidad de los productos.</li>
+        <li>Flamencalia no es responsable de la calidad de los productos.</li>
         <li>
           Las disputas deben resolverse primero entre las partes involucradas.
         </li>
@@ -79,7 +79,7 @@ export default function TermsPage() {
 
       <h2>8. Limitación de responsabilidad</h2>
       <p>
-        GutnesPlace actúa como plataforma intermediaria y no se hace responsable
+        Flamencalia actúa como plataforma intermediaria y no se hace responsable
         de las transacciones entre compradores y vendedores más allá de
         facilitar la tecnología para las mismas.
       </p>
@@ -93,8 +93,8 @@ export default function TermsPage() {
       <h2>10. Contacto</h2>
       <p>
         Para consultas legales, puedes contactarnos en{" "}
-        <a href="https://gutnes.es" target="_blank" rel="noopener noreferrer">
-          gutnes.es
+        <a href="https://flamencalia.com" target="_blank" rel="noopener noreferrer">
+          flamencalia.com
         </a>
         .
       </p>

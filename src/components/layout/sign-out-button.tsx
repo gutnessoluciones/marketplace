@@ -16,7 +16,7 @@ export function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="flex items-center gap-2 text-sm text-indigo-300/60 hover:text-red-400 transition-colors px-1"
+      className="flex items-center gap-2 text-sm text-flamencalia-albero/60 hover:text-red-400 transition-colors px-1"
     >
       <svg
         className="w-4 h-4"

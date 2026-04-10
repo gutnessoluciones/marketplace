@@ -65,7 +65,7 @@ export function OrderStatusUpdate({
             <button
               type="button"
               onClick={() => setShowTracking(true)}
-              className="text-xs text-indigo-600 hover:underline"
+              className="text-xs text-flamencalia-red hover:underline"
             >
               + Añadir número de seguimiento
             </button>
@@ -76,14 +76,14 @@ export function OrderStatusUpdate({
                 value={trackingNumber}
                 onChange={(e) => setTrackingNumber(e.target.value)}
                 placeholder="Número de seguimiento"
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               />
               <input
                 type="url"
                 value={trackingUrl}
                 onChange={(e) => setTrackingUrl(e.target.value)}
                 placeholder="URL de seguimiento (opcional)"
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 bg-slate-50/50"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
               />
             </div>
           )}
@@ -96,7 +96,7 @@ export function OrderStatusUpdate({
         type="button"
         onClick={handleUpdate}
         disabled={loading}
-        className="w-full bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all"
+        className="w-full bg-flamencalia-red text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark disabled:opacity-50 transition-all"
       >
         {loading ? "Actualizando..." : next.label}
       </button>

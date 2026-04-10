@@ -12,43 +12,43 @@ export default async function AdminUsersPage() {
   return (
     <div className="max-w-5xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Usuarios</h1>
-        <p className="text-sm text-slate-400 mt-0.5">
+        <h1 className="text-2xl font-bold text-flamencalia-black">Usuarios</h1>
+        <p className="text-sm text-neutral-400 mt-0.5">
           {users?.length ?? 0} usuarios registrados
         </p>
       </div>
 
-      <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-100">
-              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-5 py-3">
+            <tr className="border-b border-neutral-100">
+              <th className="text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider px-5 py-3">
                 Usuario
               </th>
-              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-5 py-3">
+              <th className="text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider px-5 py-3">
                 Rol
               </th>
-              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-5 py-3">
+              <th className="text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider px-5 py-3">
                 Stripe
               </th>
-              <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wider px-5 py-3">
+              <th className="text-left text-xs font-semibold text-neutral-500 uppercase tracking-wider px-5 py-3">
                 Registro
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-neutral-50">
             {users?.map((user) => (
-              <tr key={user.id} className="hover:bg-slate-50/50">
+              <tr key={user.id} className="hover:bg-neutral-50/50">
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
+                    <div className="w-8 h-8 rounded-full bg-flamencalia-red/10 flex items-center justify-center text-flamencalia-red font-bold text-sm">
                       {user.display_name?.charAt(0).toUpperCase() ?? "?"}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-700">
+                      <p className="text-sm font-medium text-neutral-700">
                         {user.display_name}
                       </p>
-                      <p className="text-xs text-slate-400 font-mono">
+                      <p className="text-xs text-neutral-400 font-mono">
                         {user.id.slice(0, 8)}...
                       </p>
                     </div>
@@ -58,8 +58,8 @@ export default async function AdminUsersPage() {
                   <span
                     className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                       user.role === "seller"
-                        ? "bg-violet-50 text-violet-700"
-                        : "bg-slate-100 text-slate-600"
+                        ? "bg-flamencalia-albero-pale/30 text-flamencalia-red-dark"
+                        : "bg-neutral-100 text-neutral-600"
                     }`}
                   >
                     {user.role === "seller" ? "Vendedor" : "Comprador"}
@@ -73,10 +73,10 @@ export default async function AdminUsersPage() {
                   ) : user.stripe_account_id ? (
                     <span className="text-amber-500 text-xs">Pendiente</span>
                   ) : (
-                    <span className="text-xs text-slate-300">—</span>
+                    <span className="text-xs text-neutral-300">—</span>
                   )}
                 </td>
-                <td className="px-5 py-3 text-xs text-slate-500">
+                <td className="px-5 py-3 text-xs text-neutral-500">
                   {new Date(user.created_at).toLocaleDateString("es-ES", {
                     day: "numeric",
                     month: "short",

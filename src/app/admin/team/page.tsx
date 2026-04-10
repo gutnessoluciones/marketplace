@@ -21,7 +21,7 @@ interface UserEntry {
 const roleBadge: Record<string, { bg: string; text: string; label: string }> = {
   owner: { bg: "bg-amber-100", text: "text-amber-700", label: "Owner" },
   dev: { bg: "bg-blue-100", text: "text-blue-700", label: "Dev" },
-  admin: { bg: "bg-slate-100", text: "text-slate-700", label: "Admin" },
+  admin: { bg: "bg-neutral-100", text: "text-neutral-700", label: "Admin" },
 };
 
 export default function TeamPage() {
@@ -104,7 +104,7 @@ export default function TeamPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-flamencalia-red border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -113,8 +113,8 @@ export default function TeamPage() {
     <div className="max-w-2xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Equipo admin</h1>
-          <p className="text-sm text-slate-400 mt-0.5">
+          <h1 className="text-2xl font-bold text-flamencalia-black">Equipo admin</h1>
+          <p className="text-sm text-neutral-400 mt-0.5">
             Gestiona quién tiene acceso al panel de administración
           </p>
         </div>
@@ -123,7 +123,7 @@ export default function TeamPage() {
             setShowAddModal(true);
             loadUsers("");
           }}
-          className="bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2 px-4 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 transition-all flex items-center gap-2"
+          className="bg-flamencalia-red text-white py-2 px-4 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark transition-all flex items-center gap-2"
         >
           <Icon name="plus" className="w-4 h-4" />
           Añadir
@@ -142,13 +142,13 @@ export default function TeamPage() {
         </div>
       )}
 
-      <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden">
         {admins.length === 0 ? (
-          <div className="p-8 text-center text-sm text-slate-400">
+          <div className="p-8 text-center text-sm text-neutral-400">
             No hay administradores configurados
           </div>
         ) : (
-          <div className="divide-y divide-slate-50">
+          <div className="divide-y divide-neutral-50">
             {admins.map((admin) => {
               const badge = roleBadge[admin.role];
               return (
@@ -164,16 +164,16 @@ export default function TeamPage() {
                         className="w-10 h-10 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-linear-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white font-bold text-sm">
+                      <div className="w-10 h-10 rounded-full bg-linear-to-br from-flamencalia-red to-flamencalia-red flex items-center justify-center text-white font-bold text-sm">
                         {admin.profile?.display_name?.charAt(0).toUpperCase() ??
                           "?"}
                       </div>
                     )}
                     <div>
-                      <p className="text-sm font-semibold text-slate-700">
+                      <p className="text-sm font-semibold text-neutral-700">
                         {admin.profile?.display_name ?? "—"}
                       </p>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-neutral-400">
                         Desde{" "}
                         {new Date(admin.created_at).toLocaleDateString("es-ES")}
                       </p>
@@ -188,7 +188,7 @@ export default function TeamPage() {
                     {admin.role !== "owner" && (
                       <button
                         onClick={() => handleRemove(admin.user_id)}
-                        className="text-slate-300 hover:text-red-500 transition-colors"
+                        className="text-neutral-300 hover:text-red-500 transition-colors"
                         title="Eliminar admin"
                       >
                         <svg
@@ -214,12 +214,12 @@ export default function TeamPage() {
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 m-4">
-            <h3 className="text-lg font-bold text-slate-800 mb-4">
+            <h3 className="text-lg font-bold text-flamencalia-black mb-4">
               Añadir administrador
             </h3>
 
             <div className="mb-4">
-              <label className="block text-xs font-medium text-slate-500 mb-1.5">
+              <label className="block text-xs font-medium text-neutral-500 mb-1.5">
                 Buscar usuario
               </label>
               <input
@@ -230,11 +230,11 @@ export default function TeamPage() {
                   loadUsers(e.target.value);
                 }}
                 placeholder="Buscar por nombre..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red"
               />
             </div>
 
-            <div className="max-h-48 overflow-y-auto border border-slate-100 rounded-xl mb-4">
+            <div className="max-h-48 overflow-y-auto border border-neutral-100 rounded-xl mb-4">
               {users
                 .filter((u) => !admins.some((a) => a.user_id === u.id))
                 .map((user) => (
@@ -242,8 +242,8 @@ export default function TeamPage() {
                     key={user.id}
                     type="button"
                     onClick={() => setSelectedUser(user.id)}
-                    className={`w-full p-3 flex items-center gap-3 text-left hover:bg-slate-50 transition-colors ${
-                      selectedUser === user.id ? "bg-indigo-50" : ""
+                    className={`w-full p-3 flex items-center gap-3 text-left hover:bg-neutral-50 transition-colors ${
+                      selectedUser === user.id ? "bg-flamencalia-red/5" : ""
                     }`}
                   >
                     {user.avatar_url ? (
@@ -253,22 +253,22 @@ export default function TeamPage() {
                         className="w-8 h-8 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 text-xs font-bold">
+                      <div className="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-500 text-xs font-bold">
                         {user.display_name?.charAt(0).toUpperCase() ?? "?"}
                       </div>
                     )}
                     <div>
-                      <p className="text-sm font-medium text-slate-700">
+                      <p className="text-sm font-medium text-neutral-700">
                         {user.display_name}
                       </p>
-                      <p className="text-xs text-slate-400 capitalize">
+                      <p className="text-xs text-neutral-400 capitalize">
                         {user.role}
                       </p>
                     </div>
                     {selectedUser === user.id && (
                       <Icon
                         name="check"
-                        className="w-4 h-4 text-indigo-600 ml-auto"
+                        className="w-4 h-4 text-flamencalia-red ml-auto"
                       />
                     )}
                   </button>
@@ -276,7 +276,7 @@ export default function TeamPage() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-xs font-medium text-slate-500 mb-1.5">
+              <label className="block text-xs font-medium text-neutral-500 mb-1.5">
                 Rol
               </label>
               <select
@@ -284,7 +284,7 @@ export default function TeamPage() {
                 onChange={(e) =>
                   setSelectedRole(e.target.value as "dev" | "admin")
                 }
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red"
               >
                 <option value="admin">Admin</option>
                 <option value="dev">Dev</option>
@@ -297,14 +297,14 @@ export default function TeamPage() {
                   setShowAddModal(false);
                   setSelectedUser(null);
                 }}
-                className="flex-1 py-2.5 px-4 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                className="flex-1 py-2.5 px-4 rounded-xl border border-neutral-200 text-sm font-medium text-neutral-600 hover:bg-neutral-50"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleAdd}
                 disabled={!selectedUser}
-                className="flex-1 bg-linear-to-r from-indigo-600 to-violet-600 text-white py-2.5 px-4 rounded-xl text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 transition-all"
+                className="flex-1 bg-flamencalia-red text-white py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark disabled:opacity-50 transition-all"
               >
                 Añadir
               </button>

@@ -1,103 +1,108 @@
 import Link from "next/link";
 import Image from "next/image";
 
+const CATEGORIES = [
+  { slug: "feria", label: "Feria" },
+  { slug: "camino", label: "Camino" },
+  { slug: "complementos-flamencos", label: "Complementos Flamencos" },
+  { slug: "invitada-flamenca", label: "Invitada Flamenca" },
+  { slug: "moda-infantil", label: "Moda Infantil" },
+  { slug: "equitacion", label: "Equitación" },
+  { slug: "zapatos", label: "Zapatos" },
+];
+
 export function Footer() {
   return (
-    <footer className="bg-indigo-950 text-white">
+    <footer className="bg-flamencalia-black text-white relative overflow-hidden">
+      {/* Toldo decorativo superior */}
+      <div className="h-3 toldo-rayas" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-3">
+            <Link href="/" className="flex items-center gap-3 mb-4">
               <Image
-                src="/gutnes-logo.png"
-                alt="GutnesPlace"
-                width={32}
-                height={32}
+                src="/cliente/flamencalia.jpg"
+                alt="Flamencalia"
+                width={48}
+                height={48}
                 className="rounded-lg"
               />
-              <span className="font-bold text-lg">GutnesPlace</span>
+              <div>
+                <span className="font-serif font-bold text-lg tracking-wide">
+                  FLAMENCALIA
+                </span>
+                <p className="text-xs text-flamencalia-albero-light italic">
+                  &ldquo;Larga vida a tu Flamenca&rdquo;
+                </p>
+              </div>
             </Link>
-            <p className="text-sm text-indigo-300 leading-relaxed">
-              Tu marketplace de productos únicos de vendedores independientes.
+            <p className="text-sm text-neutral-400 leading-relaxed">
+              Tu marketplace de moda flamenca. Vestidos, mantones, complementos
+              y más. Compra a diseñadores y a la comunidad.
             </p>
             <a
-              href="https://gutnes.es"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-3 text-xs text-indigo-400 hover:text-white transition-colors"
+              href="mailto:info@flamencalia.com"
+              className="inline-flex items-center gap-2 mt-3 text-sm text-flamencalia-albero hover:text-flamencalia-albero-light transition-colors"
             >
-              Un proyecto de gutnes.es
+              ✉ info@flamencalia.com
             </a>
           </div>
 
-          {/* Quick Links */}
+          {/* Categorías */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-indigo-400 mb-3">
-              Explorar
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-flamencalia-albero mb-3">
+              Categorías
             </h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/products"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
-                >
-                  Todos los productos
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products?category=electronica"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
-                >
-                  Electrónica
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products?category=ropa"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
-                >
-                  Moda
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products?category=hogar"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
-                >
-                  Hogar
-                </Link>
-              </li>
+              {CATEGORIES.map((cat) => (
+                <li key={cat.slug}>
+                  <Link
+                    href={`/products?category=${cat.slug}`}
+                    className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
+                  >
+                    {cat.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Account */}
+          {/* Tu cuenta */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-indigo-400 mb-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-flamencalia-albero mb-3">
               Tu cuenta
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/dashboard"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
                 >
-                  Panel de control
+                  Mi Panel
                 </Link>
               </li>
               <li>
                 <Link
                   href="/dashboard/orders"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
                 >
-                  Mis pedidos
+                  Mis Pedidos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dashboard/products"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
+                >
+                  Mis Productos
                 </Link>
               </li>
               <li>
                 <Link
                   href="/dashboard/settings"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
                 >
                   Configuración
                 </Link>
@@ -105,62 +110,63 @@ export function Footer() {
               <li>
                 <Link
                   href="/register"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
                 >
-                  Registrarse como vendedor
+                  Registrarse
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Info */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-indigo-400 mb-3">
-              Legal
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-flamencalia-albero mb-3">
+              Información
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/legal/privacy"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
+                  href="/about"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
                 >
-                  Política de privacidad
+                  Quiénes Somos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/legal/privacy"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
+                >
+                  Política de Privacidad
                 </Link>
               </li>
               <li>
                 <Link
                   href="/legal/terms"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
                 >
-                  Términos y condiciones
+                  Términos y Condiciones
                 </Link>
               </li>
               <li>
                 <Link
                   href="/legal/cookies"
-                  className="text-sm text-indigo-200 hover:text-white transition-colors"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
                 >
-                  Política de cookies
+                  Política de Cookies
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-indigo-900 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-indigo-400">
-            © {new Date().getFullYear()} GutnesPlace. Todos los derechos
+        <div className="border-t border-neutral-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-neutral-500">
+            © {new Date().getFullYear()} Flamencalia. Todos los derechos
             reservados.
           </p>
-          <div className="flex items-center gap-4">
-            <a
-              href="https://gutnes.es"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-indigo-400 hover:text-white transition-colors"
-            >
-              gutnes.es
-            </a>
+          <div className="flex items-center gap-4 text-xs text-neutral-500">
+            <span>Hecho con ❤️ en Sevilla</span>
           </div>
         </div>
       </div>

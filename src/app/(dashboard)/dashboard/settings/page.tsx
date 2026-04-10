@@ -25,8 +25,8 @@ export default async function SettingsPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Configuración</h1>
-        <p className="text-sm text-slate-400 mt-0.5">
+        <h1 className="text-2xl font-bold text-flamencalia-black">Configuración</h1>
+        <p className="text-sm text-neutral-400 mt-0.5">
           Gestiona tu cuenta y preferencias
         </p>
       </div>
@@ -36,9 +36,9 @@ export default async function SettingsPage() {
 
       {/* Stripe Section (Sellers Only) */}
       {isSeller && (
-        <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden mb-6">
-          <div className="p-6 border-b border-slate-50">
-            <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+        <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden mb-6">
+          <div className="p-6 border-b border-neutral-50">
+            <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
               Pagos con Stripe
             </h2>
           </div>
@@ -80,32 +80,32 @@ export default async function SettingsPage() {
       )}
 
       {/* Account Details */}
-      <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden mb-6">
-        <div className="p-6 border-b border-slate-50">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+      <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden mb-6">
+        <div className="p-6 border-b border-neutral-50">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
             Datos de la cuenta
           </h2>
         </div>
-        <div className="divide-y divide-slate-50">
+        <div className="divide-y divide-neutral-50">
           <div className="p-4 flex justify-between items-center">
             <div>
-              <p className="text-xs text-slate-400">Email</p>
-              <p className="text-sm text-slate-700">{user.email}</p>
+              <p className="text-xs text-neutral-400">Email</p>
+              <p className="text-sm text-neutral-700">{user.email}</p>
             </div>
           </div>
           <div className="p-4 flex justify-between items-center">
             <div>
-              <p className="text-xs text-slate-400">ID de usuario</p>
-              <p className="text-xs text-slate-700 font-mono">{user.id}</p>
+              <p className="text-xs text-neutral-400">ID de usuario</p>
+              <p className="text-xs text-neutral-700 font-mono">{user.id}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Addresses Section */}
-      <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-50">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+      <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-neutral-50">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
             Direcciones de envío
           </h2>
         </div>

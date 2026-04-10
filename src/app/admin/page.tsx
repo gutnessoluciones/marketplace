@@ -48,19 +48,19 @@ export default async function AdminDashboard() {
       label: "Usuarios",
       value: totalUsers ?? 0,
       icon: "sparkle",
-      color: "bg-indigo-50 text-indigo-600",
+      color: "bg-flamencalia-red/10 text-flamencalia-red",
     },
     {
       label: "Productos",
       value: totalProducts ?? 0,
       icon: "package",
-      color: "bg-teal-50 text-teal-600",
+      color: "bg-flamencalia-albero-pale/30 text-flamencalia-albero",
     },
     {
       label: "Pedidos",
       value: totalOrders ?? 0,
       icon: "receipt",
-      color: "bg-violet-50 text-violet-600",
+      color: "bg-flamencalia-albero-pale/30 text-flamencalia-red-dark",
     },
     {
       label: "Ingresos plataforma",
@@ -74,19 +74,25 @@ export default async function AdminDashboard() {
     pending: { label: "Pendiente", color: "bg-amber-50 text-amber-700" },
     paid: { label: "Pagado", color: "bg-emerald-50 text-emerald-700" },
     shipped: { label: "Enviado", color: "bg-blue-50 text-blue-700" },
-    delivered: { label: "Entregado", color: "bg-violet-50 text-violet-700" },
+    delivered: {
+      label: "Entregado",
+      color: "bg-flamencalia-albero-pale/30 text-flamencalia-albero",
+    },
     cancelled: { label: "Cancelado", color: "bg-red-50 text-red-700" },
-    refunded: { label: "Reembolsado", color: "bg-slate-100 text-slate-600" },
+    refunded: {
+      label: "Reembolsado",
+      color: "bg-neutral-100 text-neutral-600",
+    },
   };
 
   return (
     <div className="max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">
+        <h1 className="text-2xl font-bold font-serif text-flamencalia-black">
           Panel de Administración
         </h1>
-        <p className="text-sm text-slate-400 mt-0.5">
-          Resumen general de la plataforma GutnesPlace
+        <p className="text-sm text-neutral-400 mt-0.5">
+          Resumen general de la plataforma Flamencalia
         </p>
       </div>
 
@@ -95,7 +101,7 @@ export default async function AdminDashboard() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="bg-white border border-slate-100 rounded-2xl shadow-sm p-5"
+            className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5"
           >
             <div className="flex items-center gap-3 mb-3">
               <div
@@ -103,32 +109,36 @@ export default async function AdminDashboard() {
               >
                 <Icon name={stat.icon} className="w-5 h-5" />
               </div>
-              <p className="text-xs font-medium text-slate-500">{stat.label}</p>
+              <p className="text-xs font-medium text-neutral-500">
+                {stat.label}
+              </p>
             </div>
-            <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
+            <p className="text-2xl font-bold text-flamencalia-black">
+              {stat.value}
+            </p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Orders */}
-        <div className="lg:col-span-2 bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
-          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-700">
+        <div className="lg:col-span-2 bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden">
+          <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-neutral-700">
               Últimos Pedidos
             </h2>
             <Link
               href="/admin/orders"
-              className="text-xs text-indigo-600 hover:underline"
+              className="text-xs text-flamencalia-red hover:underline"
             >
               Ver todos →
             </Link>
           </div>
-          <div className="divide-y divide-slate-50">
+          <div className="divide-y divide-neutral-50">
             {recentOrders?.map((order) => {
               const status = STATUS_MAP[order.status] ?? {
                 label: order.status,
-                color: "bg-slate-100 text-slate-600",
+                color: "bg-neutral-100 text-neutral-600",
               };
               return (
                 <div
@@ -136,10 +146,10 @@ export default async function AdminDashboard() {
                   className="px-5 py-3 flex items-center justify-between"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-slate-700 truncate">
+                    <p className="text-sm font-medium text-neutral-700 truncate">
                       {order.product?.title ?? "Producto"}
                     </p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-neutral-400">
                       {order.buyer?.display_name} → {order.seller?.display_name}
                     </p>
                   </div>
@@ -149,7 +159,7 @@ export default async function AdminDashboard() {
                     >
                       {status.label}
                     </span>
-                    <span className="text-sm font-bold text-slate-700">
+                    <span className="text-sm font-bold text-neutral-700">
                       {formatPrice(order.total_amount)}
                     </span>
                   </div>
@@ -157,7 +167,7 @@ export default async function AdminDashboard() {
               );
             })}
             {(!recentOrders || recentOrders.length === 0) && (
-              <div className="px-5 py-8 text-center text-sm text-slate-400">
+              <div className="px-5 py-8 text-center text-sm text-neutral-400">
                 No hay pedidos aún
               </div>
             )}
@@ -165,35 +175,37 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Top Sellers */}
-        <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
-          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-700">Vendedores</h2>
+        <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden">
+          <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-neutral-700">
+              Vendedores
+            </h2>
             <Link
               href="/admin/users"
-              className="text-xs text-indigo-600 hover:underline"
+              className="text-xs text-flamencalia-red hover:underline"
             >
               Ver todos →
             </Link>
           </div>
-          <div className="divide-y divide-slate-50">
+          <div className="divide-y divide-neutral-50">
             {topSellers?.map((seller) => (
               <div
                 key={seller.id}
                 className="px-5 py-3 flex items-center gap-3"
               >
-                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
+                <div className="w-8 h-8 rounded-full bg-flamencalia-albero-pale flex items-center justify-center text-flamencalia-red font-bold text-sm">
                   {seller.display_name?.charAt(0).toUpperCase() ?? "?"}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-slate-700 truncate">
+                  <p className="text-sm font-medium text-neutral-700 truncate">
                     {seller.display_name}
                   </p>
-                  <p className="text-xs text-slate-400">Vendedor</p>
+                  <p className="text-xs text-neutral-400">Proveedor</p>
                 </div>
               </div>
             ))}
             {(!topSellers || topSellers.length === 0) && (
-              <div className="px-5 py-8 text-center text-sm text-slate-400">
+              <div className="px-5 py-8 text-center text-sm text-neutral-400">
                 No hay vendedores
               </div>
             )}
@@ -202,26 +214,28 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Revenue Summary */}
-      <div className="mt-6 bg-white border border-slate-100 rounded-2xl shadow-sm p-6">
-        <h2 className="text-sm font-semibold text-slate-700 mb-4">
+      <div className="mt-6 bg-white border border-neutral-100 rounded-2xl shadow-sm p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 mb-4">
           Resumen de Ingresos
         </h2>
         <div className="grid grid-cols-3 gap-6">
           <div>
-            <p className="text-xs text-slate-400 mb-1">Volumen total ventas</p>
-            <p className="text-xl font-bold text-slate-800">
+            <p className="text-xs text-neutral-400 mb-1">
+              Volumen total ventas
+            </p>
+            <p className="text-xl font-bold text-flamencalia-black">
               {formatPrice(totalRevenue)}
             </p>
           </div>
           <div>
-            <p className="text-xs text-slate-400 mb-1">Comisiones (10%)</p>
+            <p className="text-xs text-neutral-400 mb-1">Comisiones (10%)</p>
             <p className="text-xl font-bold text-emerald-600">
               {formatPrice(totalFees)}
             </p>
           </div>
           <div>
-            <p className="text-xs text-slate-400 mb-1">Pagos a vendedores</p>
-            <p className="text-xl font-bold text-indigo-600">
+            <p className="text-xs text-neutral-400 mb-1">Pagos a vendedores</p>
+            <p className="text-xl font-bold text-flamencalia-red">
               {formatPrice(totalRevenue - totalFees)}
             </p>
           </div>
