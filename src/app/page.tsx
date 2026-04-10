@@ -351,36 +351,24 @@ export default async function HomePage() {
             </h2>
             <div className="h-px flex-1 bg-flamencalia-albero-pale" />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {CATEGORIES.map((cat, i) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            {CATEGORIES.map((cat) => (
               <Link
                 key={cat.slug}
                 href={`/products?category=${cat.slug}`}
-                className={`group relative overflow-hidden rounded-2xl ${
-                  i === 0 ? "sm:col-span-2 sm:row-span-2" : ""
-                }`}
+                className="group relative overflow-hidden rounded-2xl"
               >
-                <div
-                  className={`${i === 0 ? "aspect-square" : "aspect-3/4"} relative`}
-                >
+                <div className="aspect-4/5 relative">
                   <Image
                     src={cat.image}
                     alt={cat.label}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes={
-                      i === 0
-                        ? "(max-width: 640px) 50vw, 50vw"
-                        : "(max-width: 640px) 50vw, 25vw"
-                    }
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                    <h3
-                      className={`font-serif font-bold text-white drop-shadow-md ${
-                        i === 0 ? "text-xl sm:text-2xl" : "text-base sm:text-lg"
-                      }`}
-                    >
+                    <h3 className="font-serif text-base sm:text-lg font-bold text-white drop-shadow-md">
                       {cat.label}
                     </h3>
                     <span className="text-xs text-white/70 font-medium mt-1 block group-hover:text-flamencalia-albero-light transition-colors">
@@ -427,7 +415,10 @@ export default async function HomePage() {
             <section className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 overflow-hidden shadow-sm">
               <div className="flex items-center justify-between p-5 pb-0">
                 <h2 className="font-serif text-2xl font-bold text-flamencalia-black flex items-center gap-2">
-                  <Icon name="fan" className="w-5 h-5 text-flamencalia-albero" />{" "}
+                  <Icon
+                    name="fan"
+                    className="w-5 h-5 text-flamencalia-albero"
+                  />{" "}
                   Lo Último
                 </h2>
                 <Link
