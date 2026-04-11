@@ -1,7 +1,5 @@
 "use client";
 
-const LETTERS = "FLAMENCALIA".split("");
-
 export default function AnimatedBrand({
   className = "",
 }: {
@@ -9,15 +7,8 @@ export default function AnimatedBrand({
 }) {
   return (
     <h1 className={className}>
-      {LETTERS.map((letter, i) => (
-        <span
-          key={i}
-          className="brand-letter inline-block"
-          style={{ animationDelay: `${0.15 + i * 0.08}s` }}
-        >
-          {letter}
-        </span>
-      ))}
+      <span className="inline-block brand-f-dance">F</span>
+      {"LAMENCALIA"}
     </h1>
   );
 }

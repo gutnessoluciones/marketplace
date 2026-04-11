@@ -270,8 +270,16 @@ export default async function HomePage() {
 
         <div className="relative py-20 sm:py-28 lg:py-36">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            {/* Marca animada — F gira como flamenca */}
+            <div className="flex justify-center items-center mb-6 animate-fade-in-up">
+              <AnimatedBrand className="font-serif text-4xl sm:text-6xl lg:text-8xl font-light tracking-widest text-white drop-shadow-lg" />
+            </div>
+
             {/* Slogan SVG */}
-            <div className="flex justify-center mb-6 animate-fade-in-up">
+            <div
+              className="flex justify-center mb-6 animate-fade-in-up"
+              style={{ animationDelay: "0.1s" }}
+            >
               <Image
                 src="/cliente/slogan.svg"
                 alt="Larga vida a tu Flamenca"
@@ -280,11 +288,6 @@ export default async function HomePage() {
                 className="object-contain w-full max-w-xs sm:max-w-md h-auto invert drop-shadow-lg"
                 priority
               />
-            </div>
-
-            {/* Marca animada letra a letra */}
-            <div className="flex justify-center items-center mb-6">
-              <AnimatedBrand className="font-serif text-4xl sm:text-6xl lg:text-8xl font-bold tracking-widest text-white drop-shadow-lg" />
             </div>
             <p
               className="mt-4 text-base sm:text-lg text-white/80 max-w-2xl mx-auto animate-fade-in-up"
