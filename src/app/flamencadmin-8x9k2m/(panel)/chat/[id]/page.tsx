@@ -101,12 +101,12 @@ export default async function AdminChatDetailPage({ params }: PageProps) {
               <p className="text-sm font-semibold text-flamencalia-black">
                 {(product?.title as string) || "Producto eliminado"}
               </p>
-              {product?.price && (
+              {product?.price != null && (
                 <p className="text-sm text-flamencalia-albero font-medium">
                   {formatPrice(product.price as number)}
                 </p>
               )}
-              {product?.status && (
+              {product?.status != null && (
                 <span
                   className={`text-[10px] px-2 py-0.5 rounded-full font-medium mt-1 inline-block ${
                     product.status === "active"

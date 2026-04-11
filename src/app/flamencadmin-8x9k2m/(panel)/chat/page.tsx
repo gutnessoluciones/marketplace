@@ -126,7 +126,7 @@ export default async function AdminChatPage() {
                       <p className="text-sm text-flamencalia-black/70 truncate">
                         {(product?.title as string) || "—"}
                       </p>
-                      {product?.price && (
+                      {product?.price != null && (
                         <p className="text-xs text-flamencalia-albero font-medium">
                           {formatPrice(product.price as number)}
                         </p>
