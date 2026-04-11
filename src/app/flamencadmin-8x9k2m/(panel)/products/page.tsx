@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Icon } from "@/components/icons";
+import { AdminToast } from "@/components/admin/toast";
 
 interface Product {
   id: string;
@@ -33,6 +34,10 @@ export default function AdminProductsPage() {
   } | null>(null);
   const [reason, setReason] = useState("");
   const [acting, setActing] = useState(false);
+  const [toast, setToast] = useState<{
+    msg: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
@@ -60,9 +65,22 @@ export default function AdminProductsPage() {
     });
 
     if (res.ok) {
+      const label =
+        type === "hide"
+          ? "Producto ocultado"
+          : type === "activate"
+            ? "Producto activado"
+            : "Producto eliminado";
+      setToast({ msg: label, type: "success" });
       setActionModal(null);
       setReason("");
       loadProducts();
+    } else {
+      const json = await res.json().catch(() => null);
+      setToast({
+        msg: json?.error || "Error al procesar la acción",
+        type: "error",
+      });
     }
     setActing(false);
   };
@@ -318,6 +336,11 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
+      <AdminToast
+        message={toast?.msg ?? null}
+        type={toast?.type ?? "success"}
+        onClose={() => setToast(null)}
+      />
     </div>
   );
 }

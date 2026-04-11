@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Icon } from "@/components/icons";
+import { AdminToast } from "@/components/admin/toast";
 
 interface User {
   id: string;
@@ -29,6 +30,10 @@ export default function AdminUsersPage() {
   const [reason, setReason] = useState("");
   const [verifyStatus, setVerifyStatus] = useState("verified");
   const [acting, setActing] = useState(false);
+  const [toast, setToast] = useState<{
+    msg: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const loadUsers = useCallback(async () => {
     setLoading(true);
@@ -71,9 +76,22 @@ export default function AdminUsersPage() {
     });
 
     if (res.ok) {
+      const label =
+        type === "ban"
+          ? "Usuario baneado"
+          : type === "unban"
+            ? "Usuario desbaneado"
+            : "Verificación actualizada";
+      setToast({ msg: label, type: "success" });
       setActionModal(null);
       setReason("");
       loadUsers();
+    } else {
+      const json = await res.json().catch(() => null);
+      setToast({
+        msg: json?.error || "Error al procesar la acción",
+        type: "error",
+      });
     }
     setActing(false);
   };
@@ -401,6 +419,7 @@ export default function AdminUsersPage() {
           </div>
         </div>
       )}
+      {toast && <AdminToast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 }

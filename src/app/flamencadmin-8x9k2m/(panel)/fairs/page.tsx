@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Icon } from "@/components/icons";
+import { AdminToast } from "@/components/admin/toast";
 
 const PROVINCES = [
   "Almería",
@@ -34,6 +35,10 @@ export default function AdminFairsPage() {
   const [editing, setEditing] = useState<Fair | null>(null);
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<{
+    msg: string;
+    type: "success" | "error";
+  } | null>(null);
   const [filterProvince, setFilterProvince] = useState("all");
 
   const [form, setForm] = useState({
@@ -122,10 +127,20 @@ export default function AdminFairsPage() {
     });
 
     if (res.ok) {
+      setToast({
+        msg: editing ? "Feria actualizada" : "Feria creada",
+        type: "success",
+      });
       setCreating(false);
       setEditing(null);
       resetForm();
       loadFairs();
+    } else {
+      const json = await res.json().catch(() => null);
+      setToast({
+        msg: json?.error || "Error al guardar la feria",
+        type: "error",
+      });
     }
     setSaving(false);
   };
@@ -133,7 +148,12 @@ export default function AdminFairsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("¿Eliminar esta feria?")) return;
     const res = await fetch(`/api/admin/fairs/${id}`, { method: "DELETE" });
-    if (res.ok) loadFairs();
+    if (res.ok) {
+      setToast({ msg: "Feria eliminada", type: "success" });
+      loadFairs();
+    } else {
+      setToast({ msg: "Error al eliminar la feria", type: "error" });
+    }
   };
 
   const filtered =
@@ -455,6 +475,7 @@ export default function AdminFairsPage() {
           })}
         </div>
       )}
+      {toast && <AdminToast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 }

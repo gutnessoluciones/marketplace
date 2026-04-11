@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Icon } from "@/components/icons";
+import { AdminToast } from "@/components/admin/toast";
 
 interface Report {
   id: string;
@@ -33,6 +34,10 @@ export default function AdminReportsPage() {
   );
   const [notes, setNotes] = useState("");
   const [acting, setActing] = useState(false);
+  const [toast, setToast] = useState<{
+    msg: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const loadReports = useCallback(async () => {
     setLoading(true);
@@ -62,9 +67,20 @@ export default function AdminReportsPage() {
     });
 
     if (res.ok) {
+      setToast({
+        msg:
+          resolution === "resolved" ? "Reporte resuelto" : "Reporte descartado",
+        type: "success",
+      });
       setResolveModal(null);
       setNotes("");
       loadReports();
+    } else {
+      const json = await res.json().catch(() => null);
+      setToast({
+        msg: json?.error || "Error al procesar el reporte",
+        type: "error",
+      });
     }
     setActing(false);
   };
@@ -306,6 +322,7 @@ export default function AdminReportsPage() {
           </div>
         </div>
       )}
+      {toast && <AdminToast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 }

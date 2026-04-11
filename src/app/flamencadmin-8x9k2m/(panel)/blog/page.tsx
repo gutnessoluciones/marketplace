@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Icon } from "@/components/icons";
+import { AdminToast } from "@/components/admin/toast";
 
 interface BlogPost {
   id: string;
@@ -32,6 +33,10 @@ export default function AdminBlogPage() {
   const [editing, setEditing] = useState<BlogPost | null>(null);
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<{
+    msg: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -114,10 +119,20 @@ export default function AdminBlogPage() {
     });
 
     if (res.ok) {
+      setToast({
+        msg: editing ? "Entrada actualizada" : "Entrada creada",
+        type: "success",
+      });
       setCreating(false);
       setEditing(null);
       resetForm();
       loadPosts();
+    } else {
+      const json = await res.json().catch(() => null);
+      setToast({
+        msg: json?.error || "Error al guardar la entrada",
+        type: "error",
+      });
     }
     setSaving(false);
   };
@@ -125,7 +140,12 @@ export default function AdminBlogPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("¿Eliminar esta entrada?")) return;
     const res = await fetch(`/api/admin/blog/${id}`, { method: "DELETE" });
-    if (res.ok) loadPosts();
+    if (res.ok) {
+      setToast({ msg: "Entrada eliminada", type: "success" });
+      loadPosts();
+    } else {
+      setToast({ msg: "Error al eliminar la entrada", type: "error" });
+    }
   };
 
   if (creating) {
@@ -370,6 +390,7 @@ export default function AdminBlogPage() {
           ))}
         </div>
       )}
+      {toast && <AdminToast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 }
