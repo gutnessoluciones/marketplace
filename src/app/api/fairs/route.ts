@@ -1,10 +1,11 @@
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { apiResponse, apiError } from "@/lib/utils";
 
 // GET /api/fairs — Public fairs list
 export async function GET() {
   try {
-    const { data, error } = await supabaseAdmin
+    const supabase = await createClient();
+    const { data, error } = await supabase
       .from("fairs")
       .select(
         "id, name, city, province, start_date, end_date, description, image_url, location_url, is_major, year",

@@ -40,36 +40,90 @@ export default function AboutPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-flamencalia-black text-white">
-        <div className="absolute inset-0 opacity-20">
-          <div
-            className="w-full h-full"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 50%, var(--flamencalia-red) 0%, transparent 50%), radial-gradient(circle at 80% 50%, var(--flamencalia-albero) 0%, transparent 50%)",
-            }}
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/categorias/feria.jpg"
+            alt=""
+            fill
+            className="object-cover opacity-30"
+            priority
           />
         </div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
+        <div className="absolute inset-0 bg-gradient-to-b from-flamencalia-black/60 via-flamencalia-black/40 to-flamencalia-black/80" />
+
+        {/* Toldo decorativo superior */}
+        <div className="relative h-1.5 toldo-rayas" />
+
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-28 text-center">
+          {/* Logo abanico */}
+          <div className="flex justify-center mb-5 animate-fade-in-up">
             <Image
               src="/cliente/Abanico.svg"
               alt=""
-              width={18}
-              height={18}
-              className="opacity-80"
+              width={64}
+              height={64}
+              className="w-14 h-14 sm:w-18 sm:h-18 drop-shadow-lg"
             />
-            <span className="text-xs font-medium tracking-wider uppercase text-white/80">
+          </div>
+
+          {/* Marca */}
+          <div
+            className="flex justify-center mb-4 animate-fade-in-up"
+            style={{ animationDelay: "0.05s" }}
+          >
+            <Image
+              src="/cliente/marca-flamencalia.svg"
+              alt="FLAMENCALIA"
+              width={400}
+              height={60}
+              className="h-8 sm:h-12 w-auto object-contain invert drop-shadow-lg"
+            />
+          </div>
+
+          {/* Línea decorativa */}
+          <div
+            className="flex items-center justify-center gap-3 mb-6 animate-fade-in-up"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <div className="h-px w-12 bg-flamencalia-albero/50" />
+            <span className="text-[10px] sm:text-xs font-medium tracking-[0.25em] uppercase text-flamencalia-albero">
               Nuestra historia
             </span>
+            <div className="h-px w-12 bg-flamencalia-albero/50" />
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-bold leading-tight mb-6">
+
+          <h1
+            className="font-serif text-3xl sm:text-5xl font-light leading-tight mb-6 animate-fade-in-up"
+            style={{ animationDelay: "0.15s" }}
+          >
             Larga vida a tu{" "}
-            <span className="text-flamencalia-albero">flamenca</span>
+            <span className="text-flamencalia-albero font-normal italic">
+              flamenca
+            </span>
           </h1>
-          <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
+          <p
+            className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
+            style={{ animationDelay: "0.2s" }}
+          >
             Flamencalia nace de una idea muy sencilla: que la moda flamenca no
             tenga una sola vida.
           </p>
+        </div>
+
+        {/* Onda inferior */}
+        <div className="relative">
+          <svg
+            viewBox="0 0 1440 80"
+            fill="none"
+            preserveAspectRatio="none"
+            className="w-full h-10 sm:h-16"
+          >
+            <path
+              d="M0 80V40C180 10 360 0 540 15s360 30 540 15 180-20 360-15v65H0z"
+              fill="var(--flamencalia-cream)"
+            />
+          </svg>
         </div>
       </section>
 
