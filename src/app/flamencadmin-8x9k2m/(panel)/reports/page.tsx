@@ -322,7 +322,13 @@ export default function AdminReportsPage() {
           </div>
         </div>
       )}
-      {toast && <AdminToast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
+      {toast && (
+        <AdminToast
+          message={toast.msg}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

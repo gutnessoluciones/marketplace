@@ -92,7 +92,7 @@ export default function AdminProductsPage() {
     const map: Record<string, { label: string; cls: string }> = {
       active: { label: "Activo", cls: "bg-emerald-50 text-emerald-700" },
       draft: { label: "Borrador", cls: "bg-neutral-100 text-neutral-600" },
-      hidden: { label: "Oculto", cls: "bg-red-50 text-red-700" },
+      archived: { label: "Oculto", cls: "bg-red-50 text-red-700" },
       sold: { label: "Vendido", cls: "bg-blue-50 text-blue-700" },
     };
     return map[s] || { label: s, cls: "bg-neutral-100 text-neutral-600" };
@@ -113,7 +113,7 @@ export default function AdminProductsPage() {
           {[
             { value: "all", label: "Todos" },
             { value: "active", label: "Activos" },
-            { value: "hidden", label: "Ocultos" },
+            { value: "archived", label: "Ocultos" },
             { value: "draft", label: "Borradores" },
           ].map((f) => (
             <button
@@ -177,7 +177,7 @@ export default function AdminProductsPage() {
                   return (
                     <tr
                       key={product.id}
-                      className={`hover:bg-neutral-50/50 ${product.status === "hidden" ? "bg-red-50/20" : ""}`}
+                      className={`hover:bg-neutral-50/50 ${product.status === "archived" ? "bg-red-50/20" : ""}`}
                     >
                       <td className="px-4 sm:px-5 py-3">
                         <div className="flex items-center gap-3">
@@ -231,7 +231,7 @@ export default function AdminProductsPage() {
                             >
                               Ocultar
                             </button>
-                          ) : product.status === "hidden" ? (
+                          ) : product.status === "archived" ? (
                             <button
                               onClick={() =>
                                 setActionModal({

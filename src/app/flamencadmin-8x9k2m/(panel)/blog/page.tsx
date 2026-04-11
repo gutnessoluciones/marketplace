@@ -390,7 +390,13 @@ export default function AdminBlogPage() {
           ))}
         </div>
       )}
-      {toast && <AdminToast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
+      {toast && (
+        <AdminToast
+          message={toast.msg}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

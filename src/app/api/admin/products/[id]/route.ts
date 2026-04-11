@@ -44,7 +44,7 @@ export async function PATCH(
       return apiResponse({ success: true, action: "removed" });
     }
 
-    const newStatus = action === "hide" ? "hidden" : "active";
+    const newStatus = action === "hide" ? "archived" : "active";
     const { error } = await supabaseAdmin
       .from("products")
       .update({ status: newStatus })
