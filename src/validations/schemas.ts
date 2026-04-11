@@ -129,3 +129,14 @@ export const updateSiteSettingSchema = z.object({
   key: z.string().min(1),
   value: z.record(z.string(), z.unknown()),
 });
+
+// ── Offers ───────────────────────────────────────────────
+export const createOfferSchema = z.object({
+  product_id: z.string().uuid(),
+  amount: z.number().int().positive().max(99999999),
+  message: z.string().max(500).optional(),
+});
+
+export const respondOfferSchema = z.object({
+  response: z.string().max(500).optional(),
+});

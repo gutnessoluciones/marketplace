@@ -1,0 +1,302 @@
+import { SupabaseClient } from "@supabase/supabase-js";
+import { AppError } from "@/lib/utils";
+
+const MIN_OFFER_PERCENT = 20; // minimum 20% of original price
+const OFFER_EXPIRY_HOURS = 48;
+
+// Conditions that allow offers (second-hand)
+const OFFERABLE_CONDITIONS = ["como-nuevo", "bueno", "aceptable"];
+
+interface CreateOfferInput {
+  product_id: string;
+  amount: number; // cents
+  message?: string;
+}
+
+export class OffersService {
+  constructor(private supabase: SupabaseClient) {}
+
+  /** Check if a product accepts offers (second-hand only) */
+  static isOfferable(condition: string | null): boolean {
+    return condition !== null && OFFERABLE_CONDITIONS.includes(condition);
+  }
+
+  /** Create a new offer */
+  async create(buyerId: string, input: CreateOfferInput) {
+    // Expire old offers first
+    await this.supabase.rpc("expire_pending_offers");
+
+    // Fetch product
+    const { data: product, error: pErr } = await this.supabase
+      .from("products")
+      .select("id, seller_id, price, stock, status, condition")
+      .eq("id", input.product_id)
+      .eq("status", "active")
+      .single();
+
+    if (pErr || !product) throw new AppError("Producto no encontrado", 404);
+    if (product.seller_id === buyerId)
+      throw new AppError(
+        "No puedes hacer ofertas en tus propios productos",
+        400,
+      );
+    if (product.stock < 1) throw new AppError("Producto sin stock", 400);
+    if (!OffersService.isOfferable(product.condition))
+      throw new AppError("Este producto no acepta ofertas", 400);
+
+    // Validate amount
+    const minAmount = Math.round(product.price * (MIN_OFFER_PERCENT / 100));
+    if (input.amount < minAmount) {
+      throw new AppError(
+        `La oferta mínima es ${(minAmount / 100).toFixed(2)}€ (${MIN_OFFER_PERCENT}% del precio)`,
+        400,
+      );
+    }
+    if (input.amount >= product.price) {
+      throw new AppError(
+        "La oferta debe ser menor al precio del producto",
+        400,
+      );
+    }
+
+    // Check for existing pending offer
+    const { data: existing } = await this.supabase
+      .from("offers")
+      .select("id")
+      .eq("product_id", input.product_id)
+      .eq("buyer_id", buyerId)
+      .eq("status", "pending")
+      .maybeSingle();
+
+    if (existing)
+      throw new AppError(
+        "Ya tienes una oferta pendiente para este producto",
+        409,
+      );
+
+    const expiresAt = new Date(
+      Date.now() + OFFER_EXPIRY_HOURS * 60 * 60 * 1000,
+    ).toISOString();
+
+    const { data: offer, error } = await this.supabase
+      .from("offers")
+      .insert({
+        product_id: input.product_id,
+        buyer_id: buyerId,
+        seller_id: product.seller_id,
+        amount: input.amount,
+        original_price: product.price,
+        message: input.message?.trim() || null,
+        expires_at: expiresAt,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === "23505")
+        throw new AppError(
+          "Ya tienes una oferta pendiente para este producto",
+          409,
+        );
+      throw new AppError(error.message, 500);
+    }
+
+    return offer;
+  }
+
+  /** Accept an offer (seller only) — creates an order */
+  async accept(offerId: string, sellerId: string, response?: string) {
+    await this.supabase.rpc("expire_pending_offers");
+
+    const { data: offer, error: oErr } = await this.supabase
+      .from("offers")
+      .select("*, product:products(id, price, stock, status, seller_id)")
+      .eq("id", offerId)
+      .single();
+
+    if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
+    if (offer.seller_id !== sellerId) throw new AppError("No autorizado", 403);
+    if (offer.status !== "pending")
+      throw new AppError(`La oferta ya está ${offer.status}`, 400);
+
+    const product = offer.product as {
+      id: string;
+      price: number;
+      stock: number;
+      status: string;
+      seller_id: string;
+    } | null;
+    if (!product || product.status !== "active" || product.stock < 1) {
+      // Auto-reject if product no longer available
+      await this.supabase
+        .from("offers")
+        .update({
+          status: "rejected",
+          seller_response: "Producto ya no disponible",
+        })
+        .eq("id", offerId);
+      throw new AppError("El producto ya no está disponible", 400);
+    }
+
+    // Update offer status
+    const { error: uErr } = await this.supabase
+      .from("offers")
+      .update({
+        status: "accepted",
+        seller_response: response?.trim() || null,
+      })
+      .eq("id", offerId);
+
+    if (uErr) throw new AppError(uErr.message, 500);
+
+    // Reject all other pending offers for this product
+    await this.supabase
+      .from("offers")
+      .update({
+        status: "rejected",
+        seller_response: "Otra oferta fue aceptada",
+      })
+      .eq("product_id", offer.product_id)
+      .eq("status", "pending")
+      .neq("id", offerId);
+
+    return { ...offer, status: "accepted" };
+  }
+
+  /** Reject an offer (seller only) */
+  async reject(offerId: string, sellerId: string, response?: string) {
+    const { data: offer, error: oErr } = await this.supabase
+      .from("offers")
+      .select("id, seller_id, buyer_id, amount, product_id, status")
+      .eq("id", offerId)
+      .single();
+
+    if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
+    if (offer.seller_id !== sellerId) throw new AppError("No autorizado", 403);
+    if (offer.status !== "pending")
+      throw new AppError(`La oferta ya está ${offer.status}`, 400);
+
+    const { error } = await this.supabase
+      .from("offers")
+      .update({
+        status: "rejected",
+        seller_response: response?.trim() || null,
+      })
+      .eq("id", offerId);
+
+    if (error) throw new AppError(error.message, 500);
+    return { ...offer, status: "rejected" };
+  }
+
+  /** Cancel an offer (buyer only) */
+  async cancel(offerId: string, buyerId: string) {
+    const { data: offer, error: oErr } = await this.supabase
+      .from("offers")
+      .select("id, buyer_id, seller_id, amount, product_id, status")
+      .eq("id", offerId)
+      .single();
+
+    if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
+    if (offer.buyer_id !== buyerId) throw new AppError("No autorizado", 403);
+    if (offer.status !== "pending")
+      throw new AppError(
+        `No se puede cancelar una oferta ${offer.status}`,
+        400,
+      );
+
+    const { error } = await this.supabase
+      .from("offers")
+      .update({ status: "cancelled" })
+      .eq("id", offerId);
+
+    if (error) throw new AppError(error.message, 500);
+    return { ...offer, status: "cancelled" };
+  }
+
+  /** List offers for a seller */
+  async listBySeller(sellerId: string, status?: string, page = 1, limit = 20) {
+    await this.supabase.rpc("expire_pending_offers");
+
+    let query = this.supabase
+      .from("offers")
+      .select(
+        "*, product:products(id, title, price, images, status), buyer:profiles!buyer_id(id, display_name, avatar_url)",
+        { count: "exact" },
+      )
+      .eq("seller_id", sellerId);
+
+    if (status) query = query.eq("status", status);
+
+    const { data, error, count } = await query
+      .order("created_at", { ascending: false })
+      .range((page - 1) * limit, page * limit - 1);
+
+    if (error) throw new AppError(error.message, 500);
+    return { data: data ?? [], total: count, page, limit };
+  }
+
+  /** List offers for a buyer */
+  async listByBuyer(buyerId: string, page = 1, limit = 20) {
+    await this.supabase.rpc("expire_pending_offers");
+
+    const { data, error, count } = await this.supabase
+      .from("offers")
+      .select(
+        "*, product:products(id, title, price, images, status, seller_id), seller:profiles!seller_id(id, display_name, avatar_url)",
+        { count: "exact" },
+      )
+      .eq("buyer_id", buyerId)
+      .order("created_at", { ascending: false })
+      .range((page - 1) * limit, page * limit - 1);
+
+    if (error) throw new AppError(error.message, 500);
+    return { data: data ?? [], total: count, page, limit };
+  }
+
+  /** Get offers for a specific product */
+  async listByProduct(productId: string, sellerId: string) {
+    await this.supabase.rpc("expire_pending_offers");
+
+    const { data, error } = await this.supabase
+      .from("offers")
+      .select("*, buyer:profiles!buyer_id(id, display_name, avatar_url)")
+      .eq("product_id", productId)
+      .eq("seller_id", sellerId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw new AppError(error.message, 500);
+    return data ?? [];
+  }
+
+  /** Get buyer's active offer for a product */
+  async getActiveOffer(productId: string, buyerId: string) {
+    await this.supabase.rpc("expire_pending_offers");
+
+    const { data, error } = await this.supabase
+      .from("offers")
+      .select("*")
+      .eq("product_id", productId)
+      .eq("buyer_id", buyerId)
+      .in("status", ["pending", "accepted"])
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw new AppError(error.message, 500);
+    return data;
+  }
+
+  /** Count pending offers for seller (for badge) */
+  async countPending(sellerId: string) {
+    await this.supabase.rpc("expire_pending_offers");
+
+    const { count, error } = await this.supabase
+      .from("offers")
+      .select("id", { count: "exact", head: true })
+      .eq("seller_id", sellerId)
+      .eq("status", "pending");
+
+    if (error) throw new AppError(error.message, 500);
+    return count ?? 0;
+  }
+}

@@ -5,8 +5,10 @@ import { createClient } from "@/lib/supabase/server";
 import { ProductsService } from "@/services/products.service";
 import { ReviewsService } from "@/services/reviews.service";
 import { FavoritesService } from "@/services/favorites.service";
+import { OffersService } from "@/services/offers.service";
 import { formatPrice } from "@/lib/utils";
 import { BuyButton } from "@/components/products/buy-button";
+import { OfferButton } from "@/components/products/offer-button";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ViewTracker } from "@/components/products/view-tracker";
 import { FavoriteButton } from "@/components/social/favorite-button";
@@ -258,6 +260,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       {CONDITION_LABELS[product.condition] ?? product.condition}
                     </span>
                   )}
+                  {OffersService.isOfferable(product.condition) && (
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-flamencalia-albero bg-flamencalia-albero/10 px-2.5 py-1 rounded-full">
+                      <Icon name="tag" className="w-3 h-3" />
+                      Acepta ofertas
+                    </span>
+                  )}
                 </div>
 
                 {/* Title */}
@@ -404,6 +412,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       size="md"
                     />
                   </div>
+                  {/* Offer button for second-hand products */}
+                  {!isOwnProduct &&
+                    OffersService.isOfferable(product.condition) && (
+                      <OfferButton
+                        productId={product.id}
+                        sellerId={product.seller_id}
+                        currentPrice={product.price}
+                        condition={product.condition!}
+                      />
+                    )}
                   {!isOwnProduct && (
                     <ChatButton
                       productId={product.id}

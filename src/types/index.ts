@@ -117,6 +117,34 @@ export interface Review {
   buyer?: Pick<Profile, "id" | "display_name" | "avatar_url">;
 }
 
+// ── Offer ────────────────────────────────────────────────
+export type OfferStatus =
+  | "pending"
+  | "accepted"
+  | "rejected"
+  | "expired"
+  | "cancelled"
+  | "paid";
+
+export interface Offer {
+  id: string;
+  product_id: string;
+  buyer_id: string;
+  seller_id: string;
+  amount: number; // cents
+  original_price: number; // cents
+  status: OfferStatus;
+  message: string | null;
+  seller_response: string | null;
+  order_id: string | null;
+  expires_at: string;
+  created_at: string;
+  updated_at: string;
+  product?: Product;
+  buyer?: Pick<Profile, "id" | "display_name" | "avatar_url">;
+  seller?: Pick<Profile, "id" | "display_name" | "avatar_url">;
+}
+
 // ── API Responses ────────────────────────────────────────
 export interface PaginatedResponse<T> {
   data: T[];
