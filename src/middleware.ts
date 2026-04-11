@@ -6,9 +6,6 @@ const protectedPaths = ["/dashboard", "/products/new", "/orders", "/settings"];
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
-  // Pass pathname to server components via header
-  response.headers.set("x-next-pathname", request.nextUrl.pathname);
-
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -22,7 +19,6 @@ export async function middleware(request: NextRequest) {
             request.cookies.set(name, value);
           });
           response = NextResponse.next({ request });
-          response.headers.set("x-next-pathname", request.nextUrl.pathname);
           cookiesToSet.forEach(({ name, value, options }) => {
             response.cookies.set(name, value, options);
           });

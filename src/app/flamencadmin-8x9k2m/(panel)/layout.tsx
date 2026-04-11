@@ -1,7 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { isAdmin } from "@/lib/admin";
 import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/layout/sign-out-button";
@@ -30,20 +28,11 @@ const ownerNav = [
   { href: `${ADMIN_BASE}/team`, label: "Equipo admin", icon: "medal" },
 ];
 
-export default async function AdminLayout({
+export default async function AdminPanelLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Check if we're on the login subpage — if so, render without auth/sidebar
-  const headersList = await headers();
-  const pathname = headersList.get("x-next-pathname") ?? "";
-  const isLoginPage = pathname === `${ADMIN_BASE}/login`;
-
-  if (isLoginPage) {
-    return <>{children}</>;
-  }
-
   const supabase = await createClient();
   const {
     data: { user },
