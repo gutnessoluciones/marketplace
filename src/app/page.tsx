@@ -285,7 +285,7 @@ export default async function HomePage() {
                 alt="Larga vida a tu Flamenca"
                 width={600}
                 height={80}
-                className="object-contain w-full max-w-xs sm:max-w-md h-auto invert drop-shadow-lg"
+                className="object-contain w-full max-w-xs sm:max-w-md h-auto drop-shadow-lg"
                 priority
               />
             </div>
