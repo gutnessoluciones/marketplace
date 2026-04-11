@@ -7,9 +7,12 @@ export default function AnimatedBrand({
 }) {
   return (
     <h1 className={className}>
-      <span className="inline-block brand-f-dance">F</span>
-      {"LAMENCALI"}
-      <span className="inline-block brand-f-dance">A</span>
+      {"FL"}
+      <span className="inline-block brand-a-spin">A</span>
+      {"MENC"}
+      <span className="inline-block brand-a-spin">A</span>
+      {"LI"}
+      <span className="inline-block brand-a-spin">A</span>
     </h1>
   );
 }
