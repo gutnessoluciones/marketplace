@@ -269,7 +269,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-black/50" />
 
         <div className="relative py-20 sm:py-28 lg:py-36">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* Slogan SVG */}
             <div className="flex justify-center mb-6 animate-fade-in-up">
               <Image
@@ -283,8 +283,8 @@ export default async function HomePage() {
             </div>
 
             {/* Marca animada letra a letra */}
-            <div className="flex justify-center mb-6">
-              <AnimatedBrand className="w-full max-w-xs sm:max-w-lg lg:max-w-2xl h-auto fill-white drop-shadow-lg" />
+            <div className="flex justify-center items-center mb-6">
+              <AnimatedBrand className="w-full max-w-2xl sm:max-w-4xl lg:max-w-6xl h-auto fill-white drop-shadow-lg" />
             </div>
             <p
               className="mt-4 text-base sm:text-lg text-white/80 max-w-2xl mx-auto animate-fade-in-up"
