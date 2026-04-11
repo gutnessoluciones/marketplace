@@ -50,6 +50,7 @@ export function ChatConversation({
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [filterError, setFilterError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const pollRef = useRef<ReturnType<typeof setInterval>>(null);
 
@@ -103,6 +104,7 @@ export function ChatConversation({
 
     setSending(true);
     setNewMessage("");
+    setFilterError(null);
 
     try {
       const res = await fetch(`/api/chat/${conversationId}`, {
@@ -110,9 +112,14 @@ export function ChatConversation({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
       });
-      const msg = await res.json();
-      if (msg.id) {
-        setMessages((prev) => [...prev, msg]);
+      const data = await res.json();
+      if (!res.ok) {
+        setFilterError(data.error || "Error al enviar el mensaje");
+        setNewMessage(content);
+        return;
+      }
+      if (data.id) {
+        setMessages((prev) => [...prev, data]);
       }
     } catch {
       setNewMessage(content);
@@ -264,6 +271,24 @@ export function ChatConversation({
       </div>
 
       {/* Input */}
+      {filterError && (
+        <div className="shrink-0 mx-1 mt-2 px-4 py-2.5 bg-flamencalia-red/10 border border-flamencalia-red/20 rounded-xl text-xs text-flamencalia-red leading-relaxed flex items-start gap-2">
+          <svg
+            className="w-4 h-4 shrink-0 mt-0.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+            />
+          </svg>
+          <span>{filterError}</span>
+        </div>
+      )}
       <form
         onSubmit={handleSend}
         className="shrink-0 pt-4 border-t border-flamencalia-albero-pale/30"

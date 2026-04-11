@@ -141,6 +141,48 @@ export class PaymentsService {
           message: `Se ha vendido "${productTitle ?? "Producto"}". Revisa tus pedidos.`,
           data: { order_id: orderId },
         });
+
+        // Auto-create conversation between buyer and seller
+        const { data: buyerOrder } = await supabaseAdmin
+          .from("orders")
+          .select("buyer_id, product_id")
+          .eq("id", orderId)
+          .single();
+
+        if (buyerOrder) {
+          // Check if conversation already exists
+          const { data: existing } = await supabaseAdmin
+            .from("conversations")
+            .select("id")
+            .eq("product_id", buyerOrder.product_id)
+            .eq("buyer_id", buyerOrder.buyer_id)
+            .maybeSingle();
+
+          const conversationId = existing?.id ?? (await (async () => {
+            const { data: newConv } = await supabaseAdmin
+              .from("conversations")
+              .insert({
+                product_id: buyerOrder.product_id,
+                buyer_id: buyerOrder.buyer_id,
+                seller_id: fullOrder.seller_id,
+              })
+              .select("id")
+              .single();
+            return newConv?.id;
+          })());
+
+          if (conversationId) {
+            await supabaseAdmin.from("messages").insert({
+              conversation_id: conversationId,
+              sender_id: buyerOrder.buyer_id,
+              content: `¡Hola! Acabo de comprar "${productTitle ?? "tu producto"}". ¿Cómo coordinamos el envío?`,
+            });
+            await supabaseAdmin
+              .from("conversations")
+              .update({ last_message_at: new Date().toISOString() })
+              .eq("id", conversationId);
+          }
+        }
       }
     }
   }

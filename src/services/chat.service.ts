@@ -83,6 +83,15 @@ export class ChatService {
       throw new AppError("Mensaje inválido (1-2000 caracteres)", 400);
     }
 
+    // Filter off-platform contact info
+    const violation = this.detectOffPlatformContent(trimmed);
+    if (violation) {
+      throw new AppError(
+        `Por la seguridad de ambas partes, no se permite compartir ${violation} en el chat. Usa la plataforma para completar la transacción.`,
+        400,
+      );
+    }
+
     const { data, error } = await this.supabase
       .from("messages")
       .insert({
@@ -122,5 +131,50 @@ export class ChatService {
     );
     if (error) throw new AppError(error.message, 500);
     return data ?? 0;
+  }
+
+  /** Detect attempts to share contact info or move transactions off-platform */
+  private detectOffPlatformContent(text: string): string | null {
+    const lower = text.toLowerCase().replace(/\s+/g, " ");
+
+    // Phone numbers (sequences of 6+ digits, with optional separators)
+    if (/(\+?\d[\d\s\-().]{5,}\d)/.test(text)) {
+      return "números de teléfono";
+    }
+
+    // Email addresses
+    if (/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(text)) {
+      return "direcciones de email";
+    }
+
+    // URLs (http, https, www)
+    if (/https?:\/\/|www\./i.test(text)) {
+      return "enlaces externos";
+    }
+
+    // Social media handles/references
+    const socialPatterns = [
+      /(?:mi|te paso|escr[ií]beme|cont[aá]ctame|hablamos|por)\s*(?:en|al|por)\s*(?:whatsapp|whats|wsp|telegram|instagram|insta|facebook|fb|tiktok|twitter)/i,
+      /@[a-zA-Z0-9._]{3,}/,
+    ];
+    for (const pat of socialPatterns) {
+      if (pat.test(text)) {
+        return "referencias a redes sociales o contacto externo";
+      }
+    }
+
+    // Payment outside platform
+    const paymentPatterns = [
+      /(?:bizum|transferencia|paypal|revolut|verse|n26)/i,
+      /(?:te paso|mi)\s*(?:iban|cuenta|n[uú]mero de cuenta)/i,
+      /(?:pagar?|cobr(?:ar|o))\s*(?:fuera|por fuera|aparte|directo|directamente)/i,
+    ];
+    for (const pat of paymentPatterns) {
+      if (pat.test(text)) {
+        return "métodos de pago externos. Usa el botón 'Comprar' para realizar la transacción de forma segura";
+      }
+    }
+
+    return null;
   }
 }

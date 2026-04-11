@@ -6,6 +6,7 @@ import { Icon } from "@/components/icons";
 import Link from "next/link";
 import { ReviewForm } from "@/components/products/review-form";
 import { OrderStatusUpdate } from "@/components/orders/order-status-update";
+import { ChatButton } from "@/components/social/chat-button";
 
 const STATUS_MAP: Record<
   string,
@@ -130,7 +131,9 @@ export default async function OrderDetailPage({ params }: PageProps) {
                   </div>
                   <span
                     className={`text-xs mt-1.5 font-medium ${
-                      i <= status.step ? "text-flamencalia-red-dark" : "text-neutral-400"
+                      i <= status.step
+                        ? "text-flamencalia-red-dark"
+                        : "text-neutral-400"
                     }`}
                   >
                     {step.label}
@@ -275,7 +278,9 @@ export default async function OrderDetailPage({ params }: PageProps) {
               {isSeller && (
                 <>
                   <div className="flex justify-between text-xs">
-                    <span className="text-neutral-400">Comisión plataforma</span>
+                    <span className="text-neutral-400">
+                      Comisión plataforma
+                    </span>
                     <span className="text-neutral-400">
                       -{formatPrice(order.platform_fee)}
                     </span>
@@ -299,9 +304,32 @@ export default async function OrderDetailPage({ params }: PageProps) {
               <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">
                 Vendedor
               </h2>
-              <p className="text-sm font-medium text-neutral-700">
-                {order.seller.display_name}
-              </p>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-full bg-flamencalia-albero-pale/30 overflow-hidden shrink-0 flex items-center justify-center">
+                  {order.seller.avatar_url ? (
+                    <img
+                      src={order.seller.avatar_url}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Icon
+                      name="user"
+                      className="w-5 h-5 text-flamencalia-albero"
+                    />
+                  )}
+                </div>
+                <Link
+                  href={`/sellers/${order.seller_id}`}
+                  className="text-sm font-medium text-neutral-700 hover:text-flamencalia-red transition-colors"
+                >
+                  {order.seller.display_name}
+                </Link>
+              </div>
+              <ChatButton
+                productId={order.product_id}
+                sellerId={order.seller_id}
+              />
             </div>
           )}
 

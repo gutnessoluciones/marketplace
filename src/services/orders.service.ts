@@ -59,7 +59,7 @@ export class OrdersService {
     const { data, error } = await this.supabase
       .from("orders")
       .select(
-        "*, product:products(id, title, images, price), seller:profiles!seller_id(id, display_name)",
+        "*, product:products(id, title, images, price), seller:profiles!seller_id(id, display_name, avatar_url)",
       )
       .eq("id", orderId)
       .single();
