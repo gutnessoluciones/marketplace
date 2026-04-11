@@ -5,6 +5,8 @@ import { Footer } from "@/components/layout/footer";
 import { Icon } from "@/components/icons";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {
@@ -92,10 +94,24 @@ export default async function BlogPostPage({
 
         <div className="flex items-center gap-3 text-sm text-neutral-500 mb-8 pb-8 border-b border-flamencalia-albero-pale/30">
           <div className="w-8 h-8 rounded-full bg-flamencalia-albero/10 flex items-center justify-center text-flamencalia-albero font-bold text-xs">
-            {post.author?.display_name?.charAt(0).toUpperCase() ?? "A"}
+            {(
+              post.author as unknown as {
+                display_name: string;
+                avatar_url: string;
+              } | null
+            )?.display_name
+              ?.charAt(0)
+              .toUpperCase() ?? "A"}
           </div>
           <span className="font-medium text-neutral-700">
-            {post.author?.display_name}
+            {
+              (
+                post.author as unknown as {
+                  display_name: string;
+                  avatar_url: string;
+                } | null
+              )?.display_name
+            }
           </span>
           {post.published_at && (
             <>

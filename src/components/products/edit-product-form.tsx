@@ -437,10 +437,7 @@ export function EditProductForm({ product }: { product: Product }) {
                 type="number"
                 step="0.1"
                 min="0"
-                defaultValue={
-                  ((product as Record<string, unknown>).weight_kg as number) ??
-                  ""
-                }
+                defaultValue={product.weight_kg ?? ""}
                 placeholder="Ej: 0.5"
                 className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
               />
@@ -455,10 +452,7 @@ export function EditProductForm({ product }: { product: Product }) {
               <input
                 id="shipping_from"
                 name="shipping_from"
-                defaultValue={
-                  ((product as Record<string, unknown>)
-                    .shipping_from as string) ?? ""
-                }
+                defaultValue={product.shipping_from ?? ""}
                 placeholder="Ej: Sevilla, Málaga..."
                 className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
               />

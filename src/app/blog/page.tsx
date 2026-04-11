@@ -4,6 +4,8 @@ import { Footer } from "@/components/layout/footer";
 import { Icon } from "@/components/icons";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Blog — Flamencalia",
   description:
@@ -90,7 +92,15 @@ export default async function BlogPage() {
                     </p>
                   )}
                   <div className="flex items-center gap-2 mt-3 text-[11px] text-neutral-400">
-                    <span>{post.author?.display_name}</span>
+                    <span>
+                      {
+                        (
+                          post.author as unknown as {
+                            display_name: string;
+                          } | null
+                        )?.display_name
+                      }
+                    </span>
                     {post.published_at && (
                       <>
                         <span>·</span>

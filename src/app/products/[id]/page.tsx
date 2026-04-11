@@ -454,29 +454,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 )}
 
                 {/* Shipping info */}
-                {((product as Record<string, unknown>).shipping_from ||
-                  (product as Record<string, unknown>).weight_kg) && (
+                {(product.shipping_from || product.weight_kg) && (
                   <div className="mt-3 flex items-center gap-3 text-xs text-neutral-400">
                     <Icon name="package" className="w-3.5 h-3.5 shrink-0" />
-                    {(product as Record<string, unknown>).shipping_from && (
-                      <span>
-                        Envío desde{" "}
-                        {
-                          (product as Record<string, unknown>)
-                            .shipping_from as string
-                        }
-                      </span>
+                    {product.shipping_from && (
+                      <span>Envío desde {product.shipping_from}</span>
                     )}
-                    {(product as Record<string, unknown>).weight_kg && (
-                      <span>
-                        ·{" "}
-                        {
-                          (product as Record<string, unknown>)
-                            .weight_kg as number
-                        }{" "}
-                        kg
-                      </span>
-                    )}
+                    {product.weight_kg && <span>· {product.weight_kg} kg</span>}
                   </div>
                 )}
 

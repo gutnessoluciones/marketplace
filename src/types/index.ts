@@ -62,6 +62,8 @@ export interface Product {
   likes_count: number;
   negotiable: boolean;
   stock: number;
+  weight_kg: number | null;
+  shipping_from: string | null;
   created_at: string;
   updated_at: string;
   seller?: Pick<
