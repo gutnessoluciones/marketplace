@@ -9,7 +9,7 @@ const blogPostSchema = z.object({
   slug: z.string().min(3).max(200),
   excerpt: z.string().max(500).optional(),
   content: z.string().min(10),
-  cover_image: z.string().url().optional(),
+  cover_image: z.string().url().nullable().optional(),
   status: z.enum(["draft", "published"]).default("draft"),
   tags: z.array(z.string()).optional(),
 });

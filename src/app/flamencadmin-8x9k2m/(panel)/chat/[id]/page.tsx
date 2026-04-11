@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { AdminToast } from "@/components/admin/toast";
 
 interface Participant {
   id: string;
@@ -44,6 +45,10 @@ export default function AdminChatDetailPage({
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [toast, setToast] = useState<{
+    msg: string;
+    type: "success" | "error";
+  } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -78,7 +83,10 @@ export default function AdminChatDetailPage({
     });
     if (res.ok) {
       setNewMessage("");
+      setToast({ msg: "Mensaje enviado", type: "success" });
       await loadChat();
+    } else {
+      setToast({ msg: "Error al enviar el mensaje", type: "error" });
     }
     setSending(false);
   };
@@ -338,6 +346,13 @@ export default function AdminChatDetailPage({
           </button>
         </div>
       </div>
+      {toast && (
+        <AdminToast
+          message={toast.msg}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

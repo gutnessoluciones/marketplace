@@ -61,7 +61,10 @@ export default function AdminProductsPage() {
     const res = await fetch(`/api/admin/products/${product.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: type, reason: reason || undefined }),
+      body: JSON.stringify({
+        action: type,
+        reason: reason.trim() || undefined,
+      }),
     });
 
     if (res.ok) {
