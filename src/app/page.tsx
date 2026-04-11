@@ -269,7 +269,7 @@ export default async function HomePage() {
       </header>
 
       {/* ═══ HERO BANNER — Carrusel de colección ═══ */}
-      <section className="relative overflow-hidden bg-flamencalia-black min-h-[calc(100svh-8rem)]">
+      <section className="relative overflow-hidden bg-flamencalia-black min-h-svh sm:min-h-[calc(100svh-8rem)]">
         {/* Carrusel de fondo a pantalla completa */}
         <div className="absolute inset-0">
           <BannerCarousel />
@@ -278,7 +278,7 @@ export default async function HomePage() {
         {/* Overlay oscuro para legibilidad */}
         <div className="absolute inset-0 bg-black/50" />
 
-        <div className="relative flex items-center justify-center min-h-[calc(100svh-8rem)]">
+        <div className="relative flex items-center justify-center min-h-svh sm:min-h-[calc(100svh-8rem)]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* Marca animada — F gira como flamenca */}
             <div className="flex justify-center items-center mb-6 animate-fade-in-up">

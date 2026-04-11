@@ -149,15 +149,15 @@ export function ChatConversation({
   const product = conversation.product;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)]">
+    <div className="flex flex-col h-[calc(100vh-8rem)] max-w-2xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-3 pb-4 border-b border-flamencalia-albero-pale/30 shrink-0">
+      <div className="flex items-center gap-3 pb-4 border-b border-flamencalia-albero-pale/20 shrink-0">
         <Link
           href="/dashboard/chat"
-          className="w-8 h-8 rounded-full bg-flamencalia-albero-pale/20 flex items-center justify-center hover:bg-flamencalia-albero-pale/40 transition-colors"
+          className="w-9 h-9 rounded-xl bg-flamencalia-cream hover:bg-flamencalia-albero-pale/30 flex items-center justify-center transition-colors"
         >
           <svg
-            className="w-4 h-4 text-flamencalia-black"
+            className="w-4 h-4 text-flamencalia-black/60"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -171,13 +171,13 @@ export function ChatConversation({
           </svg>
         </Link>
 
-        <div className="w-10 h-10 rounded-full bg-flamencalia-albero-pale/30 overflow-hidden shrink-0">
+        <div className="w-11 h-11 rounded-full bg-linear-to-br from-flamencalia-albero-pale/40 to-flamencalia-albero-pale/20 overflow-hidden shrink-0 ring-2 ring-flamencalia-albero-pale/20">
           {other?.avatar_url ? (
             <Image
               src={other.avatar_url}
               alt={other.display_name || ""}
-              width={40}
-              height={40}
+              width={44}
+              height={44}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -194,7 +194,7 @@ export function ChatConversation({
           {product && (
             <Link
               href={`/products/${product.id}`}
-              className="text-xs text-flamencalia-black/40 hover:text-flamencalia-albero transition-colors truncate block"
+              className="text-xs text-flamencalia-black/40 hover:text-flamencalia-red transition-colors truncate block"
             >
               {product.title} · {formatPrice(product.price)}
             </Link>
@@ -204,7 +204,7 @@ export function ChatConversation({
         {product?.images?.[0] && (
           <Link
             href={`/products/${product.id}`}
-            className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-flamencalia-cream"
+            className="w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-flamencalia-cream ring-1 ring-flamencalia-albero-pale/20 hover:ring-flamencalia-albero/40 transition-all"
           >
             <img
               src={product.images[0]}
@@ -216,55 +216,91 @@ export function ChatConversation({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto py-4 space-y-3 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto py-6 space-y-4 scrollbar-thin">
         {messages.length === 0 && (
-          <div className="text-center py-12 text-flamencalia-black/30 text-sm">
-            Envía el primer mensaje
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-flamencalia-albero-pale/15 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-7 h-7 text-flamencalia-albero/50"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={1.2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                />
+              </svg>
+            </div>
+            <p className="text-flamencalia-black/40 text-sm font-medium">
+              Envía el primer mensaje
+            </p>
+            <p className="text-flamencalia-black/25 text-xs mt-1">
+              Inicia la conversación con {other?.display_name || "el usuario"}
+            </p>
           </div>
         )}
 
-        {messages.map((msg) => {
+        {messages.map((msg, i) => {
           const isOwn = msg.sender_id === userId;
           const sender = Array.isArray(msg.sender) ? msg.sender[0] : msg.sender;
+          const showAvatar =
+            !isOwn && (i === 0 || messages[i - 1]?.sender_id !== msg.sender_id);
+          const isLast =
+            i === messages.length - 1 ||
+            messages[i + 1]?.sender_id !== msg.sender_id;
+
           return (
             <div
               key={msg.id}
-              className={`flex gap-2 ${isOwn ? "justify-end" : "justify-start"}`}
+              className={`flex gap-2.5 ${isOwn ? "justify-end" : "justify-start"} ${!isLast ? "mb-1!" : ""}`}
             >
               {!isOwn && (
-                <div className="w-7 h-7 rounded-full bg-flamencalia-albero-pale/30 overflow-hidden shrink-0 mt-1">
-                  {sender?.avatar_url ? (
-                    <img
-                      src={sender.avatar_url}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-flamencalia-albero">
-                      {(sender?.display_name || "?").charAt(0).toUpperCase()}
+                <div className="w-7 shrink-0">
+                  {showAvatar ? (
+                    <div className="w-7 h-7 rounded-full bg-linear-to-br from-flamencalia-albero-pale/40 to-flamencalia-albero-pale/20 overflow-hidden mt-1">
+                      {sender?.avatar_url ? (
+                        <img
+                          src={sender.avatar_url}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-flamencalia-albero">
+                          {(sender?.display_name || "?")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ) : null}
                 </div>
               )}
 
-              <div
-                className={`max-w-xs lg:max-w-sm px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                  isOwn
-                    ? "bg-flamencalia-black text-white rounded-br-md"
-                    : "bg-flamencalia-albero-pale/20 text-flamencalia-black rounded-bl-md"
-                }`}
-              >
-                <p className="whitespace-pre-wrap wrap-break-word">
-                  {msg.content}
-                </p>
-                <p
-                  className={`text-[10px] mt-1 ${isOwn ? "text-white/40" : "text-flamencalia-black/30"}`}
+              <div className="max-w-xs lg:max-w-sm">
+                <div
+                  className={`px-4 py-2.5 text-sm leading-relaxed shadow-sm ${
+                    isOwn
+                      ? "bg-flamencalia-red text-white rounded-2xl rounded-br-md"
+                      : "bg-flamencalia-white text-flamencalia-black rounded-2xl rounded-bl-md border border-flamencalia-albero-pale/15"
+                  }`}
                 >
-                  {new Date(msg.created_at).toLocaleTimeString("es-ES", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
+                  <p className="whitespace-pre-wrap wrap-break-word">
+                    {msg.content}
+                  </p>
+                </div>
+                {isLast && (
+                  <p
+                    className={`text-[10px] mt-1 px-1 ${isOwn ? "text-right text-flamencalia-black/25" : "text-flamencalia-black/25"}`}
+                  >
+                    {new Date(msg.created_at).toLocaleTimeString("es-ES", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                )}
               </div>
             </div>
           );
@@ -272,9 +308,9 @@ export function ChatConversation({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
+      {/* Filter error */}
       {filterError && (
-        <div className="shrink-0 mx-1 mt-2 px-4 py-2.5 bg-flamencalia-red/10 border border-flamencalia-red/20 rounded-xl text-xs text-flamencalia-red leading-relaxed flex items-start gap-2">
+        <div className="shrink-0 mx-1 mt-2 px-4 py-2.5 bg-flamencalia-red/8 border border-flamencalia-red/15 rounded-2xl text-xs text-flamencalia-red leading-relaxed flex items-start gap-2">
           <svg
             className="w-4 h-4 shrink-0 mt-0.5"
             fill="none"
@@ -291,12 +327,14 @@ export function ChatConversation({
           <span>{filterError}</span>
         </div>
       )}
+
+      {/* Input */}
       <form
         onSubmit={handleSend}
-        className="shrink-0 pt-4 border-t border-flamencalia-albero-pale/30"
+        className="shrink-0 pt-4 border-t border-flamencalia-albero-pale/20"
       >
-        <div className="flex items-end gap-2">
-          <div className="flex-1 bg-flamencalia-albero-pale/10 rounded-2xl border border-flamencalia-albero-pale/30 focus-within:border-flamencalia-albero/50 transition-colors">
+        <div className="flex items-end gap-2.5">
+          <div className="flex-1 bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/20 focus-within:border-flamencalia-red/30 focus-within:shadow-sm focus-within:shadow-flamencalia-red/5 transition-all">
             <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
@@ -308,13 +346,13 @@ export function ChatConversation({
               }}
               placeholder="Escribe un mensaje..."
               rows={1}
-              className="w-full bg-transparent px-4 py-3 text-sm text-flamencalia-black placeholder:text-flamencalia-black/30 resize-none focus:outline-none max-h-24"
+              className="w-full bg-transparent px-4 py-3 text-sm text-flamencalia-black placeholder:text-flamencalia-black/25 resize-none focus:outline-none max-h-24"
             />
           </div>
           <button
             type="submit"
             disabled={!newMessage.trim() || sending}
-            className="w-10 h-10 rounded-full bg-flamencalia-black text-white flex items-center justify-center hover:bg-flamencalia-black/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+            className="w-11 h-11 rounded-xl bg-flamencalia-red text-white flex items-center justify-center hover:bg-flamencalia-red-dark transition-all disabled:opacity-25 disabled:cursor-not-allowed shrink-0 shadow-sm shadow-flamencalia-red/20"
           >
             <svg
               className="w-5 h-5"
