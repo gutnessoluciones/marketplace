@@ -10,9 +10,15 @@ const updateBlogSchema = z.object({
   excerpt: z.string().max(500).optional(),
   content: z.string().min(10).optional(),
   cover_image: z
-    .string()
-    .transform((v) => (v.trim() === "" ? null : v.trim()))
-    .pipe(z.string().url().nullable())
+    .preprocess(
+      (v) =>
+        typeof v === "string" && v.trim() === ""
+          ? null
+          : v === undefined
+            ? null
+            : v,
+      z.string().url().nullable(),
+    )
     .optional(),
   status: z.enum(["draft", "published"]).optional(),
   tags: z.array(z.string()).optional(),

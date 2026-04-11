@@ -134,7 +134,9 @@ export default function AdminBlogPage() {
         errMsg = json.error;
       } else if (json?.error?.fieldErrors) {
         const fields = json.error.fieldErrors;
-        errMsg = Object.entries(fields).map(([k, v]) => `${k}: ${(v as string[]).join(", ")}`).join("; ");
+        errMsg = Object.entries(fields)
+          .map(([k, v]) => `${k}: ${(v as string[]).join(", ")}`)
+          .join("; ");
       }
       setToast({
         msg: errMsg,
@@ -288,6 +290,13 @@ export default function AdminBlogPage() {
             </button>
           </div>
         </div>
+        {toast && (
+          <AdminToast
+            message={toast.msg}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
       </div>
     );
   }
