@@ -11,6 +11,7 @@ import { Footer } from "@/components/layout/footer";
 import { BannerCarousel } from "@/components/layout/banner-carousel";
 import { RecentlyViewed } from "@/components/social/recently-viewed";
 import AnimatedBrand from "@/components/animated-brand";
+import { MobileSearch } from "@/components/layout/mobile-search";
 
 const CATEGORIES = [
   {
@@ -205,7 +206,10 @@ export default async function HomePage() {
             </div>
           </form>
 
-          <UserNav variant="light" />
+          <div className="flex items-center">
+            <MobileSearch />
+            <UserNav variant="light" />
+          </div>
         </nav>
 
         {/* Categories bar */}
@@ -296,51 +300,6 @@ export default async function HomePage() {
               Vestidos, mantones, flores y complementos de diseñadores y de la
               comunidad flamenca. Compra, vende y dale larga vida a tu flamenca.
             </p>
-
-            {/* ★ BUSCADOR GRANDE ★ */}
-            <form
-              action="/products"
-              method="GET"
-              className="mt-8 animate-fade-in-up"
-              style={{ animationDelay: "0.3s" }}
-            >
-              <div className="relative max-w-2xl mx-auto">
-                <Icon
-                  name="search"
-                  className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-flamencalia-albero"
-                />
-                <input
-                  type="text"
-                  name="q"
-                  placeholder="Buscar vestidos, mantones, complementos, diseñadores..."
-                  className="w-full bg-white/95 backdrop-blur-sm rounded-full pl-13 sm:pl-14 pr-36 py-4 sm:py-5 text-base sm:text-lg text-flamencalia-black placeholder-neutral-400 focus:outline-none focus:ring-4 focus:ring-flamencalia-albero/30 shadow-2xl border border-white/20 transition-all"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-flamencalia-black text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-bold hover:bg-flamencalia-black/80 transition-all hover:shadow-lg"
-                >
-                  Buscar
-                </button>
-              </div>
-            </form>
-
-            <div
-              className="mt-6 flex flex-wrap justify-center gap-3 animate-fade-in-up"
-              style={{ animationDelay: "0.4s" }}
-            >
-              <Link
-                href="/products"
-                className="bg-flamencalia-albero text-flamencalia-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-flamencalia-albero-light transition-all hover:shadow-lg hover:-translate-y-0.5"
-              >
-                Explorar Productos
-              </Link>
-              <Link
-                href="/register"
-                className="border-2 border-white/40 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white/15 backdrop-blur-sm transition-all hover:-translate-y-0.5"
-              >
-                Vender Ahora
-              </Link>
-            </div>
           </div>
         </div>
 
