@@ -15,7 +15,7 @@ export default function AnimatedBrand({
   return (
     <svg
       className={className}
-      viewBox="0 0 11812 3544"
+      viewBox="0 550 11812 2200"
       xmlns="http://www.w3.org/2000/svg"
       style={{ fillRule: "evenodd", clipRule: "evenodd" }}
     >
