@@ -4,8 +4,8 @@
 CREATE TABLE IF NOT EXISTS offers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  buyer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  seller_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  buyer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE REFERENCES profiles(id) ON DELETE CASCADE,
+  seller_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE REFERENCES profiles(id) ON DELETE CASCADE,
   amount INTEGER NOT NULL CHECK (amount > 0),          -- cents
   original_price INTEGER NOT NULL CHECK (original_price > 0), -- product price snapshot
   status TEXT NOT NULL DEFAULT 'pending'

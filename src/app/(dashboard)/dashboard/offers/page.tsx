@@ -254,6 +254,23 @@ export default async function OffersPage({ searchParams }: PageProps) {
                       </div>
                     )}
 
+                    {/* Countered — buyer can accept/reject counter */}
+                    {o.status === "countered" && !isSeller && (
+                      <div className="mt-3">
+                        <OfferActions
+                          offerId={o.id}
+                          amount={o.amount}
+                          originalPrice={o.original_price}
+                          counterAmount={
+                            (o as Record<string, unknown>)
+                              .counter_amount as number
+                          }
+                          offerStatus="countered"
+                          buyerMode
+                        />
+                      </div>
+                    )}
+
                     {/* Accepted — buyer can pay */}
                     {o.status === "accepted" && !isSeller && (
                       <div className="mt-3">

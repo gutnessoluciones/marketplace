@@ -20,8 +20,8 @@ ALTER TABLE offers ADD CONSTRAINT offers_status_check
 CREATE TABLE IF NOT EXISTS buyer_reviews (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-  seller_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  buyer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  seller_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE REFERENCES profiles(id) ON DELETE CASCADE,
+  buyer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE REFERENCES profiles(id) ON DELETE CASCADE,
   rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
   comment TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -47,7 +47,7 @@ END $$;
 CREATE TABLE IF NOT EXISTS disputes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-  reporter_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  reporter_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE REFERENCES profiles(id) ON DELETE CASCADE,
   reporter_role TEXT NOT NULL CHECK (reporter_role IN ('buyer', 'seller')),
   reason TEXT NOT NULL CHECK (reason IN (
     'not_received', 'defective', 'wrong_item', 'not_as_described',
