@@ -3,9 +3,12 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { formatPrice } from "@/lib/utils";
 import { Icon } from "@/components/icons";
+import { ProductCard } from "@/components/products/product-card";
+import { FavoritesService } from "@/services/favorites.service";
 import { UserNav } from "@/components/layout/user-nav";
 import { Footer } from "@/components/layout/footer";
 import { BannerCarousel } from "@/components/layout/banner-carousel";
+import { RecentlyViewed } from "@/components/social/recently-viewed";
 
 const CATEGORIES = [
   {
@@ -111,6 +114,38 @@ export default async function HomePage() {
   const topSellers = Array.from(sellerMap.values())
     .sort((a, b) => b.product_count - a.product_count)
     .slice(0, 10);
+
+  // Personalized feed: products from sellers the user follows
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let followedProducts: typeof featuredProducts = null;
+  let favoriteIds: string[] = [];
+
+  if (user) {
+    // Get followed seller IDs
+    const { data: followsData } = await supabase
+      .from("follows")
+      .select("following_id")
+      .eq("follower_id", user.id);
+
+    const followedIds = (followsData ?? []).map((f) => f.following_id);
+
+    if (followedIds.length > 0) {
+      const { data } = await supabase
+        .from("products")
+        .select("*, seller:profiles!seller_id(id, display_name, avatar_url)")
+        .eq("status", "active")
+        .in("seller_id", followedIds)
+        .order("created_at", { ascending: false })
+        .limit(8);
+      followedProducts = data;
+    }
+
+    // Get favorite IDs
+    const favService = new FavoritesService(supabase);
+    favoriteIds = await favService.getUserFavoriteIds(user.id);
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-flamencalia-cream">
@@ -381,6 +416,29 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* ── Feed personalizado: Vendedores que sigues ── */}
+        {followedProducts && followedProducts.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px flex-1 bg-flamencalia-albero-pale" />
+              <h2 className="font-serif text-2xl font-bold text-flamencalia-black flex items-center gap-2">
+                <Icon name="heart" className="w-5 h-5 text-flamencalia-red" />
+                De quienes sigues
+              </h2>
+              <div className="h-px flex-1 bg-flamencalia-albero-pale" />
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {followedProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product as import("@/types").Product}
+                  isFavorited={favoriteIds.includes(product.id)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* ── Productos Destacados ── */}
         {featuredProducts && featuredProducts.length > 0 && (
           <section className="mb-10">
@@ -493,6 +551,9 @@ export default async function HomePage() {
             </div>
           </section>
         )}
+
+        {/* ── Vistos recientemente (client-side) ── */}
+        <RecentlyViewed />
 
         {/* ── CTA: Vende tu Flamenca ── */}
         <section className="relative overflow-hidden rounded-2xl">

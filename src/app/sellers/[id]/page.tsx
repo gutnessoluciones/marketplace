@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/products/product-card";
+import { FavoritesService } from "@/services/favorites.service";
+import { FollowButton } from "@/components/social/follow-button";
 import { Icon } from "@/components/icons";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
@@ -36,7 +38,7 @@ export default async function SellerProfilePage({ params }: PageProps) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, display_name, avatar_url, bio, location, website, created_at")
+    .select("id, display_name, avatar_url, bio, location, website, created_at, followers_count, following_count")
     .eq("id", id)
     .single();
 
@@ -59,6 +61,15 @@ export default async function SellerProfilePage({ params }: PageProps) {
     month: "long",
     year: "numeric",
   });
+
+  // Get current user + favorites
+  const { data: { user } } = await supabase.auth.getUser();
+  let favoriteIds: string[] = [];
+  if (user) {
+    const favService = new FavoritesService(supabase);
+    favoriteIds = await favService.getUserFavoriteIds(user.id);
+  }
+  const isOwnProfile = user?.id === id;
 
   return (
     <div className="min-h-screen bg-flamencalia-cream">
@@ -97,6 +108,13 @@ export default async function SellerProfilePage({ params }: PageProps) {
                   {totalProducts ?? 0} producto
                   {(totalProducts ?? 0) !== 1 ? "s" : ""}
                 </span>
+                <span className="flex items-center gap-1.5 font-medium">
+                  <Icon name="user" className="w-4 h-4" />
+                  {profile.followers_count ?? 0} seguidores
+                </span>
+                <span className="flex items-center gap-1.5">
+                  {profile.following_count ?? 0} siguiendo
+                </span>
                 <span className="flex items-center gap-1.5">
                   <Icon name="fan" className="w-4 h-4" />
                   Miembro desde {memberSince}
@@ -123,12 +141,20 @@ export default async function SellerProfilePage({ params }: PageProps) {
                   </a>
                 )}
               </div>
-              <Link
-                href={`/products?seller=${profile.id}`}
-                className="inline-flex items-center gap-2 mt-4 bg-flamencalia-red text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-flamencalia-red-dark transition-all"
-              >
-                Ver todos sus productos →
-              </Link>
+              <div className="flex flex-wrap items-center gap-3 mt-4">
+                {!isOwnProfile && (
+                  <FollowButton
+                    sellerId={profile.id}
+                    initialCount={profile.followers_count ?? 0}
+                  />
+                )}
+                <Link
+                  href={`/products?seller=${profile.id}`}
+                  className="inline-flex items-center gap-2 bg-flamencalia-black text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-flamencalia-black/80 transition-all"
+                >
+                  Ver todos sus productos →
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -142,7 +168,7 @@ export default async function SellerProfilePage({ params }: PageProps) {
         {products && products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} isFavorited={favoriteIds.includes(product.id)} />
             ))}
           </div>
         ) : (

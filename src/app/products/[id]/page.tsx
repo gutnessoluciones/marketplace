@@ -12,6 +12,7 @@ import { ViewTracker } from "@/components/products/view-tracker";
 import { FavoriteButton } from "@/components/social/favorite-button";
 import { FollowButton } from "@/components/social/follow-button";
 import { ChatButton } from "@/components/social/chat-button";
+import { ShareButtons } from "@/components/social/share-buttons";
 import { Icon } from "@/components/icons";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
@@ -184,7 +185,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-flamencalia-cream">
-      <ViewTracker productId={product.id} />
+      <ViewTracker
+        productId={product.id}
+        title={product.title}
+        price={product.price}
+        image={product.images?.[0]}
+      />
 
       <SiteHeader />
 
@@ -290,6 +296,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       {product.views_count} visitas
                     </span>
                   )}
+                  <div className="ml-auto">
+                    <ShareButtons
+                      url={`/products/${product.id}`}
+                      title={product.title}
+                      price={formatPrice(product.price)}
+                    />
+                  </div>
                 </div>
 
                 {/* Price */}
