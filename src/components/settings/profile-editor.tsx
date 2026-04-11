@@ -13,13 +13,16 @@ interface ProfileEditorProps {
 export function ProfileEditor({ profile, email }: ProfileEditorProps) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
+  const bannerRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
 
   const [displayName, setDisplayName] = useState(profile.display_name);
   const [bio, setBio] = useState(profile.bio ?? "");
   const [phone, setPhone] = useState(profile.phone ?? "");
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
+  const [bannerUrl, setBannerUrl] = useState(profile.banner_url);
   const [uploading, setUploading] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
@@ -54,6 +57,37 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
       });
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleBannerChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingBanner(true);
+    setMessage(null);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/profile/banner", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error al subir imagen");
+
+      setBannerUrl(data.url);
+      setMessage({ type: "success", text: "Portada actualizada" });
+      startTransition(() => router.refresh());
+    } catch (err) {
+      setMessage({
+        type: "error",
+        text: err instanceof Error ? err.message : "Error al subir portada",
+      });
+    } finally {
+      setUploadingBanner(false);
     }
   };
 
@@ -92,14 +126,55 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
 
   return (
     <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden mb-6">
-      <div className="p-6 border-b border-neutral-50 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
-          Perfil
-        </h2>
-      </div>
-      <form onSubmit={handleSave} className="p-6">
-        {/* Avatar */}
-        <div className="flex items-center gap-5 mb-6">
+      {/* Banner + Avatar visual header */}
+      <div className="relative">
+        {/* Banner */}
+        <button
+          type="button"
+          onClick={() => bannerRef.current?.click()}
+          disabled={uploadingBanner}
+          className="relative w-full h-36 sm:h-44 group cursor-pointer overflow-hidden"
+        >
+          {bannerUrl ? (
+            <img
+              src={bannerUrl}
+              alt="Portada"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-linear-to-br from-flamencalia-black via-flamencalia-black/90 to-flamencalia-red-dark/70">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 left-1/4 w-48 h-48 bg-flamencalia-albero rounded-full blur-3xl" />
+                <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-flamencalia-red rounded-full blur-3xl" />
+              </div>
+            </div>
+          )}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 shadow-lg">
+              {uploadingBanner ? (
+                <div className="w-4 h-4 border-2 border-flamencalia-red border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Icon
+                  name="pencil"
+                  className="w-4 h-4 text-flamencalia-black"
+                />
+              )}
+              <span className="text-xs font-semibold text-flamencalia-black">
+                {uploadingBanner ? "Subiendo..." : "Cambiar portada"}
+              </span>
+            </div>
+          </div>
+          <input
+            ref={bannerRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleBannerChange}
+            className="hidden"
+          />
+        </button>
+
+        {/* Avatar — overlapping banner */}
+        <div className="absolute -bottom-10 left-6">
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
@@ -110,10 +185,10 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
               <img
                 src={avatarUrl}
                 alt={displayName}
-                className="w-20 h-20 rounded-full object-cover ring-2 ring-neutral-100"
+                className="w-20 h-20 rounded-full object-cover ring-4 ring-white shadow-lg"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-linear-to-br from-flamencalia-red to-flamencalia-red flex items-center justify-center text-white font-bold text-2xl ring-2 ring-neutral-100">
+              <div className="w-20 h-20 rounded-full bg-linear-to-br from-flamencalia-red to-flamencalia-red-dark flex items-center justify-center text-white font-bold text-2xl ring-4 ring-white shadow-lg">
                 {initial}
               </div>
             )}
@@ -132,22 +207,37 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
               className="hidden"
             />
           </button>
-          <div>
-            <p className="text-sm font-semibold text-flamencalia-black">
-              {displayName}
-            </p>
-            <p className="text-xs text-neutral-400">{email}</p>
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              disabled={uploading}
-              className="text-xs text-flamencalia-red hover:text-flamencalia-red-dark mt-1 font-medium"
-            >
-              {uploading ? "Subiendo..." : "Cambiar foto"}
-            </button>
-          </div>
         </div>
+      </div>
 
+      {/* Name + email — next to avatar */}
+      <div className="pt-3 pl-28 pr-6 pb-4 border-b border-neutral-100">
+        <p className="text-sm font-semibold text-flamencalia-black">
+          {displayName}
+        </p>
+        <p className="text-xs text-neutral-400">{email}</p>
+        <div className="flex items-center gap-3 mt-1">
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="text-[11px] text-flamencalia-red hover:text-flamencalia-red-dark font-medium"
+          >
+            {uploading ? "Subiendo..." : "Cambiar foto"}
+          </button>
+          <span className="text-neutral-200">·</span>
+          <button
+            type="button"
+            onClick={() => bannerRef.current?.click()}
+            disabled={uploadingBanner}
+            className="text-[11px] text-flamencalia-red hover:text-flamencalia-red-dark font-medium"
+          >
+            {uploadingBanner ? "Subiendo..." : "Cambiar portada"}
+          </button>
+        </div>
+      </div>
+
+      <form onSubmit={handleSave} className="p-6">
         {/* Fields */}
         <div className="space-y-4">
           <div>

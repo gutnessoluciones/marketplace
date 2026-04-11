@@ -45,7 +45,7 @@ export default async function SellerProfilePage({
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "id, display_name, avatar_url, bio, location, website, created_at, followers_count, following_count",
+      "id, display_name, avatar_url, banner_url, bio, location, website, created_at, followers_count, following_count",
     )
     .eq("id", id)
     .single();
@@ -163,12 +163,24 @@ export default async function SellerProfilePage({
       <SiteHeader />
 
       {/* Cover / Hero area */}
-      <div className="bg-linear-to-br from-flamencalia-black via-flamencalia-black/95 to-flamencalia-red-dark/70 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-flamencalia-albero/8 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-flamencalia-red/8 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-flamencalia-albero/5 rounded-full blur-2xl" />
-        </div>
+      <div className="relative overflow-hidden">
+        {/* Banner image or gradient fallback */}
+        {profile.banner_url ? (
+          <div className="absolute inset-0">
+            <img
+              src={profile.banner_url}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/50 to-black/80" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 bg-linear-to-br from-flamencalia-black via-flamencalia-black/95 to-flamencalia-red-dark/70">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-flamencalia-albero/8 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-flamencalia-red/8 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-flamencalia-albero/5 rounded-full blur-2xl" />
+          </div>
+        )}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 relative">
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
