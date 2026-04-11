@@ -28,8 +28,8 @@ export function apiError(error: unknown) {
   );
 }
 
-export function formatPrice(cents: number, currency = "usd"): string {
-  return new Intl.NumberFormat("en-US", {
+export function formatPrice(cents: number, currency = "EUR"): string {
+  return new Intl.NumberFormat("es-ES", {
     style: "currency",
     currency,
   }).format(cents / 100);

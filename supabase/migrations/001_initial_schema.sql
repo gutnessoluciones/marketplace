@@ -45,7 +45,7 @@ CREATE TABLE products (
   title TEXT NOT NULL,
   description TEXT,
   price INTEGER NOT NULL CHECK (price > 0),
-  currency TEXT DEFAULT 'usd',
+  currency TEXT DEFAULT 'eur',
   images TEXT[] DEFAULT '{}',
   status TEXT NOT NULL CHECK (status IN ('draft', 'active', 'sold', 'archived')) DEFAULT 'draft',
   category TEXT,

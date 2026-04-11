@@ -51,12 +51,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .order("updated_at", { ascending: false })
     .limit(5000);
 
-  const productPages: MetadataRoute.Sitemap = (products ?? []).map((p: { id: string; updated_at: string }) => ({
-    url: `${BASE_URL}/products/${p.id}`,
-    lastModified: new Date(p.updated_at),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  const productPages: MetadataRoute.Sitemap = (products ?? []).map(
+    (p: { id: string; updated_at: string }) => ({
+      url: `${BASE_URL}/products/${p.id}`,
+      lastModified: new Date(p.updated_at),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }),
+  );
 
   // Category pages
   const categories = [
@@ -82,12 +84,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .eq("role", "seller")
     .limit(1000);
 
-  const sellerPages: MetadataRoute.Sitemap = (sellers ?? []).map((s: { id: string; updated_at: string }) => ({
-    url: `${BASE_URL}/sellers/${s.id}`,
-    lastModified: new Date(s.updated_at),
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }));
+  const sellerPages: MetadataRoute.Sitemap = (sellers ?? []).map(
+    (s: { id: string; updated_at: string }) => ({
+      url: `${BASE_URL}/sellers/${s.id}`,
+      lastModified: new Date(s.updated_at),
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    }),
+  );
 
   return [...staticPages, ...productPages, ...categoryPages, ...sellerPages];
 }

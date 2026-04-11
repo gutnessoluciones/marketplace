@@ -27,7 +27,9 @@ export default async function MyProductsPage() {
     <div className="max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-flamencalia-black">Mis Productos</h1>
+          <h1 className="text-2xl font-bold text-flamencalia-black">
+            Mis Productos
+          </h1>
           <p className="text-sm text-neutral-400 mt-0.5">
             {products.length} productos en total
           </p>

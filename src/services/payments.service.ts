@@ -34,7 +34,7 @@ export class PaymentsService {
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency: "eur",
             product_data: {
               name: order.product.title,
               images: order.product.images?.slice(0, 1) || [],

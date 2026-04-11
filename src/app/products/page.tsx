@@ -130,14 +130,16 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 
   // Prioritize boosted products (only on default sort, page 1)
   const boostService = new BoostsService(supabase);
-  const boostedIds = !sort && page === 1 ? await boostService.getBoostedProductIds() : [];
+  const boostedIds =
+    !sort && page === 1 ? await boostService.getBoostedProductIds() : [];
   const boostedSet = new Set(boostedIds);
-  const products = boostedIds.length > 0
-    ? [
-        ...result.data.filter((p) => boostedSet.has(p.id)),
-        ...result.data.filter((p) => !boostedSet.has(p.id)),
-      ]
-    : result.data;
+  const products =
+    boostedIds.length > 0
+      ? [
+          ...result.data.filter((p) => boostedSet.has(p.id)),
+          ...result.data.filter((p) => !boostedSet.has(p.id)),
+        ]
+      : result.data;
 
   let sellerProfile: { display_name: string | null } | null = null;
   if (seller) {

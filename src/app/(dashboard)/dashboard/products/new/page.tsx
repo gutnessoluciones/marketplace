@@ -319,11 +319,11 @@ export default function NewProductPage() {
                 htmlFor="price"
                 className="block text-sm font-medium text-neutral-700 mb-1.5"
               >
-                Precio (USD) *
+                Precio (€) *
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
-                  $
+                  €
                 </span>
                 <input
                   id="price"
