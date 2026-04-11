@@ -101,7 +101,7 @@ export default function AdminBlogPage() {
       slug: form.slug || slugify(form.title),
       excerpt: form.excerpt || undefined,
       content: form.content,
-      cover_image: form.cover_image || undefined,
+      cover_image: form.cover_image.trim() || null,
       status: form.status,
       tags: form.tags
         .split(",")
@@ -129,8 +129,15 @@ export default function AdminBlogPage() {
       loadPosts();
     } else {
       const json = await res.json().catch(() => null);
+      let errMsg = "Error al guardar la entrada";
+      if (typeof json?.error === "string") {
+        errMsg = json.error;
+      } else if (json?.error?.fieldErrors) {
+        const fields = json.error.fieldErrors;
+        errMsg = Object.entries(fields).map(([k, v]) => `${k}: ${(v as string[]).join(", ")}`).join("; ");
+      }
       setToast({
-        msg: json?.error || "Error al guardar la entrada",
+        msg: errMsg,
         type: "error",
       });
     }
