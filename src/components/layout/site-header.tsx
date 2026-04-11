@@ -26,22 +26,26 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
       <div className="h-1.5 toldo-rayas" />
 
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <Image
-            src="/cliente/marca-flamencalia.svg"
-            alt="FLAMENCALIA"
-            width={220}
-            height={44}
-            className="h-7 sm:h-10 w-auto object-contain"
-          />
-          <Image
-            src="/cliente/Abanico.svg"
-            alt=""
-            width={48}
-            height={48}
-            className="w-8 h-8 sm:w-12 sm:h-12"
-          />
-        </Link>
+        <div className="flex items-center gap-2">
+          {/* Mobile hamburger menu — left of logo */}
+          <PublicMobileNav />
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <Image
+              src="/cliente/marca-flamencalia.svg"
+              alt="FLAMENCALIA"
+              width={220}
+              height={44}
+              className="h-7 sm:h-10 w-auto object-contain"
+            />
+            <Image
+              src="/cliente/Abanico.svg"
+              alt=""
+              width={48}
+              height={48}
+              className="w-8 h-8 sm:w-12 sm:h-12"
+            />
+          </Link>
+        </div>
 
         {/* Search bar */}
         <form
@@ -66,9 +70,6 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
             />
           </div>
         </form>
-
-        {/* Mobile hamburger menu */}
-        <PublicMobileNav />
 
         <UserNav variant="light" />
       </nav>

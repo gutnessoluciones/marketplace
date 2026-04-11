@@ -10,6 +10,7 @@ import { PublicMobileNav } from "@/components/layout/public-mobile-nav";
 import { Footer } from "@/components/layout/footer";
 import { BannerCarousel } from "@/components/layout/banner-carousel";
 import { RecentlyViewed } from "@/components/social/recently-viewed";
+import AnimatedBrand from "@/components/animated-brand";
 
 const CATEGORIES = [
   {
@@ -162,23 +163,27 @@ export default async function HomePage() {
         <div className="h-1.5 toldo-rayas" />
 
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3 shrink-0">
-            <Image
-              src="/cliente/marca-flamencalia.svg"
-              alt="FLAMENCALIA"
-              width={220}
-              height={44}
-              className="h-8 sm:h-10 w-auto object-contain"
-              priority
-            />
-            <Image
-              src="/cliente/Abanico.svg"
-              alt="Flamencalia"
-              width={48}
-              height={48}
-              className="w-10 h-10 sm:w-12 sm:h-12"
-            />
-          </Link>
+          <div className="flex items-center gap-2">
+            {/* Mobile hamburger — left of logo */}
+            <PublicMobileNav />
+            <Link href="/" className="flex items-center gap-3 shrink-0">
+              <Image
+                src="/cliente/marca-flamencalia.svg"
+                alt="FLAMENCALIA"
+                width={220}
+                height={44}
+                className="h-8 sm:h-10 w-auto object-contain"
+                priority
+              />
+              <Image
+                src="/cliente/Abanico.svg"
+                alt="Flamencalia"
+                width={48}
+                height={48}
+                className="w-10 h-10 sm:w-12 sm:h-12"
+              />
+            </Link>
+          </div>
 
           {/* Search bar */}
           <form
@@ -200,7 +205,6 @@ export default async function HomePage() {
             </div>
           </form>
 
-          <PublicMobileNav />
           <UserNav variant="light" />
         </nav>
 
@@ -278,17 +282,10 @@ export default async function HomePage() {
               />
             </div>
 
-            <h1
-              className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-white drop-shadow-lg animate-fade-in-up"
-              style={{ animationDelay: "0.1s" }}
-            >
-              Viste tu
-              <span className="text-flamencalia-albero-light">
-                {" "}
-                flamenca
-              </span>{" "}
-              con estilo
-            </h1>
+            {/* Marca animada letra a letra */}
+            <div className="flex justify-center mb-6">
+              <AnimatedBrand className="w-full max-w-xs sm:max-w-lg lg:max-w-2xl h-auto fill-white drop-shadow-lg" />
+            </div>
             <p
               className="mt-4 text-base sm:text-lg text-white/80 max-w-2xl mx-auto animate-fade-in-up"
               style={{ animationDelay: "0.2s" }}

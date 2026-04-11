@@ -21,14 +21,15 @@ const PROVINCES = [
 interface Fair {
   id: string;
   name: string;
-  location: string;
+  city: string;
   province: string;
   start_date: string;
   end_date: string;
   description: string | null;
   image_url: string | null;
-  website_url: string | null;
-  is_verified: boolean;
+  location_url: string | null;
+  is_major: boolean;
+  year: number;
 }
 
 export default function FeriasPage() {
@@ -189,13 +190,13 @@ export default function FeriasPage() {
                               <h3 className="text-sm sm:text-base font-bold text-neutral-800">
                                 {fair.name}
                               </h3>
-                              {fair.is_verified && (
+                              {fair.is_major && (
                                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-medium flex items-center gap-0.5">
                                   <Icon
                                     name="checkCircle"
                                     className="w-3 h-3"
                                   />
-                                  Verificada
+                                  Principal
                                 </span>
                               )}
                               {isActive && (
@@ -208,7 +209,7 @@ export default function FeriasPage() {
                             <div className="flex items-center gap-3 text-xs text-neutral-500 mb-2">
                               <span className="flex items-center gap-1">
                                 <Icon name="mapPin" className="w-3 h-3" />
-                                {fair.location}, {fair.province}
+                                {fair.city}, {fair.province}
                               </span>
                               <span>
                                 {formatDate(fair.start_date)} —{" "}
@@ -222,15 +223,15 @@ export default function FeriasPage() {
                               </p>
                             )}
 
-                            {fair.website_url && (
+                            {fair.location_url && (
                               <a
-                                href={fair.website_url}
+                                href={fair.location_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1 text-xs text-flamencalia-red hover:underline mt-2"
                               >
                                 <Icon name="globe" className="w-3 h-3" />
-                                Web oficial
+                                Cómo llegar
                               </a>
                             )}
                           </div>
