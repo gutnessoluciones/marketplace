@@ -285,11 +285,12 @@ export default async function HomePage() {
               style={{ animationDelay: "0.1s" }}
             >
               <Image
-                src="/cliente/slogan.svg"
+                src="/cliente/slogan.svg?v=2"
                 alt="Larga vida a tu Flamenca"
                 width={600}
                 height={80}
                 className="object-contain w-full max-w-xs sm:max-w-md h-auto drop-shadow-lg"
+                unoptimized
                 priority
               />
             </div>

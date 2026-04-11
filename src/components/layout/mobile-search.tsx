@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Icon } from "@/components/icons";
 
 export function MobileSearch() {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (open && inputRef.current) {
@@ -13,15 +16,23 @@ export function MobileSearch() {
     }
   }, [open]);
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      setOpen(false);
+      router.push(`/products?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   return (
     <>
       {/* Magnifying glass button — visible only on mobile */}
       <button
         onClick={() => setOpen(true)}
-        className="sm:hidden p-2 text-flamencalia-black/60 hover:text-flamencalia-red transition-colors"
+        className="sm:hidden flex items-center justify-center w-9 h-9 rounded-full border border-flamencalia-albero-pale text-flamencalia-black/60 hover:text-flamencalia-red hover:border-flamencalia-albero transition-colors mr-1"
         aria-label="Buscar"
       >
-        <Icon name="search" className="w-5 h-5" />
+        <Icon name="search" className="w-4 h-4" />
       </button>
 
       {/* Search overlay */}
@@ -33,10 +44,8 @@ export function MobileSearch() {
           />
           <div className="absolute top-0 left-0 right-0 bg-flamencalia-white shadow-lg animate-in slide-in-from-top duration-200">
             <form
-              action="/products"
-              method="GET"
+              onSubmit={handleSubmit}
               className="flex items-center gap-2 px-4 py-3"
-              onSubmit={() => setOpen(false)}
             >
               <div className="relative flex-1">
                 <Icon
@@ -46,11 +55,19 @@ export function MobileSearch() {
                 <input
                   ref={inputRef}
                   type="text"
-                  name="q"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                   placeholder="Buscar vestidos, mantones, complementos..."
                   className="w-full bg-flamencalia-cream border border-flamencalia-albero-pale rounded-full pl-10 pr-4 py-3 text-sm text-flamencalia-black placeholder-neutral-400 focus:border-flamencalia-albero focus:outline-none focus:ring-2 focus:ring-flamencalia-albero/20"
                 />
               </div>
+              <button
+                type="submit"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-flamencalia-black text-white hover:bg-flamencalia-black/80 transition-colors"
+                aria-label="Buscar"
+              >
+                <Icon name="search" className="w-4 h-4" />
+              </button>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
