@@ -186,27 +186,52 @@ select:focus {
   animation: fade-in-up 0.6s ease-out forwards;
 }
 
-/* F dancing like a flamenca */
+/* F dancing like a flamenca — simula sevillana */
 @keyframes f-dance {
+  /* 4 vaivenes rotateY (0-30% = 6s) */
   0% {
     transform: rotateY(0deg);
   }
-  25% {
+  3.75% {
     transform: rotateY(180deg);
   }
-  50% {
+  7.5% {
+    transform: rotateY(0deg);
+  }
+  11.25% {
+    transform: rotateY(180deg);
+  }
+  15% {
+    transform: rotateY(0deg);
+  }
+  18.75% {
+    transform: rotateY(180deg);
+  }
+  22.5% {
+    transform: rotateY(0deg);
+  }
+  26.25% {
+    transform: rotateY(180deg);
+  }
+  30% {
+    transform: rotateY(0deg);
+  }
+  /* Pausa 10s (30-80%) */
+  80% {
+    transform: rotateY(0deg);
+  }
+  /* Giro completo 360° (80-90% = 2s) */
+  90% {
     transform: rotateY(360deg);
   }
-  75% {
-    transform: rotateY(180deg);
-  }
+  /* Pausa final (90-100% = 2s) */
   100% {
     transform: rotateY(360deg);
   }
 }
 .brand-f-dance {
   display: inline-block;
-  animation: f-dance 3s ease-in-out infinite;
+  animation: f-dance 20s ease-in-out infinite;
   transform-origin: center bottom;
 }
 
