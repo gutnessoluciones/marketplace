@@ -25,6 +25,7 @@ function timeAgo(dateStr: string) {
 const STATUS_CONFIG: Record<string, { label: string; class: string }> = {
   pending: { label: "Pendiente", class: "bg-amber-100 text-amber-700" },
   accepted: { label: "Aceptada", class: "bg-emerald-100 text-emerald-700" },
+  countered: { label: "Contraoferta", class: "bg-blue-100 text-blue-700" },
   rejected: { label: "Rechazada", class: "bg-red-100 text-red-700" },
   expired: { label: "Expirada", class: "bg-neutral-100 text-neutral-500" },
   cancelled: { label: "Cancelada", class: "bg-neutral-100 text-neutral-500" },

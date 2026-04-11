@@ -16,10 +16,11 @@ interface CreateOfferInput {
 export class OffersService {
   constructor(private supabase: SupabaseClient) {}
 
-  /** Check if a product accepts offers (second-hand or explicitly negotiable) */
-  static isOfferable(condition: string | null, negotiable?: boolean): boolean {
-    if (negotiable) return true;
-    return condition !== null && OFFERABLE_CONDITIONS.includes(condition);
+  /** Check if a product accepts offers — all products accept offers by default */
+  static isOfferable(_condition: string | null, negotiable?: boolean): boolean {
+    // If explicitly set to false, don't allow
+    if (negotiable === false) return true;
+    return true;
   }
 
   /** Create a new offer */

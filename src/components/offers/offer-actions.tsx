@@ -36,7 +36,7 @@ export function OfferActions({
   const [counterValue, setCounterValue] = useState("");
   const router = useRouter();
 
-  async function handleAction(action: "accept" | "reject" | "cancel") {
+  async function handleAction(action: string) {
     setLoading(action);
     try {
       const res = await fetch(`/api/offers/${offerId}/${action}`, {
@@ -102,14 +102,14 @@ export function OfferActions({
           </p>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => handleAction("accept-counter" as "accept")}
+              onClick={() => handleAction("accept-counter")}
               disabled={!!loading}
               className="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-700 transition-all disabled:opacity-50"
             >
               {loading === "accept-counter" ? "..." : "Aceptar contraoferta"}
             </button>
             <button
-              onClick={() => handleAction("reject-counter" as "reject")}
+              onClick={() => handleAction("reject-counter")}
               disabled={!!loading}
               className="bg-red-50 text-red-600 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition-all disabled:opacity-50"
             >

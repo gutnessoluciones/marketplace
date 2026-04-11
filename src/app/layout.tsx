@@ -38,6 +38,9 @@ export default function RootLayout({
       lang="es"
       className={`${dmSans.variable} ${playfair.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="icon" href="/cliente/Abanico.svg" type="image/svg+xml" />
+      </head>
       <body className="min-h-full flex flex-col bg-flamencalia-cream text-foreground">
         {children}
       </body>
