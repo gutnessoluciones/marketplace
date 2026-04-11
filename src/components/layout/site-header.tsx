@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@/components/icons";
 import { UserNav } from "@/components/layout/user-nav";
+import { PublicMobileNav } from "@/components/layout/public-mobile-nav";
 
 const CATEGORIES = [
   { slug: "feria", label: "Feria", icon: "fan" },
@@ -66,13 +67,8 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
           </div>
         </form>
 
-        {/* Mobile search link */}
-        <Link
-          href="/products"
-          className="sm:hidden p-2 text-flamencalia-black/60 hover:text-flamencalia-albero"
-        >
-          <Icon name="search" className="w-5 h-5" />
-        </Link>
+        {/* Mobile hamburger menu */}
+        <PublicMobileNav />
 
         <UserNav variant="light" />
       </nav>

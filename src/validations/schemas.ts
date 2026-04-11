@@ -71,6 +71,8 @@ export const createProductSchema = z.object({
   images: z.array(z.string().url()).max(10).optional(),
   status: z.enum(["active", "draft"]).optional(),
   negotiable: z.boolean().optional(),
+  weight_kg: z.number().min(0).max(100).optional().nullable(),
+  shipping_from: z.string().max(100).optional().nullable(),
 });
 
 export const updateProductSchema = createProductSchema.partial();
@@ -124,6 +126,8 @@ export const updateProfileSchema = z.object({
   phone: z.string().max(20).optional().nullable(),
   location: z.string().max(100).optional().nullable(),
   website: z.string().max(200).optional().nullable(),
+  shipping_policy: z.string().max(1000).optional().nullable(),
+  return_policy: z.string().max(1000).optional().nullable(),
 });
 
 // ── Site Settings ────────────────────────────────────────

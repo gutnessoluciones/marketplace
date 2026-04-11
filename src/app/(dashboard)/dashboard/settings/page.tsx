@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { StripeConnectButton } from "@/components/layout/stripe-connect-button";
 import { AddressManager } from "@/components/settings/address-manager";
 import { ProfileEditor } from "@/components/settings/profile-editor";
+import { PushNotificationToggle } from "@/components/settings/push-notification-toggle";
 import { Icon } from "@/components/icons";
 
 export default async function SettingsPage() {
@@ -25,7 +26,9 @@ export default async function SettingsPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-flamencalia-black">Configuración</h1>
+        <h1 className="text-2xl font-bold text-flamencalia-black">
+          Configuración
+        </h1>
         <p className="text-sm text-neutral-400 mt-0.5">
           Gestiona tu cuenta y preferencias
         </p>
@@ -103,7 +106,7 @@ export default async function SettingsPage() {
       </div>
 
       {/* Addresses Section */}
-      <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden mb-6">
         <div className="p-6 border-b border-neutral-50">
           <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
             Direcciones de envío
@@ -112,6 +115,16 @@ export default async function SettingsPage() {
         <div className="p-6">
           <AddressManager />
         </div>
+      </div>
+
+      {/* Push Notifications */}
+      <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-neutral-50">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
+            Notificaciones
+          </h2>
+        </div>
+        <PushNotificationToggle />
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ const sellerNav = [
   { href: "/dashboard/disputes", label: "Disputas", icon: "alertTriangle" },
   { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
   { href: "/dashboard/favorites", label: "Favoritos", icon: "heart" },
+  { href: "/dashboard/collections", label: "Armarios", icon: "closet" },
   { href: "/dashboard/settings", label: "Configuración", icon: "gear" },
 ];
 
@@ -26,6 +27,7 @@ const buyerNav = [
   { href: "/dashboard/disputes", label: "Disputas", icon: "alertTriangle" },
   { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
   { href: "/dashboard/favorites", label: "Favoritos", icon: "heart" },
+  { href: "/dashboard/collections", label: "Armarios", icon: "closet" },
   { href: "/dashboard/settings", label: "Configuración", icon: "gear" },
 ];
 

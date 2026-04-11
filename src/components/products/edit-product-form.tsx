@@ -93,6 +93,11 @@ export function EditProductForm({ product }: { product: Product }) {
         images,
         status: formData.get("status") || "active",
         negotiable: formData.get("negotiable") === "on",
+        weight_kg: formData.get("weight_kg")
+          ? Number(formData.get("weight_kg"))
+          : null,
+        shipping_from:
+          (formData.get("shipping_from") as string)?.trim() || null,
       }),
     });
 
@@ -410,6 +415,54 @@ export function EditProductForm({ product }: { product: Product }) {
                 </p>
               </div>
             </label>
+          </div>
+        </div>
+
+        {/* Shipping */}
+        <div className="bg-white border border-neutral-100 rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">
+            Envío
+          </h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="weight_kg"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
+              >
+                Peso (kg)
+              </label>
+              <input
+                id="weight_kg"
+                name="weight_kg"
+                type="number"
+                step="0.1"
+                min="0"
+                defaultValue={
+                  ((product as Record<string, unknown>).weight_kg as number) ??
+                  ""
+                }
+                placeholder="Ej: 0.5"
+                className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="shipping_from"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
+              >
+                Envío desde
+              </label>
+              <input
+                id="shipping_from"
+                name="shipping_from"
+                defaultValue={
+                  ((product as Record<string, unknown>)
+                    .shipping_from as string) ?? ""
+                }
+                placeholder="Ej: Sevilla, Málaga..."
+                className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
+              />
+            </div>
           </div>
         </div>
 

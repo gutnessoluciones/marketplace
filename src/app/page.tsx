@@ -6,6 +6,7 @@ import { Icon } from "@/components/icons";
 import { ProductCard } from "@/components/products/product-card";
 import { FavoritesService } from "@/services/favorites.service";
 import { UserNav } from "@/components/layout/user-nav";
+import { PublicMobileNav } from "@/components/layout/public-mobile-nav";
 import { Footer } from "@/components/layout/footer";
 import { BannerCarousel } from "@/components/layout/banner-carousel";
 import { RecentlyViewed } from "@/components/social/recently-viewed";
@@ -60,21 +61,21 @@ export default async function HomePage() {
 
   const { data: featuredProducts } = await supabase
     .from("products")
-    .select("*, seller:profiles!seller_id(display_name, avatar_url)")
+    .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)")
     .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(8);
 
   const { data: recentProducts } = await supabase
     .from("products")
-    .select("*, seller:profiles!seller_id(display_name, avatar_url)")
+    .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)")
     .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(4);
 
   const { data: dealProducts } = await supabase
     .from("products")
-    .select("*, seller:profiles!seller_id(display_name, avatar_url)")
+    .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)")
     .eq("status", "active")
     .order("price", { ascending: true })
     .limit(4);
@@ -174,7 +175,7 @@ export default async function HomePage() {
           </Link>
 
           {/* Search bar */}
-          <form action="/products" method="GET" className="flex-1 max-w-xl">
+          <form action="/products" method="GET" className="hidden sm:block flex-1 max-w-xl">
             <div className="relative">
               <Icon
                 name="search"
@@ -189,6 +190,7 @@ export default async function HomePage() {
             </div>
           </form>
 
+          <PublicMobileNav />
           <UserNav variant="light" />
         </nav>
 

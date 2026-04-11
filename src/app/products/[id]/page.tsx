@@ -15,6 +15,9 @@ import { FavoriteButton } from "@/components/social/favorite-button";
 import { FollowButton } from "@/components/social/follow-button";
 import { ChatButton } from "@/components/social/chat-button";
 import { ShareButtons } from "@/components/social/share-buttons";
+import { SaveToCollection } from "@/components/products/save-to-collection";
+import { VerificationBadge } from "@/components/social/verification-badge";
+import { Recommendations } from "@/components/products/recommendations";
 import { Icon } from "@/components/icons";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
@@ -450,6 +453,33 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   </div>
                 )}
 
+                {/* Shipping info */}
+                {((product as Record<string, unknown>).shipping_from ||
+                  (product as Record<string, unknown>).weight_kg) && (
+                  <div className="mt-3 flex items-center gap-3 text-xs text-neutral-400">
+                    <Icon name="package" className="w-3.5 h-3.5 shrink-0" />
+                    {(product as Record<string, unknown>).shipping_from && (
+                      <span>
+                        Envío desde{" "}
+                        {
+                          (product as Record<string, unknown>)
+                            .shipping_from as string
+                        }
+                      </span>
+                    )}
+                    {(product as Record<string, unknown>).weight_kg && (
+                      <span>
+                        ·{" "}
+                        {
+                          (product as Record<string, unknown>)
+                            .weight_kg as number
+                        }{" "}
+                        kg
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 {/* Buy button + actions */}
                 <div className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-flamencalia-albero-pale/30 space-y-2.5 sm:space-y-3">
                   <div className="flex items-center gap-2">
@@ -485,6 +515,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       sellerId={product.seller_id}
                     />
                   )}
+                  {!isOwnProduct && <SaveToCollection productId={product.id} />}
                 </div>
               </div>
 
@@ -514,12 +545,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       </div>
                     </Link>
                     <div className="flex-1 min-w-0">
-                      <Link
-                        href={`/sellers/${product.seller.id}`}
-                        className="font-semibold text-sm text-neutral-800 hover:text-flamencalia-albero transition-colors"
-                      >
-                        {product.seller.display_name ?? "Vendedor"}
-                      </Link>
+                      <div className="flex items-center gap-1.5">
+                        <Link
+                          href={`/sellers/${product.seller.id}`}
+                          className="font-semibold text-sm text-neutral-800 hover:text-flamencalia-albero transition-colors"
+                        >
+                          {product.seller.display_name ?? "Vendedor"}
+                        </Link>
+                        <VerificationBadge
+                          status={product.seller.verification_status}
+                          size="md"
+                        />
+                      </div>
                       <div className="flex items-center gap-3 mt-1 text-xs text-neutral-400">
                         {sellerAvgRating && (
                           <span className="flex items-center gap-0.5">
@@ -704,6 +741,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </div>
           </div>
         )}
+
+        {/* Recommendations */}
+        <Recommendations
+          excludeId={product.id}
+          limit={4}
+          title="También te puede gustar"
+        />
       </div>
 
       <Footer />

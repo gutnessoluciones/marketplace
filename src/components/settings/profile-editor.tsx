@@ -19,6 +19,12 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
   const [displayName, setDisplayName] = useState(profile.display_name);
   const [bio, setBio] = useState(profile.bio ?? "");
   const [phone, setPhone] = useState(profile.phone ?? "");
+  const [shippingPolicy, setShippingPolicy] = useState(
+    profile.shipping_policy ?? "",
+  );
+  const [returnPolicy, setReturnPolicy] = useState(
+    profile.return_policy ?? "",
+  );
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
   const [bannerUrl, setBannerUrl] = useState(profile.banner_url);
   const [uploading, setUploading] = useState(false);
@@ -104,6 +110,10 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
           display_name: displayName.trim(),
           bio: bio.trim() || null,
           phone: phone.trim() || null,
+          ...(isSeller && {
+            shipping_policy: shippingPolicy.trim() || null,
+            return_policy: returnPolicy.trim() || null,
+          }),
         }),
       });
       const data = await res.json();
@@ -289,6 +299,38 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
               className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all"
             />
           </div>
+
+          {/* Seller-only fields */}
+          {isSeller && (
+            <>
+              <div>
+                <label className="block text-xs font-medium text-neutral-500 mb-1.5">
+                  Política de envío
+                </label>
+                <textarea
+                  value={shippingPolicy}
+                  onChange={(e) => setShippingPolicy(e.target.value)}
+                  maxLength={1000}
+                  rows={3}
+                  placeholder="Ej: Envío en 2-3 días laborables. Envío gratis para pedidos superiores a 50€..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all resize-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-neutral-500 mb-1.5">
+                  Política de devoluciones
+                </label>
+                <textarea
+                  value={returnPolicy}
+                  onChange={(e) => setReturnPolicy(e.target.value)}
+                  maxLength={1000}
+                  rows={3}
+                  placeholder="Ej: Aceptamos devoluciones en un plazo de 14 días. El artículo debe estar sin usar..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all resize-none"
+                />
+              </div>
+            </>
+          )}
         </div>
 
         {/* Info cards */}

@@ -7,8 +7,31 @@ import { Footer } from "@/components/layout/footer";
 export const metadata = {
   title: "Quiénes Somos — Flamencalia",
   description:
-    "Conoce la historia de Flamencalia, el marketplace de moda flamenca que conecta diseñadores y amantes de la flamenca.",
+    "Flamencalia nace de una idea muy sencilla: que la moda flamenca no tenga una sola vida. Un espacio para comprar, vender y dar nueva vida a la flamenca.",
 };
+
+const VALUES = [
+  {
+    icon: "heart",
+    title: "Moda con historia",
+    text: "Cada pieza tiene una historia. Queremos que siga formando parte de nuevas vivencias, manteniendo su valor y su esencia.",
+  },
+  {
+    icon: "users",
+    title: "Comunidad flamenca",
+    text: "Conectamos a quienes crean, quienes buscan algo especial y quienes quieren dar una nueva oportunidad a sus prendas.",
+  },
+  {
+    icon: "sparkle",
+    title: "Consumo consciente",
+    text: "Creemos en una forma de consumo donde cada prenda importa y puede seguir teniendo recorrido.",
+  },
+  {
+    icon: "dress",
+    title: "Todo flamenco",
+    text: "Desde un traje hasta el último detalle que completa un look. Todo al alcance en un solo espacio.",
+  },
+];
 
 export default function AboutPage() {
   return (
@@ -16,223 +39,134 @@ export default function AboutPage() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-linear-to-br from-flamencalia-red via-flamencalia-red-dark to-flamencalia-black py-20 sm:py-28">
-        {/* Farolillos decorativos */}
-        <div className="absolute top-4 left-[12%] farolillo opacity-40">
-          <div className="w-5 h-7 bg-flamencalia-albero rounded-full" />
+      <section className="relative overflow-hidden bg-flamencalia-black text-white">
+        <div className="absolute inset-0 opacity-20">
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 20% 50%, var(--flamencalia-red) 0%, transparent 50%), radial-gradient(circle at 80% 50%, var(--flamencalia-albero) 0%, transparent 50%)",
+            }}
+          />
         </div>
-        <div
-          className="absolute top-6 right-[18%] farolillo opacity-30"
-          style={{ animationDelay: "0.8s" }}
-        >
-          <div className="w-6 h-8 bg-flamencalia-albero-light rounded-full" />
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
-          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-6 border border-white/20">
-            <Icon name="fan" className="w-4 h-4" /> Nuestra Historia
-          </div>
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-            Quiénes <span className="text-flamencalia-albero-light">Somos</span>
-          </h1>
-          <p className="mt-5 text-lg text-white/70 max-w-2xl mx-auto">
-            Una comunidad flamenca donde la tradición, el estilo y la
-            sostenibilidad se encuentran.
-          </p>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" className="w-full">
-            <path
-              d="M0 60V30C240 0 480 0 720 30s480 30 720 0v30H0z"
-              fill="var(--flamencalia-cream)"
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
+            <Image
+              src="/cliente/Abanico.svg"
+              alt=""
+              width={18}
+              height={18}
+              className="opacity-80"
             />
-          </svg>
+            <span className="text-xs font-medium tracking-wider uppercase text-white/80">
+              Nuestra historia
+            </span>
+          </div>
+          <h1 className="font-serif text-3xl sm:text-5xl font-bold leading-tight mb-6">
+            Larga vida a tu{" "}
+            <span className="text-flamencalia-albero">flamenca</span>
+          </h1>
+          <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
+            Flamencalia nace de una idea muy sencilla: que la moda flamenca no
+            tenga una sola vida.
+          </p>
         </div>
       </section>
 
-      {/* Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Intro */}
-        <section className="mb-16 animate-fade-in-up">
-          <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 p-8 sm:p-12 shadow-sm">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-flamencalia-black mb-6">
-              Nace <span className="text-flamencalia-red">Flamencalia</span>
-            </h2>
-            <div className="space-y-4 text-flamencalia-black/70 leading-relaxed">
-              <p>
-                Flamencalia nace de la pasión por la moda flamenca y la
-                necesidad de crear un espacio donde{" "}
-                <strong className="text-flamencalia-black">
-                  diseñadores, artesanos y amantes de la flamenca
-                </strong>{" "}
-                puedan conectar, comprar y vender con confianza.
-              </p>
-              <p>
-                Somos un marketplace que une lo mejor de dos mundos: productos
-                nuevos de diseñadores con talento y piezas de segunda mano de la
-                comunidad flamenca, dándole
-                <strong className="text-flamencalia-red">
-                  {" "}
-                  larga vida a tu flamenca
-                </strong>
-                .
-              </p>
-              <p>
-                Creemos en la moda circular y en que un buen traje de flamenca
-                merece más de una temporada de feria. Cada vestido tiene una
-                historia, y en Flamencalia ayudamos a que esa historia continúe.
-              </p>
-            </div>
+      {/* Story — client text */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+        <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 p-6 sm:p-10 shadow-sm">
+          <div className="space-y-5 text-neutral-600 leading-relaxed text-sm sm:text-base">
+            <p>
+              Surge como un espacio donde comprar y vender vestidos y
+              complementos flamencos de forma fácil, cuidada y cercana. Un lugar
+              pensado para que cada pieza pueda seguir formando parte de nuevas
+              historias, manteniendo su valor y su esencia.
+            </p>
+            <p>
+              <strong className="text-neutral-800">
+                Flamencalia conecta a personas que comparten una misma pasión.
+              </strong>{" "}
+              Aquí conviven quienes crean, quienes buscan algo especial y
+              quienes quieren dar una nueva oportunidad a prendas que todavía
+              tienen mucho que aportar. Todo dentro de un entorno centrado
+              exclusivamente en el universo flamenco.
+            </p>
+            <p>
+              Nuestro objetivo es construir una red donde todo esté al alcance:
+              desde un traje hasta el último detalle que completa un look. Un
+              espacio donde descubrir, inspirarse y encontrar piezas únicas, sin
+              perder la identidad ni la tradición que hacen especial a la moda
+              flamenca.
+            </p>
+            <p>
+              Creemos en una forma de consumo más consciente, donde cada prenda
+              importa y puede seguir teniendo recorrido. Porque la flamenca no
+              se entiende como algo puntual, sino como una expresión que
+              evoluciona, se comparte y se vuelve a vivir.
+            </p>
+            <p className="text-neutral-800 font-semibold text-base sm:text-lg pt-5 border-t border-flamencalia-albero-pale/40">
+              Flamencalia es eso: un punto de encuentro para comprar, vender y
+              seguir dando vida a la flamenca.
+            </p>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Values */}
-        <section className="mb-16">
-          <h2 className="font-serif text-2xl font-bold text-flamencalia-black text-center mb-8">
-            Nuestros Valores
+      {/* Values */}
+      <section className="bg-flamencalia-white border-y border-flamencalia-albero-pale/30">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-neutral-900 text-center mb-10">
+            Lo que nos mueve
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {[
-              {
-                icon: "fan",
-                title: "Comunidad",
-                desc: "Creamos una red flamenca donde diseñadores y amantes de la moda se encuentran, comparten y crecen juntos.",
-                color: "text-flamencalia-red",
-              },
-              {
-                icon: "heart",
-                title: "Sostenibilidad",
-                desc: "Impulsamos la moda circular. Cada prenda reutilizada es un paso hacia un mundo más sostenible y consciente.",
-                color: "text-flamencalia-albero",
-              },
-              {
-                icon: "star",
-                title: "Confianza",
-                desc: "Cada producto es revisado por nuestro equipo. Compra y vende con la tranquilidad de una plataforma segura.",
-                color: "text-flamencalia-red",
-              },
-            ].map((value, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {VALUES.map((v) => (
               <div
-                key={value.title}
-                className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 p-6 text-center hover:shadow-lg transition-all hover:-translate-y-1 animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.1}s` }}
+                key={v.title}
+                className="bg-flamencalia-cream rounded-2xl p-5 sm:p-6 border border-flamencalia-albero-pale/20"
               >
-                <div className={`${value.color} mb-4`}>
-                  <Icon name={value.icon} className="w-10 h-10 mx-auto" />
-                </div>
-                <h3 className="font-serif font-bold text-lg text-flamencalia-black mb-2">
-                  {value.title}
-                </h3>
-                <p className="text-sm text-flamencalia-black/60 leading-relaxed">
-                  {value.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section className="mb-16">
-          <h2 className="font-serif text-2xl font-bold text-flamencalia-black text-center mb-8">
-            ¿Cómo funciona?
-          </h2>
-          <div className="space-y-6">
-            {[
-              {
-                step: "1",
-                title: "Regístrate",
-                desc: "Crea tu perfil como cliente o proveedor. Es gratis y solo lleva un minuto.",
-              },
-              {
-                step: "2",
-                title: "Explora o Publica",
-                desc: "Descubre productos increíbles de diseñadores y la comunidad, o sube tus propias prendas para vender.",
-              },
-              {
-                step: "3",
-                title: "Compra con Confianza",
-                desc: "Todos los productos son revisados por nuestro equipo. Pago seguro y protegido.",
-              },
-              {
-                step: "4",
-                title: "Disfruta y Comparte",
-                desc: "Recibe tu pedido, disfruta de tu flamenca y comparte tu estilo con la comunidad.",
-              },
-            ].map((item, i) => (
-              <div
-                key={item.step}
-                className="flex items-start gap-5 animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="w-12 h-12 shrink-0 rounded-full bg-flamencalia-red text-white font-serif font-bold text-lg flex items-center justify-center">
-                  {item.step}
-                </div>
-                <div>
-                  <h3 className="font-serif font-bold text-lg text-flamencalia-black">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-flamencalia-black/60 mt-1">
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Target audience */}
-        <section className="mb-16">
-          <div className="bg-linear-to-br from-flamencalia-albero-pale to-flamencalia-cream rounded-2xl p-8 sm:p-12 border border-flamencalia-albero/20">
-            <h2 className="font-serif text-2xl font-bold text-flamencalia-black mb-4">
-              ¿A quién va dirigido?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm text-flamencalia-black/70">
-              <div>
-                <h3 className="font-bold text-flamencalia-black mb-2 flex items-center gap-2">
-                  <Icon name="dress" className="w-5 h-5 text-flamencalia-red" />{" "}
-                  Amantes de la Flamenca
-                </h3>
-                <p>
-                  Si buscas vestidos de flamenca, complementos o accesorios para
-                  la feria, el Rocío o cualquier evento flamenco, aquí
-                  encontrarás piezas únicas a los mejores precios.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-bold text-flamencalia-black mb-2 flex items-center gap-2">
+                <div className="w-10 h-10 bg-flamencalia-albero/10 rounded-xl flex items-center justify-center mb-3">
                   <Icon
-                    name="sparkle"
+                    name={v.icon as "heart" | "users" | "sparkle" | "dress"}
                     className="w-5 h-5 text-flamencalia-albero"
-                  />{" "}
-                  Diseñadores y Artesanos
+                  />
+                </div>
+                <h3 className="text-sm font-bold text-neutral-800 mb-1.5">
+                  {v.title}
                 </h3>
-                <p>
-                  Si creas moda flamenca, Flamencalia es tu escaparate. Llega a
-                  miles de personas apasionadas por la flamenca y haz crecer tu
-                  negocio.
+                <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
+                  {v.text}
                 </p>
               </div>
-            </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Contact */}
-        <section className="text-center">
-          <h2 className="font-serif text-2xl font-bold text-flamencalia-black mb-3">
-            ¿Alguna duda?
-          </h2>
-          <p className="text-flamencalia-black/60 mb-6">
-            Escríbenos y te respondemos encantados.
-          </p>
-          <a
-            href="mailto:info@flamencalia.com"
-            className="inline-flex items-center gap-2 bg-flamencalia-red text-white px-8 py-3.5 rounded-full text-sm font-bold hover:bg-flamencalia-red-dark transition-all hover:shadow-lg hover:shadow-flamencalia-red/20"
+      {/* CTA */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center">
+        <h2 className="font-serif text-xl sm:text-2xl font-bold text-neutral-900 mb-3">
+          ¿Te unes a Flamencalia?
+        </h2>
+        <p className="text-sm text-neutral-500 mb-8 max-w-lg mx-auto">
+          Tanto si buscas algo especial como si quieres dar nueva vida a tus
+          prendas, este es tu sitio.
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 bg-flamencalia-black text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-neutral-800 transition-all"
           >
-            ✉ info@flamencalia.com
-          </a>
-        </section>
-      </main>
+            Explorar productos
+          </Link>
+          <Link
+            href="/register"
+            className="inline-flex items-center gap-2 border-2 border-flamencalia-albero text-flamencalia-albero px-6 py-3 rounded-xl text-sm font-bold hover:bg-flamencalia-albero hover:text-white transition-all"
+          >
+            Crear cuenta
+          </Link>
+        </div>
+      </section>
 
       <Footer />
     </div>

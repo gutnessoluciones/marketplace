@@ -115,6 +115,14 @@ const paths: Record<string, ReactNode> = {
       <circle cx="12" cy="7" r="4" />
     </>
   ),
+  users: (
+    <>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </>
+  ),
   monitor: (
     <>
       <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -229,6 +237,13 @@ const paths: Record<string, ReactNode> = {
     <>
       <circle cx="12" cy="12" r="10" />
       <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </>
+  ),
+  closet: (
+    <>
+      <rect x="3" y="2" width="18" height="20" rx="2" />
+      <path d="M12 2v20M3 12h18" />
+      <path d="M10 7v2M14 7v2M10 15v2M14 15v2" />
     </>
   ),
 };

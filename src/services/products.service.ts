@@ -37,7 +37,7 @@ export class ProductsService {
   ) {
     let query = this.supabase
       .from("products")
-      .select("*, seller:profiles!seller_id(id, display_name, avatar_url)", {
+      .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)", {
         count: "exact",
       })
       .eq("status", "active")
@@ -78,7 +78,7 @@ export class ProductsService {
     if (error?.message?.includes("fts")) {
       let fallbackQuery = this.supabase
         .from("products")
-        .select("*, seller:profiles!seller_id(id, display_name, avatar_url)", {
+        .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)", {
           count: "exact",
         })
         .eq("status", "active")
@@ -123,7 +123,7 @@ export class ProductsService {
   async getById(id: string) {
     const { data, error } = await this.supabase
       .from("products")
-      .select("*, seller:profiles!seller_id(id, display_name, avatar_url)")
+      .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)")
       .eq("id", id)
       .single();
 

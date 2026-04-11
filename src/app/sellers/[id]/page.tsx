@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SellerProductCard } from "@/components/products/seller-product-card";
 import { FavoritesService } from "@/services/favorites.service";
 import { FollowButton } from "@/components/social/follow-button";
+import { VerificationBadge } from "@/components/social/verification-badge";
 import { Icon } from "@/components/icons";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
@@ -45,7 +46,7 @@ export default async function SellerProfilePage({
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "id, display_name, avatar_url, banner_url, bio, location, website, created_at, followers_count, following_count",
+      "id, display_name, avatar_url, banner_url, bio, location, website, created_at, followers_count, following_count, verification_status, shipping_policy, return_policy",
     )
     .eq("id", id)
     .single();
@@ -203,9 +204,15 @@ export default async function SellerProfilePage({
             </div>
 
             {/* Name */}
-            <h1 className="text-2xl sm:text-3xl font-bold font-serif text-white">
-              {profile.display_name ?? "Vendedor"}
-            </h1>
+            <div className="flex items-center gap-2 justify-center">
+              <h1 className="text-2xl sm:text-3xl font-bold font-serif text-white">
+                {profile.display_name ?? "Vendedor"}
+              </h1>
+              <VerificationBadge
+                status={profile.verification_status}
+                size="lg"
+              />
+            </div>
 
             {/* Bio */}
             {profile.bio && (
@@ -337,6 +344,44 @@ export default async function SellerProfilePage({
 
       {/* Products Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        {/* Seller Policies */}
+        {(profile.shipping_policy || profile.return_policy) && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            {profile.shipping_policy && (
+              <div className="bg-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon
+                    name="package"
+                    className="w-4 h-4 text-flamencalia-albero"
+                  />
+                  <h3 className="text-sm font-semibold text-flamencalia-black">
+                    Política de envío
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  {profile.shipping_policy}
+                </p>
+              </div>
+            )}
+            {profile.return_policy && (
+              <div className="bg-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon
+                    name="receipt"
+                    className="w-4 h-4 text-flamencalia-albero"
+                  />
+                  <h3 className="text-sm font-semibold text-flamencalia-black">
+                    Política de devoluciones
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  {profile.return_policy}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Sort Tabs — Instagram style with icons */}
         <div className="flex items-center justify-between mb-5 border-b border-neutral-200 pb-3">
           <div className="flex items-center gap-1">

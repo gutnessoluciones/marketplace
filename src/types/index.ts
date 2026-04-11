@@ -11,6 +11,11 @@ export interface Profile {
   website: string | null;
   stripe_account_id: string | null;
   stripe_onboarding_complete: boolean;
+  verification_status: string | null;
+  verification_badge: string | null;
+  is_banned: boolean;
+  shipping_policy: string | null;
+  return_policy: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -59,7 +64,10 @@ export interface Product {
   stock: number;
   created_at: string;
   updated_at: string;
-  seller?: Pick<Profile, "id" | "display_name" | "avatar_url">;
+  seller?: Pick<
+    Profile,
+    "id" | "display_name" | "avatar_url" | "verification_status"
+  >;
 }
 
 // ── Order ────────────────────────────────────────────────
@@ -88,7 +96,10 @@ export interface Order {
   created_at: string;
   updated_at: string;
   product?: Product;
-  seller?: Pick<Profile, "id" | "display_name" | "avatar_url">;
+  seller?: Pick<
+    Profile,
+    "id" | "display_name" | "avatar_url" | "verification_status"
+  >;
 }
 
 // ── Payment ──────────────────────────────────────────────
@@ -148,7 +159,10 @@ export interface Offer {
   updated_at: string;
   product?: Product;
   buyer?: Pick<Profile, "id" | "display_name" | "avatar_url">;
-  seller?: Pick<Profile, "id" | "display_name" | "avatar_url">;
+  seller?: Pick<
+    Profile,
+    "id" | "display_name" | "avatar_url" | "verification_status"
+  >;
 }
 
 // ── Buyer Review ─────────────────────────────────────────
@@ -160,7 +174,10 @@ export interface BuyerReview {
   rating: number;
   comment: string | null;
   created_at: string;
-  seller?: Pick<Profile, "id" | "display_name" | "avatar_url">;
+  seller?: Pick<
+    Profile,
+    "id" | "display_name" | "avatar_url" | "verification_status"
+  >;
 }
 
 // ── Dispute ──────────────────────────────────────────────

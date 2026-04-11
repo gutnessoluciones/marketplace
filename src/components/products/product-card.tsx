@@ -4,6 +4,7 @@ import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { Icon } from "@/components/icons";
 import { FavoriteButton } from "@/components/social/favorite-button";
+import { VerificationBadge } from "@/components/social/verification-badge";
 import type { Product } from "@/types";
 
 const CONDITION_LABELS: Record<string, string> = {
@@ -110,6 +111,10 @@ export function ProductCard({
             <span className="text-[11px] text-neutral-400 truncate">
               {product.seller.display_name}
             </span>
+            <VerificationBadge
+              status={product.seller.verification_status}
+              size="sm"
+            />
           </div>
         )}
       </div>

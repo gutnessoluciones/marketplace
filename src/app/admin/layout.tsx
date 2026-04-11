@@ -5,12 +5,16 @@ import { isAdmin } from "@/lib/admin";
 import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/layout/sign-out-button";
 import { Icon } from "@/components/icons";
+import { AdminMobileSidebar } from "@/components/layout/admin-mobile-sidebar";
 
 const adminNav = [
   { href: "/admin", label: "Resumen", icon: "chart" },
-  { href: "/admin/users", label: "Usuarios", icon: "sparkle" },
+  { href: "/admin/users", label: "Usuarios", icon: "users" },
   { href: "/admin/products", label: "Productos", icon: "package" },
   { href: "/admin/orders", label: "Pedidos", icon: "receipt" },
+  { href: "/admin/reports", label: "Reportes", icon: "alertTriangle" },
+  { href: "/admin/blog", label: "Blog", icon: "book" },
+  { href: "/admin/fairs", label: "Ferias", icon: "mapPin" },
 ];
 
 const ownerNav = [
@@ -40,10 +44,20 @@ export default async function AdminLayout({
     .single();
 
   const isOwnerOrDev = auth.role === "owner" || auth.role === "dev";
+  const displayName = profile?.display_name ?? "Admin";
 
   return (
     <div className="min-h-screen flex bg-flamencalia-cream">
-      <aside className="w-64 bg-linear-to-b from-flamencalia-black to-flamencalia-red-dark p-5 flex flex-col shrink-0">
+      {/* Mobile sidebar */}
+      <AdminMobileSidebar
+        navItems={adminNav}
+        ownerNavItems={isOwnerOrDev ? ownerNav : undefined}
+        displayName={displayName}
+        role={auth.role ?? "admin"}
+      />
+
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex w-64 bg-linear-to-b from-flamencalia-black to-flamencalia-red-dark p-5 flex-col shrink-0">
         <Link
           href="/admin"
           className="flex items-center gap-2 text-lg font-bold tracking-tight text-white mb-8 px-1"
@@ -109,11 +123,11 @@ export default async function AdminLayout({
         <div className="border-t border-white/10 pt-4">
           <div className="flex items-center gap-3 px-1 mb-3">
             <div className="w-9 h-9 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-sm">
-              {profile?.display_name?.charAt(0).toUpperCase() ?? "A"}
+              {displayName.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0">
               <p className="text-sm font-medium text-white truncate">
-                {profile?.display_name}
+                {displayName}
               </p>
               <p className="text-xs text-amber-400 capitalize">{auth.role}</p>
             </div>
@@ -122,7 +136,9 @@ export default async function AdminLayout({
         </div>
       </aside>
 
-      <main className="flex-1 p-8 overflow-auto">{children}</main>
+      <main className="flex-1 p-4 pt-18 sm:p-6 sm:pt-18 lg:p-8 lg:pt-8 overflow-auto">
+        {children}
+      </main>
     </div>
   );
 }
