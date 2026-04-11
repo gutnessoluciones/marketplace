@@ -231,64 +231,76 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     <div className="min-h-screen bg-flamencalia-cream">
       <SiteHeader activeCategory={category} defaultSearch={q} />
 
-      <div className="max-w-350 mx-auto px-4 sm:px-6 py-6">
-        {/* Title + sort */}
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-lg font-bold text-neutral-900">
-              {seller && sellerProfile
-                ? `Productos de ${sellerProfile.display_name}`
-                : q
-                  ? `"${q}"`
-                  : category
-                    ? (CATEGORIES.find((c) => c.slug === category)?.label ??
-                      "Productos")
-                    : "Todos los productos"}
-            </h1>
-            <p className="text-xs text-neutral-400 mt-0.5">
-              {result.total ?? 0} resultados
-            </p>
-          </div>
-          <form action="/products" method="GET" className="hidden sm:block">
-            {category && (
-              <input type="hidden" name="category" value={category} />
-            )}
-            {q && <input type="hidden" name="q" value={q} />}
-            {seller && <input type="hidden" name="seller" value={seller} />}
-            {color && <input type="hidden" name="color" value={color} />}
-            {size && <input type="hidden" name="size" value={size} />}
-            {condition && (
-              <input type="hidden" name="condition" value={condition} />
-            )}
-            {brand && <input type="hidden" name="brand" value={brand} />}
-            {priceMin && (
-              <input type="hidden" name="priceMin" value={priceMin} />
-            )}
-            {priceMax && (
-              <input type="hidden" name="priceMax" value={priceMax} />
-            )}
-            <select
-              name="sort"
-              defaultValue={sort ?? ""}
-              className="border border-flamencalia-albero-pale/30 rounded-lg px-3 py-1.5 text-xs text-neutral-600 bg-white focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
-            >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            <noscript>
-              <button
-                type="submit"
-                className="ml-1 text-xs text-flamencalia-albero"
+      {/* ── Hero mini-banner ── */}
+      <div className="bg-flamencalia-white border-b border-flamencalia-albero-pale/20">
+        <div className="max-w-350 mx-auto px-4 sm:px-6 py-5 sm:py-7">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-serif font-bold text-flamencalia-black tracking-tight">
+                {seller && sellerProfile ? (
+                  `Productos de ${sellerProfile.display_name}`
+                ) : q ? (
+                  <>
+                    Resultados para{" "}
+                    <span className="text-flamencalia-albero italic">
+                      &ldquo;{q}&rdquo;
+                    </span>
+                  </>
+                ) : category ? (
+                  (CATEGORIES.find((c) => c.slug === category)?.label ??
+                  "Productos")
+                ) : (
+                  "Explora la colección"
+                )}
+              </h1>
+              <p className="text-sm text-neutral-400 mt-1">
+                {result.total ?? 0} producto{(result.total ?? 0) !== 1 && "s"}{" "}
+                disponible{(result.total ?? 0) !== 1 && "s"}
+              </p>
+            </div>
+            <form action="/products" method="GET" className="shrink-0">
+              {category && (
+                <input type="hidden" name="category" value={category} />
+              )}
+              {q && <input type="hidden" name="q" value={q} />}
+              {seller && <input type="hidden" name="seller" value={seller} />}
+              {color && <input type="hidden" name="color" value={color} />}
+              {size && <input type="hidden" name="size" value={size} />}
+              {condition && (
+                <input type="hidden" name="condition" value={condition} />
+              )}
+              {brand && <input type="hidden" name="brand" value={brand} />}
+              {priceMin && (
+                <input type="hidden" name="priceMin" value={priceMin} />
+              )}
+              {priceMax && (
+                <input type="hidden" name="priceMax" value={priceMax} />
+              )}
+              <select
+                name="sort"
+                defaultValue={sort ?? ""}
+                className="border border-flamencalia-albero-pale/30 rounded-full px-4 py-2 text-xs text-neutral-600 bg-white focus:outline-none focus:ring-2 focus:ring-flamencalia-albero/20 cursor-pointer"
               >
-                Aplicar
-              </button>
-            </noscript>
-          </form>
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <noscript>
+                <button
+                  type="submit"
+                  className="ml-1 text-xs text-flamencalia-albero"
+                >
+                  Aplicar
+                </button>
+              </noscript>
+            </form>
+          </div>
         </div>
+      </div>
 
+      <div className="max-w-350 mx-auto px-4 sm:px-6 py-6">
         {/* Active filter chips */}
         {hasActiveFilters && (
           <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -615,7 +627,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
           <div className="flex-1 min-w-0">
             {products.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
                   {products.map((product) => (
                     <ProductCard
                       key={product.id}
@@ -627,22 +639,22 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                 </div>
 
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-3 mt-10">
+                  <div className="flex items-center justify-center gap-2 mt-12">
                     {page > 1 && (
                       <Link
                         href={buildUrl({ page: String(page - 1) })}
-                        className="px-4 py-2 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-lg text-xs font-medium hover:bg-flamencalia-albero-pale/20 transition-all text-flamencalia-black/70"
+                        className="px-5 py-2.5 bg-white border border-flamencalia-albero-pale/30 rounded-full text-sm font-medium hover:border-flamencalia-albero hover:text-flamencalia-albero transition-all text-flamencalia-black/70 shadow-sm"
                       >
                         ← Anterior
                       </Link>
                     )}
-                    <span className="text-xs text-neutral-400 px-3">
-                      {page} / {totalPages}
+                    <span className="text-sm text-neutral-400 px-4 font-medium">
+                      {page} de {totalPages}
                     </span>
                     {page < totalPages && (
                       <Link
                         href={buildUrl({ page: String(page + 1) })}
-                        className="px-4 py-2 bg-flamencalia-white border border-flamencalia-albero-pale/30 rounded-lg text-xs font-medium hover:bg-flamencalia-albero-pale/20 transition-all text-flamencalia-black/70"
+                        className="px-5 py-2.5 bg-flamencalia-black text-white rounded-full text-sm font-medium hover:bg-flamencalia-black/80 transition-all shadow-sm"
                       >
                         Siguiente →
                       </Link>
@@ -651,26 +663,30 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                 )}
               </>
             ) : (
-              <div className="text-center py-20">
-                <div className="w-16 h-16 bg-flamencalia-albero-pale/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Icon name="search" className="w-7 h-7 text-neutral-300" />
+              <div className="text-center py-24">
+                <div className="w-20 h-20 bg-flamencalia-albero-pale/20 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <Icon
+                    name="search"
+                    className="w-8 h-8 text-flamencalia-albero/40"
+                  />
                 </div>
-                <h3 className="text-base font-semibold text-neutral-700 mb-1">
+                <h3 className="text-xl font-serif font-bold text-neutral-700 mb-2">
                   No se encontraron productos
                 </h3>
-                <p className="text-neutral-400 text-xs mb-5">
+                <p className="text-neutral-400 text-sm mb-6 max-w-sm mx-auto">
                   {q
-                    ? `No hay resultados para "${q}".`
+                    ? `No hay resultados para "${q}". Intenta con otros términos.`
                     : hasActiveFilters
-                      ? "Prueba a cambiar los filtros."
+                      ? "Prueba a cambiar los filtros para ver más resultados."
                       : "Aún no hay productos publicados."}
                 </p>
                 {(hasActiveFilters || category || q) && (
                   <Link
                     href="/products"
-                    className="inline-flex items-center gap-1.5 bg-flamencalia-black text-white px-5 py-2 rounded-full text-xs font-semibold hover:bg-flamencalia-black/80 transition-all"
+                    className="inline-flex items-center gap-2 bg-flamencalia-black text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-flamencalia-black/80 transition-all shadow-sm"
                   >
-                    Ver todos
+                    <Icon name="tag" className="w-4 h-4" />
+                    Ver todos los productos
                   </Link>
                 )}
               </div>

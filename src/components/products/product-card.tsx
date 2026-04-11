@@ -26,7 +26,7 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product.id}`}
-      className={`group relative bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200${boosted ? " ring-2 ring-flamencalia-albero/40" : ""}`}
+      className={`group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1${boosted ? " ring-2 ring-flamencalia-albero/40" : ""}`}
     >
       {/* Image — tall like Vinted */}
       <div className="aspect-3/4 bg-flamencalia-cream relative overflow-hidden">
@@ -34,7 +34,7 @@ export function ProductCard({
           <img
             src={product.images[0]}
             alt={product.title}
-            className="object-cover w-full h-full group-hover:scale-[1.03] transition-transform duration-300"
+            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="flex flex-col items-center justify-center h-full gap-2 text-flamencalia-albero/30">
@@ -42,8 +42,11 @@ export function ProductCard({
           </div>
         )}
 
+        {/* Gradient overlay on hover */}
+        <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
         {/* Heart button */}
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all">
+        <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-all duration-200">
           <FavoriteButton
             productId={product.id}
             initialFavorited={isFavorited}
@@ -53,49 +56,49 @@ export function ProductCard({
 
         {/* Boosted badge */}
         {boosted && (
-          <span className="absolute top-2 left-2 bg-flamencalia-albero text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-            Destacado
+          <span className="absolute top-2.5 left-2.5 bg-flamencalia-albero text-white text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+            ★ Destacado
           </span>
         )}
 
         {/* Condition badge */}
         {product.condition && (
-          <span className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full text-neutral-700 uppercase tracking-wide">
+          <span className="absolute bottom-2.5 left-2.5 bg-white/95 backdrop-blur-sm text-[10px] font-semibold px-2.5 py-1 rounded-full text-neutral-700 uppercase tracking-wide shadow-sm">
             {CONDITION_LABELS[product.condition] ?? product.condition}
           </span>
         )}
       </div>
 
       {/* Info */}
-      <div className="p-3">
+      <div className="p-3.5">
         {/* Price */}
-        <p className="text-base font-bold text-flamencalia-black">
+        <p className="text-lg font-bold text-flamencalia-black">
           {formatPrice(product.price)}
         </p>
 
         {/* Badges: size + brand */}
-        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+        <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
           {product.size && (
-            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-600 uppercase">
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-flamencalia-cream text-neutral-600 uppercase">
               {product.size === "unica" ? "T.Única" : product.size}
             </span>
           )}
           {product.brand && (
-            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-flamencalia-albero-pale/40 text-flamencalia-black truncate max-w-20">
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-flamencalia-albero-pale/30 text-flamencalia-black truncate max-w-24">
               {product.brand}
             </span>
           )}
         </div>
 
         {/* Title */}
-        <p className="text-xs text-neutral-500 mt-1.5 line-clamp-1">
+        <p className="text-xs text-neutral-500 mt-2 line-clamp-2 leading-relaxed">
           {product.title}
         </p>
 
         {/* Seller */}
         {product.seller && (
-          <div className="flex items-center gap-1.5 mt-2">
-            <div className="w-5 h-5 rounded-full bg-neutral-100 overflow-hidden shrink-0">
+          <div className="flex items-center gap-1.5 mt-2.5 pt-2.5 border-t border-flamencalia-cream">
+            <div className="w-5 h-5 rounded-full bg-flamencalia-cream overflow-hidden shrink-0 ring-1 ring-flamencalia-albero-pale/30">
               {product.seller.avatar_url ? (
                 <img
                   src={product.seller.avatar_url}

@@ -190,7 +190,17 @@ export function Footer() {
             reservados.
           </p>
           <div className="flex items-center gap-4 text-xs text-neutral-500">
-            <span>Hecho con ❤️ en Sevilla</span>
+            <span>
+              Hecho con ❤️ por{" "}
+              <a
+                href="https://www.gutnes.es"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-flamencalia-albero hover:text-flamencalia-albero-light transition-colors"
+              >
+                Gutnes
+              </a>
+            </span>
           </div>
         </div>
       </div>

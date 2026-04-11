@@ -42,6 +42,17 @@ body {
     sans-serif;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif), serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 /* Smooth transitions */
 * {
   scroll-behavior: smooth;
@@ -202,6 +213,11 @@ select:focus {
   display: inline-block;
   animation: a-spin 12s ease-in-out infinite;
   transform-origin: center bottom;
+}
+.brand-a-spin-svg {
+  transform-box: fill-box;
+  transform-origin: center center;
+  animation: a-spin 12s ease-in-out infinite;
 }
 
 /* Slide in from left */

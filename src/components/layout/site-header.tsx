@@ -75,11 +75,12 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
       </nav>
 
       {/* Categories bar */}
-      <div className="border-t border-flamencalia-albero-pale/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
+      {/* Categories bar — hidden on mobile (hamburger menu covers it) */}
+      <div className="hidden sm:block border-t border-flamencalia-albero-pale/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1 py-2">
           <Link
             href="/products"
-            className={`text-xs font-semibold px-4 py-1.5 rounded-full transition-colors whitespace-nowrap ${
+            className={`text-xs font-serif font-semibold uppercase tracking-wide px-3.5 py-1.5 rounded-full transition-colors whitespace-nowrap ${
               !activeCategory
                 ? "text-flamencalia-white bg-flamencalia-black"
                 : "text-flamencalia-black/70 hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero"
@@ -91,40 +92,40 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
             <Link
               key={cat.slug}
               href={`/products?category=${cat.slug}`}
-              className={`text-xs font-medium px-3.5 py-1.5 rounded-full transition-colors whitespace-nowrap flex items-center gap-1.5 ${
+              className={`text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
                 activeCategory === cat.slug
                   ? "text-flamencalia-white bg-flamencalia-black"
                   : "text-flamencalia-black/70 hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero"
               }`}
             >
-              <Icon name={cat.icon} className="w-3.5 h-3.5" /> {cat.label}
+              {cat.label}
             </Link>
           ))}
 
           {/* Separador */}
-          <span className="hidden sm:block w-px h-4 bg-flamencalia-albero-pale/50 mx-1" />
+          <span className="w-px h-4 bg-flamencalia-albero-pale/50 mx-1" />
 
           <Link
             href="/ferias"
-            className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+            className="text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
           >
-            <Icon name="mapPin" className="w-3.5 h-3.5" /> Ferias
+            Ferias
           </Link>
           <Link
             href="/blog"
-            className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+            className="text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
           >
-            <Icon name="book" className="w-3.5 h-3.5" /> Blog
+            Blog
           </Link>
           <Link
             href="/lookbook"
-            className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+            className="text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
           >
-            <Icon name="sparkles" className="w-3.5 h-3.5" /> Inspírate
+            Inspírate
           </Link>
           <Link
             href="/about"
-            className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-albero hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5 ml-auto"
+            className="text-flamencalia-albero text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap ml-auto"
           >
             Quiénes Somos
           </Link>

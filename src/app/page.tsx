@@ -56,6 +56,12 @@ const CATEGORIES = [
     icon: "shoe",
     image: "/categorias/zapatos.jpg",
   },
+  {
+    slug: "todo",
+    label: "Todo",
+    icon: "fan",
+    image: "/categorias/todo.jpg",
+  },
 ];
 
 export default async function HomePage() {
@@ -212,49 +218,49 @@ export default async function HomePage() {
           </div>
         </nav>
 
-        {/* Categories bar */}
-        <div className="border-t border-flamencalia-albero-pale/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
+        {/* Categories bar — hidden on mobile (hamburger menu covers it) */}
+        <div className="hidden sm:block border-t border-flamencalia-albero-pale/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1 py-2">
             <Link
               href="/products"
-              className="text-flamencalia-white bg-flamencalia-black text-xs font-semibold px-4 py-1.5 rounded-full hover:bg-flamencalia-black/80 transition-colors whitespace-nowrap"
+              className="text-flamencalia-white bg-flamencalia-black text-xs font-serif font-semibold uppercase tracking-wide px-3.5 py-1.5 rounded-full hover:bg-flamencalia-black/80 transition-colors whitespace-nowrap"
             >
               Todo
             </Link>
-            {CATEGORIES.map((cat) => (
+            {CATEGORIES.filter((cat) => cat.slug !== "todo").map((cat) => (
               <Link
                 key={cat.slug}
                 href={`/products?category=${cat.slug}`}
-                className="text-flamencalia-black/70 text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap flex items-center gap-1.5"
+                className="text-flamencalia-black/70 text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
               >
-                <Icon name={cat.icon} className="w-3.5 h-3.5" /> {cat.label}
+                {cat.label}
               </Link>
             ))}
 
             {/* Separador */}
-            <span className="hidden sm:block w-px h-4 bg-flamencalia-albero-pale/50 mx-1" />
+            <span className="w-px h-4 bg-flamencalia-albero-pale/50 mx-1" />
 
             <Link
               href="/ferias"
-              className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+              className="text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
             >
-              <Icon name="mapPin" className="w-3.5 h-3.5" /> Ferias
+              Ferias
             </Link>
             <Link
               href="/blog"
-              className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+              className="text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
             >
-              <Icon name="book" className="w-3.5 h-3.5" /> Blog
+              Blog
             </Link>
             <Link
               href="/lookbook"
-              className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+              className="text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
             >
-              <Icon name="sparkles" className="w-3.5 h-3.5" /> Inspírate
+              Inspírate
             </Link>
             <Link
               href="/about"
-              className="hidden sm:flex text-flamencalia-albero text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5 ml-auto"
+              className="text-flamencalia-albero text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap ml-auto"
             >
               Quiénes Somos
             </Link>
@@ -263,7 +269,7 @@ export default async function HomePage() {
       </header>
 
       {/* ═══ HERO BANNER — Carrusel de colección ═══ */}
-      <section className="relative overflow-hidden bg-flamencalia-black">
+      <section className="relative overflow-hidden bg-flamencalia-black min-h-[calc(100svh-8rem)]">
         {/* Carrusel de fondo a pantalla completa */}
         <div className="absolute inset-0">
           <BannerCarousel />
@@ -272,11 +278,13 @@ export default async function HomePage() {
         {/* Overlay oscuro para legibilidad */}
         <div className="absolute inset-0 bg-black/50" />
 
-        <div className="relative py-20 sm:py-28 lg:py-36">
+        <div className="relative flex items-center justify-center min-h-[calc(100svh-8rem)]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* Marca animada — F gira como flamenca */}
             <div className="flex justify-center items-center mb-6 animate-fade-in-up">
-              <AnimatedBrand className="font-serif text-4xl sm:text-6xl lg:text-8xl font-light tracking-widest text-white drop-shadow-lg" />
+              <div className="w-62 sm:w-96 lg:w-150">
+                <AnimatedBrand className="w-full h-auto text-white drop-shadow-lg" />
+              </div>
             </div>
 
             {/* Slogan SVG */}
@@ -322,55 +330,6 @@ export default async function HomePage() {
 
       {/* ═══ MAIN CONTENT ═══ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10 pb-12">
-        {/* ── Vendedores Destacados ── */}
-        <section className="mb-10">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="h-px flex-1 bg-flamencalia-albero-pale" />
-            <h2 className="font-serif text-2xl font-bold text-flamencalia-black flex items-center gap-2">
-              <Icon name="fan" className="w-5 h-5 text-flamencalia-albero" />
-              Vendedores &amp; Diseñadores
-            </h2>
-            <div className="h-px flex-1 bg-flamencalia-albero-pale" />
-          </div>
-          {topSellers && topSellers.length > 0 ? (
-            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-              {topSellers.map((seller) => (
-                <Link
-                  key={seller.id}
-                  href={`/sellers/${seller.id}`}
-                  className="flex flex-col items-center gap-2 shrink-0 group"
-                >
-                  <div className="w-20 h-20 rounded-full bg-flamencalia-albero-pale/50 border-2 border-flamencalia-albero-pale group-hover:border-flamencalia-albero overflow-hidden transition-colors flex items-center justify-center">
-                    {seller.avatar_url ? (
-                      <img
-                        src={seller.avatar_url}
-                        alt={seller.display_name ?? "Vendedor"}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <Icon
-                        name="user"
-                        className="w-8 h-8 text-flamencalia-albero"
-                      />
-                    )}
-                  </div>
-                  <span className="text-xs font-medium text-flamencalia-black/70 group-hover:text-flamencalia-albero transition-colors text-center max-w-20 truncate">
-                    {seller.display_name ?? "Vendedor"}
-                  </span>
-                  <span className="text-[10px] text-neutral-400">
-                    {seller.product_count} producto
-                    {seller.product_count !== 1 ? "s" : ""}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-neutral-400 text-center py-4">
-              Pronto verás aquí a los mejores vendedores y diseñadores.
-            </p>
-          )}
-        </section>
-
         {/* ── Categorías con imágenes grandes ── */}
         <section className="mb-14">
           <div className="flex items-center gap-4 mb-8">
@@ -384,7 +343,11 @@ export default async function HomePage() {
             {CATEGORIES.map((cat) => (
               <Link
                 key={cat.slug}
-                href={`/products?category=${cat.slug}`}
+                href={
+                  cat.slug === "todo"
+                    ? "/products"
+                    : `/products?category=${cat.slug}`
+                }
                 className="group relative overflow-hidden rounded-2xl"
               >
                 <div className="aspect-4/5 relative">
@@ -401,13 +364,71 @@ export default async function HomePage() {
                       {cat.label}
                     </h3>
                     <span className="text-xs text-white/70 font-medium mt-1 block group-hover:text-flamencalia-albero-light transition-colors">
-                      Ver colección →
+                      {cat.slug === "todo"
+                        ? "Explorar todo →"
+                        : "Ver colección →"}
                     </span>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
+        </section>
+
+        {/* ── Vendedores & Diseñadores ── */}
+        <section className="mb-10">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="h-px flex-1 bg-flamencalia-albero-pale" />
+            <h2 className="font-serif text-2xl font-bold text-flamencalia-black flex items-center gap-2">
+              <Icon name="fan" className="w-5 h-5 text-flamencalia-albero" />
+              Vendedores &amp; Diseñadores
+            </h2>
+            <div className="h-px flex-1 bg-flamencalia-albero-pale" />
+          </div>
+          {topSellers && topSellers.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {topSellers.map((seller) => (
+                <Link
+                  key={seller.id}
+                  href={`/sellers/${seller.id}`}
+                  className="group relative bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  {/* Avatar grande */}
+                  <div className="aspect-square relative bg-flamencalia-albero-pale/30">
+                    {seller.avatar_url ? (
+                      <img
+                        src={seller.avatar_url}
+                        alt={seller.display_name ?? "Vendedor"}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-flamencalia-albero/20 to-flamencalia-red/10">
+                        <Icon
+                          name="user"
+                          className="w-12 h-12 text-flamencalia-albero/60"
+                        />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                  {/* Info */}
+                  <div className="p-3 text-center">
+                    <p className="text-sm font-semibold text-flamencalia-black truncate group-hover:text-flamencalia-albero transition-colors">
+                      {seller.display_name ?? "Vendedor"}
+                    </p>
+                    <p className="text-xs text-neutral-400 mt-0.5">
+                      {seller.product_count} producto
+                      {seller.product_count !== 1 ? "s" : ""}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-neutral-400 text-center py-4">
+              Pronto verás aquí a los mejores vendedores y diseñadores.
+            </p>
+          )}
         </section>
 
         {/* ── Feed personalizado: Vendedores que sigues ── */}
