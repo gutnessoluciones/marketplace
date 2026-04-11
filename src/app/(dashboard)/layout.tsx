@@ -4,18 +4,23 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { SignOutButton } from "@/components/layout/sign-out-button";
 import { NotificationBell } from "@/components/layout/notification-bell";
+import { UnreadBadge } from "@/components/social/unread-badge";
 import { Icon } from "@/components/icons";
 
 const sellerNav = [
   { href: "/dashboard", label: "Panel Principal", icon: "chart" },
   { href: "/dashboard/products", label: "Mis Productos", icon: "dress" },
   { href: "/dashboard/orders", label: "Pedidos", icon: "receipt" },
+  { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
+  { href: "/dashboard/favorites", label: "Favoritos", icon: "heart" },
   { href: "/dashboard/settings", label: "Configuración", icon: "gear" },
 ];
 
 const buyerNav = [
   { href: "/dashboard", label: "Panel Principal", icon: "chart" },
   { href: "/dashboard/orders", label: "Mis Compras", icon: "cart" },
+  { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
+  { href: "/dashboard/favorites", label: "Favoritos", icon: "heart" },
   { href: "/dashboard/settings", label: "Configuración", icon: "gear" },
 ];
 
@@ -76,6 +81,7 @@ export default async function DashboardLayout({
                 <Icon name={item.icon} className="w-4.5 h-4.5" />
               </span>
               {item.label}
+              {item.href === "/dashboard/chat" && <UnreadBadge />}
             </Link>
           ))}
           <div className="pt-4 mt-4 border-t border-white/10">

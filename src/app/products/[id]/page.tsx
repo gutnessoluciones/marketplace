@@ -4,10 +4,14 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ProductsService } from "@/services/products.service";
 import { ReviewsService } from "@/services/reviews.service";
+import { FavoritesService } from "@/services/favorites.service";
 import { formatPrice } from "@/lib/utils";
 import { BuyButton } from "@/components/products/buy-button";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ViewTracker } from "@/components/products/view-tracker";
+import { FavoriteButton } from "@/components/social/favorite-button";
+import { FollowButton } from "@/components/social/follow-button";
+import { ChatButton } from "@/components/social/chat-button";
 import { Icon } from "@/components/icons";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
@@ -158,6 +162,25 @@ export default async function ProductDetailPage({ params }: PageProps) {
     .neq("id", product.id)
     .order("views_count", { ascending: false })
     .limit(4);
+
+  // Check if current user has favorited this product + seller follower count
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let isFavorited = false;
+  if (user) {
+    const favService = new FavoritesService(supabase);
+    isFavorited = await favService.isFavorite(user.id, product.id);
+  }
+
+  // Get seller follower count
+  const { data: sellerProfile } = await supabase
+    .from("profiles")
+    .select("followers_count")
+    .eq("id", product.seller_id)
+    .single();
+  const sellerFollowers = sellerProfile?.followers_count ?? 0;
+  const isOwnProduct = user?.id === product.seller_id;
 
   return (
     <div className="min-h-screen bg-flamencalia-cream">
@@ -353,12 +376,27 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   </div>
                 )}
 
-                {/* Buy button */}
-                <div className="mt-6 pt-5 border-t border-flamencalia-albero-pale/30">
-                  <BuyButton
-                    productId={product.id}
-                    inStock={product.stock > 0}
-                  />
+                {/* Buy button + actions */}
+                <div className="mt-6 pt-5 border-t border-flamencalia-albero-pale/30 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                      <BuyButton
+                        productId={product.id}
+                        inStock={product.stock > 0}
+                      />
+                    </div>
+                    <FavoriteButton
+                      productId={product.id}
+                      initialFavorited={isFavorited}
+                      size="md"
+                    />
+                  </div>
+                  {!isOwnProduct && (
+                    <ChatButton
+                      productId={product.id}
+                      sellerId={product.seller_id}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -414,6 +452,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       Ver perfil
                     </Link>
                   </div>
+                  {!isOwnProduct && (
+                    <div className="mt-3 pt-3 border-t border-flamencalia-albero-pale/20">
+                      <FollowButton
+                        sellerId={product.seller_id}
+                        initialCount={sellerFollowers}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
             </div>

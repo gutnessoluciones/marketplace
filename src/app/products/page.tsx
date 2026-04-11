@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ProductsService } from "@/services/products.service";
+import { FavoritesService } from "@/services/favorites.service";
 import { ProductCard } from "@/components/products/product-card";
 import { Icon } from "@/components/icons";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -168,6 +169,16 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     (a, b) => b.count - a.count,
   );
   const totalPages = Math.ceil((result.total ?? 0) / result.limit);
+
+  // Fetch favorite IDs for logged-in user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let favoriteIds: string[] = [];
+  if (user) {
+    const favService = new FavoritesService(supabase);
+    favoriteIds = await favService.getUserFavoriteIds(user.id);
+  }
 
   function buildUrl(overrides: Record<string, string | undefined>) {
     const current: Record<string, string | undefined> = {
@@ -592,7 +603,11 @@ export default async function ProductsPage({ searchParams }: PageProps) {
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                   {result.data.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      isFavorited={favoriteIds.includes(product.id)}
+                    />
                   ))}
                 </div>
 

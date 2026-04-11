@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { Icon } from "@/components/icons";
+import { FavoriteButton } from "@/components/social/favorite-button";
 import type { Product } from "@/types";
 
 const CONDITION_LABELS: Record<string, string> = {
@@ -12,7 +13,13 @@ const CONDITION_LABELS: Record<string, string> = {
   aceptable: "Aceptable",
 };
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({
+  product,
+  isFavorited,
+}: {
+  product: Product;
+  isFavorited?: boolean;
+}) {
   return (
     <Link
       href={`/products/${product.id}`}
@@ -33,13 +40,13 @@ export function ProductCard({ product }: { product: Product }) {
         )}
 
         {/* Heart button */}
-        <button
-          type="button"
-          onClick={(e) => e.preventDefault()}
-          className="absolute top-2 right-2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-flamencalia-albero hover:text-white shadow-sm"
-        >
-          <Icon name="heart" className="w-4 h-4" />
-        </button>
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all">
+          <FavoriteButton
+            productId={product.id}
+            initialFavorited={isFavorited}
+            size="sm"
+          />
+        </div>
 
         {/* Condition badge */}
         {product.condition && (
