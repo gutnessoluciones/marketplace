@@ -84,7 +84,7 @@ export default async function AdminChatPage() {
               return (
                 <Link
                   key={conv.id as string}
-                  href={`/admin/chat/${conv.id}`}
+                  href={`/flamencadmin-8x9k2m/chat/${conv.id}`}
                   className="block sm:grid sm:grid-cols-12 gap-4 px-5 py-4 hover:bg-flamencalia-cream/30 transition-colors group"
                 >
                   {/* Participants */}
