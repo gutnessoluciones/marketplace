@@ -7,19 +7,26 @@ import { SignOutButton } from "@/components/layout/sign-out-button";
 import { Icon } from "@/components/icons";
 import { AdminMobileSidebar } from "@/components/layout/admin-mobile-sidebar";
 
+const ADMIN_BASE = "/flamencadmin-8x9k2m";
+
 const adminNav = [
-  { href: "/admin", label: "Resumen", icon: "chart" },
-  { href: "/admin/users", label: "Usuarios", icon: "users" },
-  { href: "/admin/products", label: "Productos", icon: "package" },
-  { href: "/admin/orders", label: "Pedidos", icon: "receipt" },
-  { href: "/admin/reports", label: "Reportes", icon: "alertTriangle" },
-  { href: "/admin/blog", label: "Blog", icon: "book" },
-  { href: "/admin/fairs", label: "Ferias", icon: "mapPin" },
+  { href: ADMIN_BASE, label: "Resumen", icon: "chart" },
+  { href: `${ADMIN_BASE}/users`, label: "Usuarios", icon: "users" },
+  { href: `${ADMIN_BASE}/products`, label: "Productos", icon: "package" },
+  { href: `${ADMIN_BASE}/orders`, label: "Pedidos", icon: "receipt" },
+  { href: `${ADMIN_BASE}/chat`, label: "Conversaciones", icon: "message" },
+  { href: `${ADMIN_BASE}/reports`, label: "Reportes", icon: "alertTriangle" },
+  { href: `${ADMIN_BASE}/blog`, label: "Blog", icon: "book" },
+  { href: `${ADMIN_BASE}/fairs`, label: "Ferias", icon: "mapPin" },
 ];
 
 const ownerNav = [
-  { href: "/admin/site-settings", label: "Configuración web", icon: "gear" },
-  { href: "/admin/team", label: "Equipo admin", icon: "medal" },
+  {
+    href: `${ADMIN_BASE}/site-settings`,
+    label: "Configuración web",
+    icon: "gear",
+  },
+  { href: `${ADMIN_BASE}/team`, label: "Equipo admin", icon: "medal" },
 ];
 
 export default async function AdminLayout({
@@ -59,7 +66,7 @@ export default async function AdminLayout({
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 bg-linear-to-b from-flamencalia-black to-flamencalia-red-dark p-5 flex-col shrink-0">
         <Link
-          href="/admin"
+          href={ADMIN_BASE}
           className="flex items-center gap-2 text-lg font-bold tracking-tight text-white mb-8 px-1"
         >
           <Icon name="fan" className="w-8 h-8 text-flamencalia-red-light" />

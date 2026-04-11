@@ -38,7 +38,7 @@ export function AdminMobileSidebar({
             <path d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <Link href="/admin" className="flex items-center gap-2">
+        <Link href="/flamencadmin-8x9k2m" className="flex items-center gap-2">
           <Icon name="fan" className="w-6 h-6 text-flamencalia-red-light" />
           <span className="text-white font-serif text-sm tracking-wide">
             Admin
@@ -59,7 +59,7 @@ export function AdminMobileSidebar({
           <aside className="absolute left-0 top-0 bottom-0 w-72 bg-linear-to-b from-flamencalia-black to-flamencalia-red-dark p-5 flex flex-col animate-in slide-in-from-left duration-200">
             <div className="flex items-center justify-between mb-6">
               <Link
-                href="/admin"
+                href="/flamencadmin-8x9k2m"
                 className="flex items-center gap-2"
                 onClick={() => setOpen(false)}
               >
@@ -94,7 +94,8 @@ export function AdminMobileSidebar({
               {navItems.map((item) => {
                 const isActive =
                   pathname === item.href ||
-                  (item.href !== "/admin" && pathname.startsWith(item.href));
+                  (item.href !== "/flamencadmin-8x9k2m" &&
+                    pathname.startsWith(item.href));
                 return (
                   <Link
                     key={item.href}

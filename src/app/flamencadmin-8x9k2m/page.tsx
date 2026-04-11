@@ -128,7 +128,7 @@ export default async function AdminDashboard() {
               Últimos Pedidos
             </h2>
             <Link
-              href="/admin/orders"
+              href="/flamencadmin-8x9k2m/orders"
               className="text-xs text-flamencalia-red hover:underline"
             >
               Ver todos →
@@ -181,7 +181,7 @@ export default async function AdminDashboard() {
               Vendedores
             </h2>
             <Link
-              href="/admin/users"
+              href="/flamencadmin-8x9k2m/users"
               className="text-xs text-flamencalia-red hover:underline"
             >
               Ver todos →
