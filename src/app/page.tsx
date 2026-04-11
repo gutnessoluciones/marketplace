@@ -283,8 +283,8 @@ export default async function HomePage() {
             </div>
 
             {/* Marca animada letra a letra */}
-            <div className="flex justify-center items-center mb-6 w-full px-2">
-              <AnimatedBrand className="w-full h-auto fill-white drop-shadow-lg" />
+            <div className="flex justify-center items-center mb-6">
+              <AnimatedBrand className="font-serif text-4xl sm:text-6xl lg:text-8xl font-bold tracking-widest text-white drop-shadow-lg" />
             </div>
             <p
               className="mt-4 text-base sm:text-lg text-white/80 max-w-2xl mx-auto animate-fade-in-up"
