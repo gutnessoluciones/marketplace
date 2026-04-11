@@ -222,9 +222,31 @@ export default async function HomePage() {
                 <Icon name={cat.icon} className="w-3.5 h-3.5" /> {cat.label}
               </Link>
             ))}
+
+            {/* Separador */}
+            <span className="hidden sm:block w-px h-4 bg-flamencalia-albero-pale/50 mx-1" />
+
+            <Link
+              href="/ferias"
+              className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+            >
+              <Icon name="mapPin" className="w-3.5 h-3.5" /> Ferias
+            </Link>
+            <Link
+              href="/blog"
+              className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+            >
+              <Icon name="book" className="w-3.5 h-3.5" /> Blog
+            </Link>
+            <Link
+              href="/lookbook"
+              className="hidden sm:flex text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 text-flamencalia-black/70 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5"
+            >
+              <Icon name="sparkles" className="w-3.5 h-3.5" /> Inspírate
+            </Link>
             <Link
               href="/about"
-              className="text-flamencalia-albero text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap ml-auto"
+              className="hidden sm:flex text-flamencalia-albero text-xs font-medium px-3.5 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap items-center gap-1.5 ml-auto"
             >
               Quiénes Somos
             </Link>

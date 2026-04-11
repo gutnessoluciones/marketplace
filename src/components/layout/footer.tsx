@@ -134,6 +134,30 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/blog"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/ferias"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
+                >
+                  Calendario de Ferias
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/lookbook"
+                  className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
+                >
+                  Inspírate
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/legal/privacy"
                   className="text-sm text-neutral-400 hover:text-flamencalia-albero-light transition-colors"
                 >
