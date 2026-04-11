@@ -277,8 +277,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
           {/* ── Left: Gallery ── */}
           <div className="lg:col-span-7">
             <ProductGallery
@@ -289,11 +289,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
           {/* ── Right: Product info ── */}
           <div className="lg:col-span-5">
-            <div className="sticky top-20 space-y-6">
+            <div className="lg:sticky lg:top-20 space-y-4 sm:space-y-6">
               {/* Main info card */}
-              <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/30 p-6 lg:p-8">
+              <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/30 p-4 sm:p-6 lg:p-8">
                 {/* Category + condition */}
-                <div className="flex flex-wrap items-center gap-2 mb-3">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3">
                   {product.category && (
                     <Link
                       href={`/products?category=${product.category}`}
@@ -327,7 +327,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 </h1>
 
                 {/* Rating + views */}
-                <div className="flex items-center gap-3 mt-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-3">
                   {avgRating && (
                     <div className="flex items-center gap-1">
                       <div className="flex">
@@ -367,9 +367,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 </div>
 
                 {/* Price */}
-                <div className="mt-5 pt-5 border-t border-flamencalia-albero-pale/30">
+                <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-flamencalia-albero-pale/30">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl lg:text-4xl font-extrabold text-flamencalia-black">
+                    <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-flamencalia-black">
                       {formatPrice(product.price)}
                     </span>
                   </div>
@@ -394,8 +394,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   product.color ||
                   product.brand ||
                   product.material) && (
-                  <div className="mt-5 pt-5 border-t border-flamencalia-albero-pale/30">
-                    <div className="grid grid-cols-2 gap-3">
+                  <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-flamencalia-albero-pale/30">
+                    <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                       {product.color && (
                         <div className="flex items-center gap-2.5">
                           <span
@@ -451,7 +451,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 )}
 
                 {/* Buy button + actions */}
-                <div className="mt-6 pt-5 border-t border-flamencalia-albero-pale/30 space-y-3">
+                <div className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-flamencalia-albero-pale/30 space-y-2.5 sm:space-y-3">
                   <div className="flex items-center gap-2">
                     <div className="flex-1">
                       <BuyButton
@@ -490,7 +490,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
               {/* Seller card */}
               {product.seller && (
-                <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/30 p-5">
+                <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/30 p-4 sm:p-5">
                   <div className="flex items-start gap-3">
                     <Link
                       href={`/sellers/${product.seller.id}`}

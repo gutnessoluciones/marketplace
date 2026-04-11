@@ -350,17 +350,7 @@ export function OfferButton({
         onClick={() => setShowModal(true)}
         className="w-full flex items-center justify-center gap-2 text-sm font-bold px-5 py-3.5 rounded-xl border-2 border-flamencalia-albero text-flamencalia-albero hover:bg-flamencalia-albero hover:text-white transition-all"
       >
-        <svg
-          className="w-4.5 h-4.5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-        </svg>
+        <Icon name="tag" className="w-4.5 h-4.5" />
         Hacer oferta
       </button>
 

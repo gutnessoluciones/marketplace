@@ -66,7 +66,11 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                     : "border-neutral-200 opacity-60 hover:border-neutral-400"
                 }`}
               >
-                <img src={img} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
+                <img
+                  src={img}
+                  alt={`Foto ${i + 1}`}
+                  className="w-full h-full object-cover"
+                />
               </button>
             ))}
           </div>
@@ -88,11 +92,13 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               draggable={false}
             />
 
-            {/* Lens indicator on the image */}
+            {/* Lens indicator on the image – size matches 1/3 of image (backgroundSize 300%) */}
             {showZoom && (
               <div
-                className="absolute w-32 h-32 border-2 border-flamencalia-albero/60 bg-flamencalia-albero/10 pointer-events-none transition-opacity opacity-0 group-hover:opacity-100"
+                className="absolute border-2 border-flamencalia-albero/60 bg-flamencalia-albero/10 pointer-events-none transition-opacity opacity-0 group-hover:opacity-100"
                 style={{
+                  width: "33.33%",
+                  height: "33.33%",
                   left: `${zoomPos.x}%`,
                   top: `${zoomPos.y}%`,
                   transform: "translate(-50%, -50%)",
@@ -111,17 +117,39 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               <>
                 <button
                   type="button"
-                  onClick={(e) => { e.stopPropagation(); goTo(-1); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goTo(-1);
+                  }}
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-105"
                 >
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M15 18l-6-6 6-6" /></svg>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
                 </button>
                 <button
                   type="button"
-                  onClick={(e) => { e.stopPropagation(); goTo(1); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goTo(1);
+                  }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-105"
                 >
-                  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M9 18l6-6-6-6" /></svg>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
                 </button>
               </>
             )}
@@ -140,9 +168,14 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   <button
                     key={i}
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); setActiveIndex(i); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveIndex(i);
+                    }}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      i === activeIndex ? "bg-white scale-125 shadow" : "bg-white/50"
+                      i === activeIndex
+                        ? "bg-white scale-125 shadow"
+                        : "bg-white/50"
                     }`}
                   />
                 ))}
@@ -152,16 +185,15 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
 
           {/* Zoomed panel – appears to the right on hover */}
           {showZoom && activeImage && (
-            <div
-              className="hidden lg:block absolute left-full top-0 ml-4 w-[500px] h-[500px] rounded-2xl overflow-hidden border border-neutral-200 shadow-xl bg-white z-20"
-            >
+            <div className="hidden lg:block absolute left-full top-0 ml-4 w-125 h-125 rounded-2xl overflow-hidden border border-neutral-200 shadow-xl bg-white z-20">
               <div
                 className="w-full h-full"
                 style={{
                   backgroundImage: `url(${activeImage})`,
-                  backgroundSize: "300%",
-                  backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  transform: "scale(3)",
+                  transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
                 }}
               />
             </div>
@@ -176,14 +208,21 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
             <button
               key={i}
               type="button"
-              onClick={() => { setActiveIndex(i); setShowZoom(false); }}
+              onClick={() => {
+                setActiveIndex(i);
+                setShowZoom(false);
+              }}
               className={`shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
                 i === activeIndex
                   ? "border-flamencalia-red opacity-100"
                   : "border-transparent opacity-50"
               }`}
             >
-              <img src={img} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
+              <img
+                src={img}
+                alt={`Foto ${i + 1}`}
+                className="w-full h-full object-cover"
+              />
             </button>
           ))}
         </div>
