@@ -8,7 +8,8 @@ export default function AnimatedBrand({
   return (
     <h1 className={className}>
       <span className="inline-block brand-f-dance">F</span>
-      {"LAMENCALIA"}
+      {"LAMENCALI"}
+      <span className="inline-block brand-f-dance">A</span>
     </h1>
   );
 }
