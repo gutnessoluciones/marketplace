@@ -158,18 +158,20 @@ export class PaymentsService {
             .eq("buyer_id", buyerOrder.buyer_id)
             .maybeSingle();
 
-          const conversationId = existing?.id ?? (await (async () => {
-            const { data: newConv } = await supabaseAdmin
-              .from("conversations")
-              .insert({
-                product_id: buyerOrder.product_id,
-                buyer_id: buyerOrder.buyer_id,
-                seller_id: fullOrder.seller_id,
-              })
-              .select("id")
-              .single();
-            return newConv?.id;
-          })());
+          const conversationId =
+            existing?.id ??
+            (await (async () => {
+              const { data: newConv } = await supabaseAdmin
+                .from("conversations")
+                .insert({
+                  product_id: buyerOrder.product_id,
+                  buyer_id: buyerOrder.buyer_id,
+                  seller_id: fullOrder.seller_id,
+                })
+                .select("id")
+                .single();
+              return newConv?.id;
+            })());
 
           if (conversationId) {
             await supabaseAdmin.from("messages").insert({
