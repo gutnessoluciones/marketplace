@@ -22,9 +22,7 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
   const [shippingPolicy, setShippingPolicy] = useState(
     profile.shipping_policy ?? "",
   );
-  const [returnPolicy, setReturnPolicy] = useState(
-    profile.return_policy ?? "",
-  );
+  const [returnPolicy, setReturnPolicy] = useState(profile.return_policy ?? "");
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
   const [bannerUrl, setBannerUrl] = useState(profile.banner_url);
   const [uploading, setUploading] = useState(false);

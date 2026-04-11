@@ -254,7 +254,9 @@ export function ChatConversation({
                     : "bg-flamencalia-albero-pale/20 text-flamencalia-black rounded-bl-md"
                 }`}
               >
-                <p className="whitespace-pre-wrap wrap-break-word">{msg.content}</p>
+                <p className="whitespace-pre-wrap wrap-break-word">
+                  {msg.content}
+                </p>
                 <p
                   className={`text-[10px] mt-1 ${isOwn ? "text-white/40" : "text-flamencalia-black/30"}`}
                 >

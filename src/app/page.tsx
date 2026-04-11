@@ -61,21 +61,27 @@ export default async function HomePage() {
 
   const { data: featuredProducts } = await supabase
     .from("products")
-    .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)")
+    .select(
+      "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+    )
     .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(8);
 
   const { data: recentProducts } = await supabase
     .from("products")
-    .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)")
+    .select(
+      "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+    )
     .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(4);
 
   const { data: dealProducts } = await supabase
     .from("products")
-    .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)")
+    .select(
+      "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+    )
     .eq("status", "active")
     .order("price", { ascending: true })
     .limit(4);
@@ -175,7 +181,11 @@ export default async function HomePage() {
           </Link>
 
           {/* Search bar */}
-          <form action="/products" method="GET" className="hidden sm:block flex-1 max-w-xl">
+          <form
+            action="/products"
+            method="GET"
+            className="hidden sm:block flex-1 max-w-xl"
+          >
             <div className="relative">
               <Icon
                 name="search"
