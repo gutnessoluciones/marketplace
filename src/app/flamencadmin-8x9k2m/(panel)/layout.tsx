@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -68,7 +69,13 @@ export default async function AdminPanelLayout({
           href={ADMIN_BASE}
           className="flex items-center gap-2 text-lg font-bold tracking-tight text-white mb-8 px-1"
         >
-          <Icon name="fan" className="w-8 h-8 text-flamencalia-red-light" />
+          <Image
+            src="/cliente/Abanico.svg"
+            alt="Flamencalia"
+            width={32}
+            height={32}
+            className="drop-shadow-md"
+          />
           <span>
             Admin
             <span className="text-xs font-normal text-flamencalia-albero block -mt-0.5">

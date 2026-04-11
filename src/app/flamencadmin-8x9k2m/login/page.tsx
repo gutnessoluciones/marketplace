@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 import { Icon } from "@/components/icons";
 
 const ADMIN_BASE = "/flamencadmin-8x9k2m";
@@ -43,9 +44,13 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-sm">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-flamencalia-red/20 mb-4">
-            <Icon name="fan" className="w-8 h-8 text-flamencalia-red-light" />
-          </div>
+          <Image
+            src="/cliente/Abanico.svg"
+            alt="Flamencalia"
+            width={64}
+            height={64}
+            className="mx-auto mb-4 drop-shadow-lg"
+          />
           <h1 className="font-serif text-2xl font-bold text-white">
             Admin Flamencalia
           </h1>

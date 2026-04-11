@@ -39,7 +39,13 @@ export function AdminMobileSidebar({
           </svg>
         </button>
         <Link href="/flamencadmin-8x9k2m" className="flex items-center gap-2">
-          <Icon name="fan" className="w-6 h-6 text-flamencalia-red-light" />
+          <Image
+            src="/cliente/Abanico.svg"
+            alt="Flamencalia"
+            width={24}
+            height={24}
+            className="drop-shadow-md"
+          />
           <span className="text-white font-serif text-sm tracking-wide">
             Admin
           </span>
@@ -63,9 +69,12 @@ export function AdminMobileSidebar({
                 className="flex items-center gap-2"
                 onClick={() => setOpen(false)}
               >
-                <Icon
-                  name="fan"
-                  className="w-7 h-7 text-flamencalia-red-light"
+                <Image
+                  src="/cliente/Abanico.svg"
+                  alt="Flamencalia"
+                  width={28}
+                  height={28}
+                  className="drop-shadow-md"
                 />
                 <span className="text-white font-bold text-sm">
                   Admin
