@@ -49,6 +49,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*.supabase.co",
       },
+      {
+        protocol: "https",
+        hostname: "sevilla.abc.es",
+      },
     ],
   },
   async headers() {

@@ -24,7 +24,8 @@ const CATEGORIES = [
     slug: "camino",
     label: "Camino",
     icon: "horseshoe",
-    image: "/categorias/camino.jpg",
+    image:
+      "https://sevilla.abc.es/estilo/bulevarsur/wp-content/uploads/sites/14/2019/03/gil-ortiz-moda-rociera-1.jpg",
   },
   {
     slug: "complementos-flamencos",
