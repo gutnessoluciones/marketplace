@@ -13,6 +13,9 @@ function formatPrice(cents: number) {
 interface OfferActionsProps {
   offerId: string;
   amount: number;
+  originalPrice?: number;
+  counterAmount?: number;
+  offerStatus?: string;
   buyerMode?: boolean;
   acceptedMode?: boolean;
 }
@@ -20,12 +23,17 @@ interface OfferActionsProps {
 export function OfferActions({
   offerId,
   amount,
+  originalPrice,
+  counterAmount,
+  offerStatus,
   buyerMode,
   acceptedMode,
 }: OfferActionsProps) {
   const [loading, setLoading] = useState("");
   const [response, setResponse] = useState("");
   const [showResponse, setShowResponse] = useState(false);
+  const [showCounter, setShowCounter] = useState(false);
+  const [counterValue, setCounterValue] = useState("");
   const router = useRouter();
 
   async function handleAction(action: "accept" | "reject" | "cancel") {
@@ -84,8 +92,33 @@ export function OfferActions({
     );
   }
 
-  // Buyer — can cancel
+  // Buyer — can cancel or respond to counter
   if (buyerMode) {
+    if (offerStatus === "countered" && counterAmount) {
+      return (
+        <div className="space-y-2">
+          <p className="text-xs text-blue-600 font-medium">
+            Contraoferta: {formatPrice(counterAmount)}
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleAction("accept-counter" as "accept")}
+              disabled={!!loading}
+              className="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-700 transition-all disabled:opacity-50"
+            >
+              {loading === "accept-counter" ? "..." : "Aceptar contraoferta"}
+            </button>
+            <button
+              onClick={() => handleAction("reject-counter" as "reject")}
+              disabled={!!loading}
+              className="bg-red-50 text-red-600 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition-all disabled:opacity-50"
+            >
+              {loading === "reject-counter" ? "..." : "Rechazar"}
+            </button>
+          </div>
+        </div>
+      );
+    }
     return (
       <button
         onClick={() => handleAction("cancel")}
@@ -97,7 +130,40 @@ export function OfferActions({
     );
   }
 
-  // Seller — accept/reject
+  // Seller — accept/reject/counter
+  async function handleCounter() {
+    const cents = Math.round(parseFloat(counterValue) * 100);
+    if (isNaN(cents) || cents <= amount) {
+      alert("La contraoferta debe ser mayor a la oferta del comprador");
+      return;
+    }
+    if (originalPrice && cents >= originalPrice) {
+      alert("La contraoferta debe ser menor al precio original");
+      return;
+    }
+    setLoading("counter");
+    try {
+      const res = await fetch(`/api/offers/${offerId}/counter`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          counter_amount: cents,
+          response: response.trim() || undefined,
+        }),
+      });
+      if (res.ok) {
+        router.refresh();
+      } else {
+        const data = await res.json();
+        alert(data.error ?? "Error");
+      }
+    } catch {
+      alert("Error al procesar");
+    } finally {
+      setLoading("");
+    }
+  }
+
   return (
     <div className="space-y-2">
       {showResponse && (
@@ -110,6 +176,30 @@ export function OfferActions({
           className="w-full px-3 py-1.5 rounded-lg border border-neutral-200 text-xs outline-none focus:border-flamencalia-albero"
         />
       )}
+      {showCounter && (
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-neutral-400 text-xs">
+              €
+            </span>
+            <input
+              type="number"
+              step="0.01"
+              value={counterValue}
+              onChange={(e) => setCounterValue(e.target.value)}
+              placeholder={(amount / 100 + 5).toFixed(2)}
+              className="w-full pl-6 pr-3 py-1.5 rounded-lg border border-blue-200 text-xs outline-none focus:border-blue-400"
+            />
+          </div>
+          <button
+            onClick={handleCounter}
+            disabled={!!loading || !counterValue}
+            className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-700 transition-all disabled:opacity-50"
+          >
+            {loading === "counter" ? "..." : "Enviar"}
+          </button>
+        </div>
+      )}
       <div className="flex items-center gap-2">
         <button
           onClick={() => handleAction("accept")}
@@ -119,6 +209,16 @@ export function OfferActions({
           {loading === "accept" ? "..." : "Aceptar"}
         </button>
         <button
+          onClick={() => {
+            setShowCounter(!showCounter);
+            setShowResponse(false);
+          }}
+          disabled={!!loading}
+          className="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-100 transition-all disabled:opacity-50"
+        >
+          Contraoferta
+        </button>
+        <button
           onClick={() => handleAction("reject")}
           disabled={!!loading}
           className="bg-red-50 text-red-600 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition-all disabled:opacity-50"
@@ -126,10 +226,13 @@ export function OfferActions({
           {loading === "reject" ? "..." : "Rechazar"}
         </button>
         <button
-          onClick={() => setShowResponse(!showResponse)}
+          onClick={() => {
+            setShowResponse(!showResponse);
+            setShowCounter(false);
+          }}
           className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors ml-auto"
         >
-          {showResponse ? "Ocultar" : "Responder"}
+          {showResponse ? "Ocultar" : "Mensaje"}
         </button>
       </div>
     </div>

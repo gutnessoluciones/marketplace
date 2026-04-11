@@ -92,6 +92,7 @@ export function EditProductForm({ product }: { product: Product }) {
         stock: Number(formData.get("stock")) || 0,
         images,
         status: formData.get("status") || "active",
+        negotiable: formData.get("negotiable") === "on",
       }),
     });
 
@@ -390,6 +391,25 @@ export function EditProductForm({ product }: { product: Product }) {
                 </div>
               </label>
             </div>
+          </div>
+
+          <div className="flex items-center gap-3 pt-2">
+            <label className="flex items-center gap-2.5 cursor-pointer">
+              <input
+                type="checkbox"
+                name="negotiable"
+                defaultChecked={product.negotiable ?? false}
+                className="w-4.5 h-4.5 rounded border-neutral-300 text-flamencalia-albero accent-flamencalia-albero"
+              />
+              <div>
+                <span className="text-sm font-medium text-neutral-700">
+                  Precio negociable
+                </span>
+                <p className="text-xs text-neutral-400">
+                  Permite a los compradores enviar ofertas
+                </p>
+              </div>
+            </label>
           </div>
         </div>
 

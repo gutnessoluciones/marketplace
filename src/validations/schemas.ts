@@ -70,6 +70,7 @@ export const createProductSchema = z.object({
   stock: z.number().int().min(0).default(1),
   images: z.array(z.string().url()).max(10).optional(),
   status: z.enum(["active", "draft"]).optional(),
+  negotiable: z.boolean().optional(),
 });
 
 export const updateProductSchema = createProductSchema.partial();
@@ -88,6 +89,7 @@ export const createOrderSchema = z.object({
       country: z.string().length(2),
     })
     .optional(),
+  coupon_code: z.string().max(50).optional(),
 });
 
 // ── Checkout ─────────────────────────────────────────────

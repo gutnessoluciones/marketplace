@@ -4,6 +4,7 @@ import { OffersService } from "@/services/offers.service";
 import { NotificationsService } from "@/services/notifications.service";
 import { respondOfferSchema } from "@/validations/schemas";
 import { apiResponse, apiError, formatPrice } from "@/lib/utils";
+import { sendOfferAcceptedEmail, sendOfferCounteredEmail } from "@/lib/email";
 
 interface Ctx {
   params: Promise<{ id: string }>;
@@ -48,6 +49,22 @@ export async function POST(request: NextRequest, { params }: Ctx) {
         },
       });
 
+      // Email (fire-and-forget)
+      const { data: prodAccept } = await supabase
+        .from("products")
+        .select("title")
+        .eq("id", offer.product_id)
+        .single();
+      const { data: buyerAcceptAuth } = await supabase.auth.admin.getUserById(
+        offer.buyer_id,
+      );
+      if (buyerAcceptAuth?.user?.email && prodAccept)
+        sendOfferAcceptedEmail(
+          buyerAcceptAuth.user.email,
+          prodAccept.title,
+          offer.amount,
+        ).catch(() => {});
+
       return apiResponse(offer);
     }
 
@@ -63,6 +80,81 @@ export async function POST(request: NextRequest, { params }: Ctx) {
         type: "offer_rejected",
         title: "Oferta rechazada",
         message: `Tu oferta de ${formatPrice(offer.amount)} ha sido rechazada.`,
+        data: { offer_id: offer.id, product_id: offer.product_id },
+      });
+
+      return apiResponse(offer);
+    }
+
+    if (action === "counter") {
+      const counterAmount = body.counter_amount;
+      if (!counterAmount || typeof counterAmount !== "number") {
+        return apiResponse({ error: "counter_amount is required" }, 400);
+      }
+      const offer = await service.counter(
+        id,
+        user.id,
+        counterAmount,
+        parsed.success ? parsed.data.response : undefined,
+      );
+
+      await notifications.create({
+        user_id: offer.buyer_id,
+        type: "offer_countered",
+        title: "Contraoferta recibida",
+        message: `El vendedor te propone ${formatPrice(offer.counter_amount)} como contraoferta.`,
+        data: {
+          offer_id: offer.id,
+          product_id: offer.product_id,
+          counter_amount: offer.counter_amount,
+        },
+      });
+
+      // Email
+      const { data: prodCounter } = await supabase
+        .from("products")
+        .select("title")
+        .eq("id", offer.product_id)
+        .single();
+      const { data: buyerCounterAuth } = await supabase.auth.admin.getUserById(
+        offer.buyer_id,
+      );
+      if (buyerCounterAuth?.user?.email && prodCounter)
+        sendOfferCounteredEmail(
+          buyerCounterAuth.user.email,
+          prodCounter.title,
+          offer.counter_amount,
+        ).catch(() => {});
+
+      return apiResponse(offer);
+    }
+
+    if (action === "accept-counter") {
+      const offer = await service.acceptCounter(id, user.id);
+
+      await notifications.create({
+        user_id: offer.seller_id,
+        type: "offer_accepted",
+        title: "Contraoferta aceptada",
+        message: `El comprador ha aceptado tu contraoferta de ${formatPrice(offer.amount)}.`,
+        data: {
+          offer_id: offer.id,
+          product_id: offer.product_id,
+          amount: offer.amount,
+        },
+      });
+
+      return apiResponse(offer);
+    }
+
+    if (action === "reject-counter") {
+      const offer = await service.rejectCounter(id, user.id);
+
+      await notifications.create({
+        user_id: offer.seller_id,
+        type: "offer_rejected",
+        title: "Contraoferta rechazada",
+        message: `El comprador ha rechazado tu contraoferta.`,
         data: { offer_id: offer.id, product_id: offer.product_id },
       });
 

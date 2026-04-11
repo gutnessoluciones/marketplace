@@ -16,8 +16,9 @@ interface CreateOfferInput {
 export class OffersService {
   constructor(private supabase: SupabaseClient) {}
 
-  /** Check if a product accepts offers (second-hand only) */
-  static isOfferable(condition: string | null): boolean {
+  /** Check if a product accepts offers (second-hand or explicitly negotiable) */
+  static isOfferable(condition: string | null, negotiable?: boolean): boolean {
+    if (negotiable) return true;
     return condition !== null && OFFERABLE_CONDITIONS.includes(condition);
   }
 
@@ -29,7 +30,7 @@ export class OffersService {
     // Fetch product
     const { data: product, error: pErr } = await this.supabase
       .from("products")
-      .select("id, seller_id, price, stock, status, condition")
+      .select("id, seller_id, price, stock, status, condition, negotiable")
       .eq("id", input.product_id)
       .eq("status", "active")
       .single();
@@ -41,7 +42,7 @@ export class OffersService {
         400,
       );
     if (product.stock < 1) throw new AppError("Producto sin stock", 400);
-    if (!OffersService.isOfferable(product.condition))
+    if (!OffersService.isOfferable(product.condition, product.negotiable))
       throw new AppError("Este producto no acepta ofertas", 400);
 
     // Validate amount
@@ -173,7 +174,7 @@ export class OffersService {
 
     if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
     if (offer.seller_id !== sellerId) throw new AppError("No autorizado", 403);
-    if (offer.status !== "pending")
+    if (offer.status !== "pending" && offer.status !== "countered")
       throw new AppError(`La oferta ya está ${offer.status}`, 400);
 
     const { error } = await this.supabase
@@ -182,6 +183,128 @@ export class OffersService {
         status: "rejected",
         seller_response: response?.trim() || null,
       })
+      .eq("id", offerId);
+
+    if (error) throw new AppError(error.message, 500);
+    return { ...offer, status: "rejected" };
+  }
+
+  /** Counter an offer (seller only) */
+  async counter(
+    offerId: string,
+    sellerId: string,
+    counterAmount: number,
+    response?: string,
+  ) {
+    const { data: offer, error: oErr } = await this.supabase
+      .from("offers")
+      .select(
+        "id, seller_id, buyer_id, amount, product_id, original_price, status",
+      )
+      .eq("id", offerId)
+      .single();
+
+    if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
+    if (offer.seller_id !== sellerId) throw new AppError("No autorizado", 403);
+    if (offer.status !== "pending")
+      throw new AppError(`La oferta ya está ${offer.status}`, 400);
+
+    if (counterAmount <= offer.amount)
+      throw new AppError(
+        "La contraoferta debe ser mayor a la oferta del comprador",
+        400,
+      );
+    if (counterAmount >= offer.original_price)
+      throw new AppError(
+        "La contraoferta debe ser menor al precio original",
+        400,
+      );
+
+    const counterExpires = new Date(
+      Date.now() + OFFER_EXPIRY_HOURS * 60 * 60 * 1000,
+    ).toISOString();
+
+    const { error } = await this.supabase
+      .from("offers")
+      .update({
+        status: "countered",
+        counter_amount: counterAmount,
+        counter_expires_at: counterExpires,
+        seller_response: response?.trim() || null,
+      })
+      .eq("id", offerId);
+
+    if (error) throw new AppError(error.message, 500);
+    return {
+      ...offer,
+      status: "countered",
+      counter_amount: counterAmount,
+      counter_expires_at: counterExpires,
+    };
+  }
+
+  /** Accept a counteroffer (buyer only) */
+  async acceptCounter(offerId: string, buyerId: string) {
+    const { data: offer, error: oErr } = await this.supabase
+      .from("offers")
+      .select(
+        "id, buyer_id, seller_id, product_id, amount, counter_amount, status, counter_expires_at",
+      )
+      .eq("id", offerId)
+      .single();
+
+    if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
+    if (offer.buyer_id !== buyerId) throw new AppError("No autorizado", 403);
+    if (offer.status !== "countered")
+      throw new AppError("Esta oferta no tiene contraoferta activa", 400);
+    if (
+      offer.counter_expires_at &&
+      new Date(offer.counter_expires_at) < new Date()
+    )
+      throw new AppError("La contraoferta ha expirado", 400);
+
+    const { error } = await this.supabase
+      .from("offers")
+      .update({
+        status: "accepted",
+        amount: offer.counter_amount, // update amount to counter amount
+      })
+      .eq("id", offerId);
+
+    if (error) throw new AppError(error.message, 500);
+
+    // Reject other pending offers for this product
+    await this.supabase
+      .from("offers")
+      .update({
+        status: "rejected",
+        seller_response: "Otra oferta fue aceptada",
+      })
+      .eq("product_id", offer.product_id)
+      .eq("status", "pending")
+      .neq("id", offerId);
+
+    return { ...offer, status: "accepted", amount: offer.counter_amount };
+  }
+
+  /** Reject a counteroffer (buyer only) */
+  async rejectCounter(offerId: string, buyerId: string) {
+    const { data: offer, error: oErr } = await this.supabase
+      .from("offers")
+      .select(
+        "id, buyer_id, seller_id, product_id, amount, counter_amount, status",
+      )
+      .eq("id", offerId)
+      .single();
+
+    if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
+    if (offer.buyer_id !== buyerId) throw new AppError("No autorizado", 403);
+    if (offer.status !== "countered")
+      throw new AppError("Esta oferta no tiene contraoferta activa", 400);
+
+    const { error } = await this.supabase
+      .from("offers")
+      .update({ status: "rejected" })
       .eq("id", offerId);
 
     if (error) throw new AppError(error.message, 500);
@@ -277,7 +400,7 @@ export class OffersService {
       .select("*")
       .eq("product_id", productId)
       .eq("buyer_id", buyerId)
-      .in("status", ["pending", "accepted"])
+      .in("status", ["pending", "accepted", "countered"])
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { OrdersService } from "@/services/orders.service";
 import { apiResponse, apiError } from "@/lib/utils";
 import { rateLimit } from "@/lib/rate-limit";
+import { sendOrderStatusEmail } from "@/lib/email";
 import { z } from "zod";
 
 const updateOrderStatusSchema = z.object({
@@ -51,6 +52,27 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const service = new OrdersService(supabase);
     const order = await service.updateStatus(id, user.id, parsed);
+
+    // Send email to buyer about status change
+    if (order.buyer_id) {
+      const { data: buyerAuth } = await supabase.auth.admin.getUserById(
+        order.buyer_id,
+      );
+      if (buyerAuth?.user?.email) {
+        const { data: prod } = await supabase
+          .from("products")
+          .select("title")
+          .eq("id", order.product_id)
+          .single();
+        sendOrderStatusEmail(
+          buyerAuth.user.email,
+          prod?.title ?? "Producto",
+          parsed.status,
+          id,
+        ).catch(() => {});
+      }
+    }
+
     return apiResponse(order);
   } catch (error) {
     return apiError(error);

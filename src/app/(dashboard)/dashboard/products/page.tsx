@@ -4,6 +4,7 @@ import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { ProductsService } from "@/services/products.service";
 import { Icon } from "@/components/icons";
+import { BoostButton } from "@/components/products/boost-button";
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
   active: { label: "Activo", color: "bg-emerald-50 text-emerald-700" },
@@ -103,6 +104,9 @@ export default async function MyProductsPage() {
                   <p className="text-sm font-bold text-flamencalia-red-dark">
                     {formatPrice(product.price)}
                   </p>
+                  {product.status === "active" && (
+                    <BoostButton productId={product.id} />
+                  )}
                   <Link
                     href={`/dashboard/products/${product.id}/edit`}
                     className="text-xs font-medium text-flamencalia-red hover:text-flamencalia-red-dark bg-flamencalia-red/5 px-3 py-1.5 rounded-lg transition-colors"

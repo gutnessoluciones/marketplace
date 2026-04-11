@@ -6,12 +6,14 @@ import { SignOutButton } from "@/components/layout/sign-out-button";
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { UnreadBadge } from "@/components/social/unread-badge";
 import { Icon } from "@/components/icons";
+import { MobileSidebar } from "@/components/layout/mobile-sidebar";
 
 const sellerNav = [
   { href: "/dashboard", label: "Panel Principal", icon: "chart" },
   { href: "/dashboard/products", label: "Mis Productos", icon: "dress" },
   { href: "/dashboard/orders", label: "Pedidos", icon: "receipt" },
   { href: "/dashboard/offers", label: "Ofertas", icon: "tag" },
+  { href: "/dashboard/disputes", label: "Disputas", icon: "alertTriangle" },
   { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
   { href: "/dashboard/favorites", label: "Favoritos", icon: "heart" },
   { href: "/dashboard/settings", label: "Configuración", icon: "gear" },
@@ -21,6 +23,7 @@ const buyerNav = [
   { href: "/dashboard", label: "Panel Principal", icon: "chart" },
   { href: "/dashboard/orders", label: "Mis Compras", icon: "cart" },
   { href: "/dashboard/offers", label: "Mis Ofertas", icon: "tag" },
+  { href: "/dashboard/disputes", label: "Disputas", icon: "alertTriangle" },
   { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
   { href: "/dashboard/favorites", label: "Favoritos", icon: "heart" },
   { href: "/dashboard/settings", label: "Configuración", icon: "gear" },
@@ -49,8 +52,15 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen flex bg-flamencalia-cream">
-      {/* Sidebar */}
-      <aside className="w-64 bg-linear-to-b from-flamencalia-black to-flamencalia-red-dark p-5 flex flex-col shrink-0">
+      {/* Mobile top bar */}
+      <MobileSidebar
+        navItems={navItems}
+        displayName={profile?.display_name ?? "U"}
+        isSeller={isSeller}
+      />
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-64 bg-linear-to-b from-flamencalia-black to-flamencalia-red-dark p-5 flex-col shrink-0">
         <Link
           href="/"
           className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-white mb-8 px-1"
@@ -119,7 +129,9 @@ export default async function DashboardLayout({
       </aside>
 
       {/* Main */}
-      <main className="flex-1 p-8 overflow-auto">{children}</main>
+      <main className="flex-1 p-4 lg:p-8 pt-16 lg:pt-8 overflow-auto">
+        {children}
+      </main>
     </div>
   );
 }

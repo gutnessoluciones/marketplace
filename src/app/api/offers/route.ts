@@ -4,6 +4,7 @@ import { OffersService } from "@/services/offers.service";
 import { NotificationsService } from "@/services/notifications.service";
 import { createOfferSchema } from "@/validations/schemas";
 import { apiResponse, apiError, formatPrice } from "@/lib/utils";
+import { sendOfferReceivedEmail } from "@/lib/email";
 
 // POST /api/offers — Create a new offer
 export async function POST(request: NextRequest) {
@@ -41,6 +42,23 @@ export async function POST(request: NextRequest) {
         amount: offer.amount,
       },
     });
+
+    // Email notification (fire-and-forget)
+    const { data: product } = await supabase
+      .from("products")
+      .select("title")
+      .eq("id", offer.product_id)
+      .single();
+    const { data: sellerAuth } = await supabase.auth.admin.getUserById(
+      offer.seller_id,
+    );
+    if (sellerAuth?.user?.email && product) {
+      sendOfferReceivedEmail(
+        sellerAuth.user.email,
+        product.title,
+        offer.amount,
+      ).catch(() => {});
+    }
 
     return apiResponse(offer, 201);
   } catch (error) {

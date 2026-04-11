@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ProductsService } from "@/services/products.service";
 import { FavoritesService } from "@/services/favorites.service";
+import { BoostsService } from "@/services/boosts.service";
 import { ProductCard } from "@/components/products/product-card";
 import { Icon } from "@/components/icons";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -126,6 +127,17 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     priceMax: priceMax ? Math.round(Number(priceMax) * 100) : undefined,
     sort,
   });
+
+  // Prioritize boosted products (only on default sort, page 1)
+  const boostService = new BoostsService(supabase);
+  const boostedIds = !sort && page === 1 ? await boostService.getBoostedProductIds() : [];
+  const boostedSet = new Set(boostedIds);
+  const products = boostedIds.length > 0
+    ? [
+        ...result.data.filter((p) => boostedSet.has(p.id)),
+        ...result.data.filter((p) => !boostedSet.has(p.id)),
+      ]
+    : result.data;
 
   let sellerProfile: { display_name: string | null } | null = null;
   if (seller) {
@@ -599,14 +611,15 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 
           {/* ── Main grid ── */}
           <div className="flex-1 min-w-0">
-            {result.data.length > 0 ? (
+            {products.length > 0 ? (
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                  {result.data.map((product) => (
+                  {products.map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}
                       isFavorited={favoriteIds.includes(product.id)}
+                      boosted={boostedSet.has(product.id)}
                     />
                   ))}
                 </div>

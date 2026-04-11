@@ -54,13 +54,53 @@ export default async function DashboardPage() {
 
   // Revenue for sellers
   let totalRevenue = 0;
+  let deliveredRevenue = 0;
+  let totalViews = 0;
+  let totalFavorites = 0;
+  let pendingOffers = 0;
+  let monthlyRevenue: { month: string; amount: number }[] = [];
   if (isSeller) {
     const { data: paidOrders } = await supabase
       .from("orders")
-      .select("total_amount")
+      .select("total_amount, status, created_at")
       .eq("seller_id", user.id)
-      .eq("status", "paid");
+      .in("status", ["paid", "shipped", "delivered"]);
+
     totalRevenue = paidOrders?.reduce((sum, o) => sum + o.total_amount, 0) ?? 0;
+    deliveredRevenue =
+      paidOrders
+        ?.filter((o) => o.status === "delivered")
+        .reduce((sum, o) => sum + o.total_amount, 0) ?? 0;
+
+    // Monthly revenue (last 6 months)
+    const months: Record<string, number> = {};
+    paidOrders?.forEach((o) => {
+      const d = new Date(o.created_at);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      months[key] = (months[key] ?? 0) + o.total_amount;
+    });
+    monthlyRevenue = Object.entries(months)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .slice(-6)
+      .map(([month, amount]) => ({ month, amount }));
+
+    // Total views across products
+    const { data: viewsData } = await supabase
+      .from("products")
+      .select("views_count, likes_count")
+      .eq("seller_id", user.id);
+    totalViews =
+      viewsData?.reduce((sum, p) => sum + (p.views_count ?? 0), 0) ?? 0;
+    totalFavorites =
+      viewsData?.reduce((sum, p) => sum + (p.likes_count ?? 0), 0) ?? 0;
+
+    // Pending offers
+    const { count: offersCount } = await supabase
+      .from("offers")
+      .select("id", { count: "exact", head: true })
+      .eq("seller_id", user.id)
+      .eq("status", "pending");
+    pendingOffers = offersCount ?? 0;
   }
 
   return (
@@ -167,36 +207,127 @@ export default async function DashboardPage() {
 
       {/* Quick Actions for Sellers */}
       {isSeller && (
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <Link
-            href="/dashboard/products/new"
-            className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
-          >
-            <span className="text-2xl block mb-2 text-neutral-400">
-              <Icon name="plus" className="w-6 h-6" />
-            </span>
-            <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
-              Añadir Producto
-            </p>
-            <p className="text-xs text-neutral-400 mt-0.5">
-              Publica un nuevo artículo
-            </p>
-          </Link>
-          <Link
-            href="/dashboard/products"
-            className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
-          >
-            <span className="text-2xl block mb-2 text-neutral-400">
-              <Icon name="clipboard" className="w-6 h-6" />
-            </span>
-            <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
-              Gestionar Productos
-            </p>
-            <p className="text-xs text-neutral-400 mt-0.5">
-              Edita precios, stock y más
-            </p>
-          </Link>
-        </div>
+        <>
+          {/* Extra stats row */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
+              <span className="text-xs text-neutral-400">Visitas totales</span>
+              <p className="text-xl font-bold text-neutral-800 mt-1">
+                {totalViews.toLocaleString("es-ES")}
+              </p>
+            </div>
+            <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
+              <span className="text-xs text-neutral-400">Favoritos</span>
+              <p className="text-xl font-bold text-neutral-800 mt-1">
+                {totalFavorites}
+              </p>
+            </div>
+            <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
+              <span className="text-xs text-neutral-400">
+                Ofertas pendientes
+              </span>
+              <p className="text-xl font-bold text-amber-600 mt-1">
+                {pendingOffers}
+              </p>
+            </div>
+            <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
+              <span className="text-xs text-neutral-400">Entregado</span>
+              <p className="text-xl font-bold text-emerald-600 mt-1">
+                {formatPrice(deliveredRevenue)}
+              </p>
+            </div>
+          </div>
+
+          {/* Monthly Revenue Chart (simple bar) */}
+          {monthlyRevenue.length > 0 && (
+            <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm mb-6">
+              <h3 className="text-sm font-semibold text-neutral-700 mb-4">
+                Ingresos mensuales
+              </h3>
+              <div className="flex items-end gap-2 h-32">
+                {monthlyRevenue.map((m) => {
+                  const maxAmount = Math.max(
+                    ...monthlyRevenue.map((r) => r.amount),
+                    1,
+                  );
+                  const height = Math.max((m.amount / maxAmount) * 100, 4);
+                  const [year, month] = m.month.split("-");
+                  const label = new Date(
+                    Number(year),
+                    Number(month) - 1,
+                  ).toLocaleDateString("es-ES", { month: "short" });
+                  return (
+                    <div
+                      key={m.month}
+                      className="flex-1 flex flex-col items-center gap-1"
+                    >
+                      <span className="text-[10px] text-neutral-400 font-medium">
+                        {formatPrice(m.amount)}
+                      </span>
+                      <div
+                        className="w-full bg-flamencalia-albero/80 rounded-t-md"
+                        style={{ height: `${height}%` }}
+                      />
+                      <span className="text-[10px] text-neutral-500 capitalize">
+                        {label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Conversion metric */}
+          {totalViews > 0 && (totalOrders ?? 0) > 0 && (
+            <div className="bg-linear-to-r from-flamencalia-cream to-flamencalia-albero-pale/20 border border-flamencalia-albero-pale/30 rounded-2xl p-5 mb-6 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
+                  Tasa de conversión
+                </p>
+                <p className="text-2xl font-bold text-flamencalia-black mt-1">
+                  {(((totalOrders ?? 0) / totalViews) * 100).toFixed(2)}%
+                </p>
+              </div>
+              <div className="text-right text-xs text-neutral-400">
+                <p>
+                  {totalViews} visitas → {totalOrders} pedidos
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <Link
+              href="/dashboard/products/new"
+              className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
+            >
+              <span className="text-2xl block mb-2 text-neutral-400">
+                <Icon name="plus" className="w-6 h-6" />
+              </span>
+              <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
+                Añadir Producto
+              </p>
+              <p className="text-xs text-neutral-400 mt-0.5">
+                Publica un nuevo artículo
+              </p>
+            </Link>
+            <Link
+              href="/dashboard/products"
+              className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
+            >
+              <span className="text-2xl block mb-2 text-neutral-400">
+                <Icon name="clipboard" className="w-6 h-6" />
+              </span>
+              <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
+                Gestionar Productos
+              </p>
+              <p className="text-xs text-neutral-400 mt-0.5">
+                Edita precios, stock y más
+              </p>
+            </Link>
+          </div>
+        </>
       )}
 
       {/* Recent Orders */}

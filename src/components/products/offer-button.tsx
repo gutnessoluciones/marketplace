@@ -34,6 +34,8 @@ export function OfferButton({
     amount: number;
     status: string;
     expires_at: string;
+    counter_amount?: number;
+    counter_expires_at?: string;
   } | null>(null);
   const [payLoading, setPayLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -190,6 +192,111 @@ export function OfferButton({
               className="text-xs font-medium text-amber-700 hover:text-amber-900 underline disabled:opacity-50"
             >
               {loading ? "Cancelando..." : "Cancelar oferta"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeOffer.status === "countered" && activeOffer.counter_amount) {
+      const counterDiscount = Math.round(
+        (1 - activeOffer.counter_amount / currentPrice) * 100,
+      );
+      const counterExpiresIn = activeOffer.counter_expires_at
+        ? Math.max(
+            0,
+            Math.round(
+              (new Date(activeOffer.counter_expires_at).getTime() -
+                Date.now()) /
+                3600000,
+            ),
+          )
+        : 0;
+
+      async function handleAcceptCounter() {
+        if (!activeOffer) return;
+        setLoading(true);
+        try {
+          const res = await fetch(
+            `/api/offers/${activeOffer.id}/accept-counter`,
+            { method: "POST" },
+          );
+          if (res.ok) {
+            const data = await res.json();
+            setActiveOffer({
+              ...activeOffer,
+              status: "accepted",
+              amount: data.amount ?? activeOffer.counter_amount,
+            });
+          }
+        } catch {
+          /* ignore */
+        }
+        setLoading(false);
+      }
+
+      async function handleRejectCounter() {
+        if (!activeOffer) return;
+        setLoading(true);
+        try {
+          await fetch(`/api/offers/${activeOffer.id}/reject-counter`, {
+            method: "POST",
+          });
+          setActiveOffer(null);
+        } catch {
+          /* ignore */
+        }
+        setLoading(false);
+      }
+
+      return (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg
+                className="w-4 h-4 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+              >
+                <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-blue-800">
+                Contraoferta del vendedor
+              </p>
+              <p className="text-xs text-blue-600">
+                Expira en {counterExpiresIn}h
+              </p>
+            </div>
+          </div>
+          <div className="mb-3">
+            <span className="text-xs text-neutral-400 line-through mr-2">
+              Tu oferta: {formatPrice(activeOffer.amount)}
+            </span>
+            <span className="text-lg font-bold text-blue-800">
+              {formatPrice(activeOffer.counter_amount!)}
+            </span>
+            <span className="text-xs text-blue-600 ml-1.5">
+              (-{counterDiscount}%)
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={handleAcceptCounter}
+              disabled={loading}
+              className="flex-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 disabled:opacity-50 transition-all"
+            >
+              {loading ? "..." : "Aceptar"}
+            </button>
+            <button
+              onClick={handleRejectCounter}
+              disabled={loading}
+              className="flex-1 border border-blue-200 text-blue-700 py-2.5 rounded-xl text-sm font-medium hover:bg-blue-50 disabled:opacity-50 transition-all"
+            >
+              {loading ? "..." : "Rechazar"}
             </button>
           </div>
         </div>

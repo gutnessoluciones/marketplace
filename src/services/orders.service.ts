@@ -7,6 +7,8 @@ interface CreateOrderInput {
   product_id: string;
   quantity: number;
   shipping_address?: Record<string, unknown>;
+  coupon_id?: string;
+  discount_amount?: number;
 }
 
 export class OrdersService {
@@ -34,7 +36,9 @@ export class OrdersService {
     }
 
     const totalAmount = product.price * input.quantity;
-    const platformFee = Math.round((totalAmount * PLATFORM_FEE_PERCENT) / 100);
+    const discount = input.discount_amount ?? 0;
+    const finalAmount = Math.max(totalAmount - discount, 0);
+    const platformFee = Math.round((finalAmount * PLATFORM_FEE_PERCENT) / 100);
 
     const { data: order, error } = await this.supabase
       .from("orders")
@@ -43,9 +47,11 @@ export class OrdersService {
         seller_id: product.seller_id,
         product_id: product.id,
         quantity: input.quantity,
-        total_amount: totalAmount,
+        total_amount: finalAmount,
         platform_fee: platformFee,
         shipping_address: input.shipping_address || null,
+        coupon_id: input.coupon_id || null,
+        discount_amount: discount || null,
         status: "pending",
       })
       .select()

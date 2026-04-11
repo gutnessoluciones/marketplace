@@ -16,14 +16,16 @@ const CONDITION_LABELS: Record<string, string> = {
 export function ProductCard({
   product,
   isFavorited,
+  boosted,
 }: {
   product: Product;
   isFavorited?: boolean;
+  boosted?: boolean;
 }) {
   return (
     <Link
       href={`/products/${product.id}`}
-      className="group relative bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200"
+      className={`group relative bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200${boosted ? " ring-2 ring-flamencalia-albero/40" : ""}`}
     >
       {/* Image — tall like Vinted */}
       <div className="aspect-3/4 bg-flamencalia-cream relative overflow-hidden">
@@ -47,6 +49,13 @@ export function ProductCard({
             size="sm"
           />
         </div>
+
+        {/* Boosted badge */}
+        {boosted && (
+          <span className="absolute top-2 left-2 bg-flamencalia-albero text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+            Destacado
+          </span>
+        )}
 
         {/* Condition badge */}
         {product.condition && (

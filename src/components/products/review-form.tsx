@@ -5,9 +5,14 @@ import { useState } from "react";
 interface ReviewFormProps {
   orderId: string;
   onSubmitted?: () => void;
+  apiEndpoint?: string;
 }
 
-export function ReviewForm({ orderId, onSubmitted }: ReviewFormProps) {
+export function ReviewForm({
+  orderId,
+  onSubmitted,
+  apiEndpoint = "/api/reviews",
+}: ReviewFormProps) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
@@ -26,7 +31,7 @@ export function ReviewForm({ orderId, onSubmitted }: ReviewFormProps) {
     setError("");
 
     try {
-      const res = await fetch("/api/reviews", {
+      const res = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

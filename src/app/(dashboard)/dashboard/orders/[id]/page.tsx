@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ReviewForm } from "@/components/products/review-form";
 import { OrderStatusUpdate } from "@/components/orders/order-status-update";
 import { ChatButton } from "@/components/social/chat-button";
+import { DisputeButton } from "@/components/orders/dispute-button";
 
 const STATUS_MAP: Record<
   string,
@@ -78,6 +79,25 @@ export default async function OrderDetailPage({ params }: PageProps) {
       .single();
     hasReviewed = !!existingReview;
   }
+
+  // Check if seller already reviewed the buyer
+  let hasReviewedBuyer = false;
+  if (isSeller && (order.status === "paid" || order.status === "delivered")) {
+    const { data: existingBuyerReview } = await supabase
+      .from("buyer_reviews")
+      .select("id")
+      .eq("order_id", order.id)
+      .maybeSingle();
+    hasReviewedBuyer = !!existingBuyerReview;
+  }
+
+  // Check disputes
+  const { data: existingDispute } = await supabase
+    .from("disputes")
+    .select("id, status")
+    .eq("order_id", order.id)
+    .in("status", ["open", "in_review"])
+    .maybeSingle();
 
   return (
     <div className="max-w-3xl">
@@ -234,6 +254,132 @@ export default async function OrderDetailPage({ params }: PageProps) {
             <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-center">
               <p className="text-sm font-medium text-emerald-700">
                 Ya has dejado una reseña para este pedido ✓
+              </p>
+            </div>
+          )}
+
+          {/* Seller review buyer */}
+          {isSeller &&
+            (order.status === "paid" || order.status === "delivered") &&
+            !hasReviewedBuyer && (
+              <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5">
+                <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+                  Valora al comprador
+                </h2>
+                <ReviewForm
+                  orderId={order.id}
+                  apiEndpoint="/api/buyer-reviews"
+                />
+              </div>
+            )}
+          {isSeller && hasReviewedBuyer && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-center">
+              <p className="text-sm font-medium text-emerald-700">
+                Ya has valorado a este comprador ✓
+              </p>
+            </div>
+          )}
+
+          {/* Tracking Timeline */}
+          {order.status !== "pending" && order.status !== "cancelled" && (
+            <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-5">
+              <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+                Línea temporal del envío
+              </h2>
+              <div className="space-y-4">
+                {[
+                  {
+                    step: "paid",
+                    label: "Pedido confirmado",
+                    icon: "dollar" as const,
+                    date: order.created_at,
+                  },
+                  {
+                    step: "shipped",
+                    label: "Enviado",
+                    icon: "package" as const,
+                    date: order.shipped_at,
+                  },
+                  {
+                    step: "delivered",
+                    label: "Entregado",
+                    icon: "checkCircle" as const,
+                    date: order.delivered_at,
+                  },
+                ].map((item, i) => {
+                  const currentStep = STATUS_MAP[order.status]?.step ?? 0;
+                  const isComplete = i < currentStep;
+                  const isCurrent = i === currentStep - 1;
+                  return (
+                    <div key={item.step} className="flex items-start gap-3">
+                      <div className="flex flex-col items-center">
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isComplete || isCurrent ? "bg-emerald-500 text-white" : "bg-neutral-100 text-neutral-400"}`}
+                        >
+                          <Icon name={item.icon} className="w-4 h-4" />
+                        </div>
+                        {i < 2 && (
+                          <div
+                            className={`w-0.5 h-6 mt-1 ${isComplete ? "bg-emerald-500" : "bg-neutral-100"}`}
+                          />
+                        )}
+                      </div>
+                      <div className="pt-1">
+                        <p
+                          className={`text-sm font-medium ${isComplete || isCurrent ? "text-neutral-800" : "text-neutral-400"}`}
+                        >
+                          {item.label}
+                        </p>
+                        {item.date && (
+                          <p className="text-xs text-neutral-400">
+                            {new Date(item.date).toLocaleDateString("es-ES", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </p>
+                        )}
+                        {item.step === "shipped" && order.tracking_number && (
+                          <div className="mt-1.5">
+                            <span className="text-xs text-neutral-500">
+                              Nº:{" "}
+                              <span className="font-mono">
+                                {order.tracking_number}
+                              </span>
+                            </span>
+                            {order.tracking_url && (
+                              <a
+                                href={order.tracking_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-flamencalia-red hover:underline ml-2"
+                              >
+                                Seguir envío →
+                              </a>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Dispute Button */}
+          {(order.status === "paid" ||
+            order.status === "shipped" ||
+            order.status === "delivered") &&
+            !existingDispute && <DisputeButton orderId={order.id} />}
+          {existingDispute && (
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-center">
+              <p className="text-sm font-medium text-amber-700">
+                <Icon name="alertTriangle" className="w-4 h-4 inline mr-1" />
+                Disputa abierta — Estado:{" "}
+                {existingDispute.status === "open" ? "Abierta" : "En revisión"}
               </p>
             </div>
           )}

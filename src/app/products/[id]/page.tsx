@@ -185,8 +185,56 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const sellerFollowers = sellerProfile?.followers_count ?? 0;
   const isOwnProduct = user?.id === product.seller_id;
 
+  const BASE_URL =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://marketplace-three-mu.vercel.app";
+
+  // JSON-LD structured data
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description || product.title,
+    image: product.images?.length ? product.images : undefined,
+    brand: product.brand
+      ? { "@type": "Brand", name: product.brand }
+      : undefined,
+    color: product.color || undefined,
+    material: product.material || undefined,
+    offers: {
+      "@type": "Offer",
+      url: `${BASE_URL}/products/${product.id}`,
+      priceCurrency: "EUR",
+      price: (product.price / 100).toFixed(2),
+      availability:
+        product.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      itemCondition:
+        product.condition === "nuevo"
+          ? "https://schema.org/NewCondition"
+          : "https://schema.org/UsedCondition",
+      seller: product.seller
+        ? { "@type": "Person", name: product.seller.display_name }
+        : undefined,
+    },
+    ...(avgRating
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: avgRating,
+            reviewCount: reviews.total,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="min-h-screen bg-flamencalia-cream">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ViewTracker
         productId={product.id}
         title={product.title}
@@ -260,10 +308,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       {CONDITION_LABELS[product.condition] ?? product.condition}
                     </span>
                   )}
-                  {OffersService.isOfferable(product.condition) && (
+                  {OffersService.isOfferable(
+                    product.condition,
+                    product.negotiable,
+                  ) && (
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-flamencalia-albero bg-flamencalia-albero/10 px-2.5 py-1 rounded-full">
                       <Icon name="tag" className="w-3 h-3" />
-                      Acepta ofertas
+                      {product.negotiable
+                        ? "Precio negociable"
+                        : "Acepta ofertas"}
                     </span>
                   )}
                 </div>
@@ -404,6 +457,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       <BuyButton
                         productId={product.id}
                         inStock={product.stock > 0}
+                        price={product.price}
                       />
                     </div>
                     <FavoriteButton
@@ -412,9 +466,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       size="md"
                     />
                   </div>
-                  {/* Offer button for second-hand products */}
+                  {/* Offer button for second-hand or negotiable products */}
                   {!isOwnProduct &&
-                    OffersService.isOfferable(product.condition) && (
+                    OffersService.isOfferable(
+                      product.condition,
+                      product.negotiable,
+                    ) && (
                       <OfferButton
                         productId={product.id}
                         sellerId={product.seller_id}

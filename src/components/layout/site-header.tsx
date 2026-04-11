@@ -43,7 +43,11 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
         </Link>
 
         {/* Search bar */}
-        <form action="/products" method="GET" className="flex-1 max-w-xl">
+        <form
+          action="/products"
+          method="GET"
+          className="hidden sm:block flex-1 max-w-xl"
+        >
           {activeCategory && (
             <input type="hidden" name="category" value={activeCategory} />
           )}
@@ -61,6 +65,14 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
             />
           </div>
         </form>
+
+        {/* Mobile search link */}
+        <Link
+          href="/products"
+          className="sm:hidden p-2 text-flamencalia-black/60 hover:text-flamencalia-albero"
+        >
+          <Icon name="search" className="w-5 h-5" />
+        </Link>
 
         <UserNav variant="light" />
       </nav>
