@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { isAdmin } from "@/lib/admin";
 import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/layout/sign-out-button";
@@ -34,12 +35,21 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Check if we're on the login subpage — if so, render without auth/sidebar
+  const headersList = await headers();
+  const pathname = headersList.get("x-next-pathname") ?? "";
+  const isLoginPage = pathname === `${ADMIN_BASE}/login`;
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(`${ADMIN_BASE}/login`);
 
   const auth = await isAdmin();
   if (!auth.authorized) redirect("/dashboard");

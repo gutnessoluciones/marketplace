@@ -6,6 +6,9 @@ const protectedPaths = ["/dashboard", "/products/new", "/orders", "/settings"];
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
+  // Pass pathname to server components via header
+  response.headers.set("x-next-pathname", request.nextUrl.pathname);
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -19,12 +22,13 @@ export async function middleware(request: NextRequest) {
             request.cookies.set(name, value);
           });
           response = NextResponse.next({ request });
+          response.headers.set("x-next-pathname", request.nextUrl.pathname);
           cookiesToSet.forEach(({ name, value, options }) => {
             response.cookies.set(name, value, options);
           });
         },
       },
-    }
+    },
   );
 
   const {
@@ -32,7 +36,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const isProtected = protectedPaths.some((p) =>
-    request.nextUrl.pathname.startsWith(p)
+    request.nextUrl.pathname.startsWith(p),
   );
 
   if (isProtected && !user) {
@@ -42,7 +46,11 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect logged-in users away from auth pages
-  if (user && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/register")) {
+  if (
+    user &&
+    (request.nextUrl.pathname === "/login" ||
+      request.nextUrl.pathname === "/register")
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
