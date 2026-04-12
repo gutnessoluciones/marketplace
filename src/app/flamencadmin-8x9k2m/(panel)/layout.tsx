@@ -27,6 +27,7 @@ const ownerNav = [
     icon: "gear",
   },
   { href: `${ADMIN_BASE}/team`, label: "Equipo admin", icon: "medal" },
+  { href: `${ADMIN_BASE}/dev`, label: "Zona Dev", icon: "code" },
 ];
 
 export default async function AdminPanelLayout({

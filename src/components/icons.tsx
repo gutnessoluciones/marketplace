@@ -254,6 +254,20 @@ const paths: Record<string, ReactNode> = {
       <path d="M10 7v2M14 7v2M10 15v2M14 15v2" />
     </>
   ),
+  code: (
+    <>
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+    </>
+  ),
+  activity: <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />,
+  database: (
+    <>
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
+      <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" />
+      <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3" />
+    </>
+  ),
 };
 
 export function Icon({
