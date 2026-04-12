@@ -4,6 +4,7 @@ import { StripeConnectButton } from "@/components/layout/stripe-connect-button";
 import { AddressManager } from "@/components/settings/address-manager";
 import { ProfileEditor } from "@/components/settings/profile-editor";
 import { PushNotificationToggle } from "@/components/settings/push-notification-toggle";
+import { DeleteAccountSection } from "@/components/settings/delete-account";
 import { Icon } from "@/components/icons";
 
 export default async function SettingsPage() {
@@ -125,6 +126,16 @@ export default async function SettingsPage() {
           </h2>
         </div>
         <PushNotificationToggle />
+      </div>
+
+      {/* Delete Account — GDPR */}
+      <div className="bg-white border border-red-100 rounded-2xl shadow-sm overflow-hidden mt-6">
+        <div className="p-6 border-b border-red-50">
+          <h2 className="text-sm font-semibold text-red-500 uppercase tracking-wider">
+            Zona de peligro
+          </h2>
+        </div>
+        <DeleteAccountSection />
       </div>
     </div>
   );

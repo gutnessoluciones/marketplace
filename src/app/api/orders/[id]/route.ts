@@ -11,6 +11,7 @@ const updateOrderStatusSchema = z.object({
   status: z.enum(["shipped", "delivered"]),
   tracking_number: z.string().max(100).optional(),
   tracking_url: z.string().url().max(500).optional(),
+  tracking_carrier: z.string().max(50).optional(),
 });
 
 interface RouteParams {

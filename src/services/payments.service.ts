@@ -2,6 +2,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AppError } from "@/lib/utils";
+import { sendOrderStatusEmail } from "@/lib/email";
 import Stripe from "stripe";
 
 const PLATFORM_FEE_PERCENT = 10;
@@ -140,6 +141,30 @@ export class PaymentsService {
           .select("buyer_id, product_id")
           .eq("id", orderId)
           .single();
+
+        // Send email confirmations (fire-and-forget)
+        if (buyerOrder) {
+          const { data: buyerAuth } =
+            await supabaseAdmin.auth.admin.getUserById(buyerOrder.buyer_id);
+          if (buyerAuth?.user?.email) {
+            sendOrderStatusEmail(
+              buyerAuth.user.email,
+              productTitle ?? "Producto",
+              "paid",
+              orderId,
+            );
+          }
+          const { data: sellerAuth } =
+            await supabaseAdmin.auth.admin.getUserById(fullOrder.seller_id);
+          if (sellerAuth?.user?.email) {
+            sendOrderStatusEmail(
+              sellerAuth.user.email,
+              productTitle ?? "Producto",
+              "paid",
+              orderId,
+            );
+          }
+        }
 
         if (buyerOrder) {
           // Check if conversation already exists

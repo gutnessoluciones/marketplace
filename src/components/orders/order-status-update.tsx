@@ -22,10 +22,24 @@ export function OrderStatusUpdate({
   const [error, setError] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
   const [trackingUrl, setTrackingUrl] = useState("");
+  const [trackingCarrier, setTrackingCarrier] = useState("");
   const [showTracking, setShowTracking] = useState(false);
 
   const next = NEXT_STATUS[currentStatus];
   if (!next) return null;
+
+  const CARRIERS = [
+    { value: "", label: "Seleccionar transportista" },
+    { value: "correos", label: "Correos" },
+    { value: "seur", label: "SEUR" },
+    { value: "mrw", label: "MRW" },
+    { value: "gls", label: "GLS" },
+    { value: "ups", label: "UPS" },
+    { value: "dhl", label: "DHL" },
+    { value: "fedex", label: "FedEx" },
+    { value: "nacex", label: "Nacex" },
+    { value: "otro", label: "Otro" },
+  ];
 
   async function handleUpdate() {
     setLoading(true);
@@ -35,6 +49,7 @@ export function OrderStatusUpdate({
       const body: Record<string, string> = { status: next!.value };
       if (trackingNumber.trim()) body.tracking_number = trackingNumber.trim();
       if (trackingUrl.trim()) body.tracking_url = trackingUrl.trim();
+      if (trackingCarrier) body.tracking_carrier = trackingCarrier;
 
       const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
@@ -71,6 +86,17 @@ export function OrderStatusUpdate({
             </button>
           ) : (
             <div className="space-y-2">
+              <select
+                value={trackingCarrier}
+                onChange={(e) => setTrackingCarrier(e.target.value)}
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red bg-neutral-50/50"
+              >
+                {CARRIERS.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
               <input
                 type="text"
                 value={trackingNumber}

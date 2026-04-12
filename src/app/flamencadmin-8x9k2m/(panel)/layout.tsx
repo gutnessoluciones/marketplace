@@ -16,6 +16,7 @@ const adminNav = [
   { href: `${ADMIN_BASE}/orders`, label: "Pedidos", icon: "receipt" },
   { href: `${ADMIN_BASE}/chat`, label: "Conversaciones", icon: "message" },
   { href: `${ADMIN_BASE}/reports`, label: "Reportes", icon: "alertTriangle" },
+  { href: `${ADMIN_BASE}/contacts`, label: "Contactos", icon: "inbox" },
   { href: `${ADMIN_BASE}/blog`, label: "Blog", icon: "book" },
   { href: `${ADMIN_BASE}/fairs`, label: "Ferias", icon: "mapPin" },
 ];

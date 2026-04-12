@@ -117,7 +117,12 @@ export class OrdersService {
   async updateStatus(
     orderId: string,
     sellerId: string,
-    input: { status: string; tracking_number?: string; tracking_url?: string },
+    input: {
+      status: string;
+      tracking_number?: string;
+      tracking_url?: string;
+      tracking_carrier?: string;
+    },
   ) {
     // Verify order belongs to seller
     const { data: order, error: fetchError } = await this.supabase
@@ -148,6 +153,12 @@ export class OrdersService {
     if (input.tracking_number)
       updateData.tracking_number = input.tracking_number;
     if (input.tracking_url) updateData.tracking_url = input.tracking_url;
+    if (input.tracking_carrier)
+      updateData.tracking_carrier = input.tracking_carrier;
+    if (input.status === "shipped")
+      updateData.shipped_at = new Date().toISOString();
+    if (input.status === "delivered")
+      updateData.delivered_at = new Date().toISOString();
 
     const { data: updated, error } = await this.supabase
       .from("orders")

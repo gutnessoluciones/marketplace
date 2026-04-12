@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { Icon } from "@/components/icons";
+import { SellerBalance } from "@/components/dashboard/seller-balance";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -139,7 +140,7 @@ export default async function DashboardPage() {
       )}
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
@@ -204,6 +205,13 @@ export default async function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Seller Balance */}
+      {isSeller && profile?.stripe_onboarding_complete && (
+        <div className="mb-6">
+          <SellerBalance />
+        </div>
+      )}
 
       {/* Quick Actions for Sellers */}
       {isSeller && (

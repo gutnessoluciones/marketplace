@@ -95,6 +95,11 @@ export interface Order {
   shipping_address: Record<string, unknown> | null;
   coupon_id: string | null;
   discount_amount: number;
+  tracking_number: string | null;
+  tracking_url: string | null;
+  tracking_carrier: string | null;
+  shipped_at: string | null;
+  delivered_at: string | null;
   created_at: string;
   updated_at: string;
   product?: Product;

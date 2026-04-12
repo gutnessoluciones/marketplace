@@ -217,6 +217,14 @@ export default async function OrderDetailPage({ params }: PageProps) {
               <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-3">
                 Seguimiento
               </h2>
+              {order.tracking_carrier && (
+                <p className="text-sm text-neutral-700 mb-1">
+                  <span className="text-neutral-500">Transportista:</span>{" "}
+                  <span className="font-medium uppercase">
+                    {order.tracking_carrier}
+                  </span>
+                </p>
+              )}
               {order.tracking_number && (
                 <p className="text-sm text-neutral-700">
                   <span className="text-neutral-500">Nº de seguimiento:</span>{" "}

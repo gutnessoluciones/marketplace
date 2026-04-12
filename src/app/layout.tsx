@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
+import { CookieBanner } from "@/components/layout/cookie-banner";
+import { CartProvider } from "@/components/cart/cart-provider";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -26,6 +28,15 @@ export const metadata: Metadata = {
     "moda flamenca",
     "complementos flamencos",
   ],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Flamencalia",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export default function RootLayout({
@@ -40,9 +51,14 @@ export default function RootLayout({
     >
       <head>
         <link rel="icon" href="/cliente/Abanico.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <meta name="theme-color" content="#c8102e" />
       </head>
       <body className="min-h-full flex flex-col bg-flamencalia-cream text-foreground">
-        {children}
+        <CartProvider>
+          {children}
+          <CookieBanner />
+        </CartProvider>
       </body>
     </html>
   );

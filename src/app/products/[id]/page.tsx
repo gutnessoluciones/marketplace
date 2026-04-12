@@ -8,7 +8,9 @@ import { FavoritesService } from "@/services/favorites.service";
 import { OffersService } from "@/services/offers.service";
 import { formatPrice } from "@/lib/utils";
 import { BuyButton } from "@/components/products/buy-button";
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { OfferButton } from "@/components/products/offer-button";
+import { SizeGuide } from "@/components/products/size-guide";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ViewTracker } from "@/components/products/view-tracker";
 import { FavoriteButton } from "@/components/social/favorite-button";
@@ -427,6 +429,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                           <p className="text-sm font-medium text-neutral-700">
                             {product.size === "unica" ? "Única" : product.size}
                           </p>
+                          <SizeGuide category={product.category} />
                         </div>
                       )}
                       {product.brand && (
@@ -474,6 +477,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
                         price={product.price}
                       />
                     </div>
+                    <AddToCartButton
+                      product={{
+                        id: product.id,
+                        title: product.title,
+                        price: product.price,
+                        images: product.images,
+                        seller_id: product.seller_id,
+                        seller: product.seller,
+                      }}
+                    />
                     <FavoriteButton
                       productId={product.id}
                       initialFavorited={isFavorited}
