@@ -11,6 +11,7 @@ import { BuyButton } from "@/components/products/buy-button";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { OfferButton } from "@/components/products/offer-button";
 import { SizeGuide } from "@/components/products/size-guide";
+import { PriceBadge } from "@/components/products/price-badge";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ViewTracker } from "@/components/products/view-tracker";
 import { FavoriteButton } from "@/components/social/favorite-button";
@@ -189,6 +190,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
     .single();
   const sellerFollowers = sellerProfile?.followers_count ?? 0;
   const isOwnProduct = user?.id === product.seller_id;
+
+  // Price history
+  const { data: priceHistory } = await supabase
+    .from("price_history")
+    .select("old_price, new_price, changed_at")
+    .eq("product_id", product.id)
+    .order("changed_at", { ascending: false })
+    .limit(5);
 
   const BASE_URL =
     process.env.NEXT_PUBLIC_SITE_URL ||
@@ -373,10 +382,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
                 {/* Price */}
                 <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-flamencalia-albero-pale/30">
-                  <div className="flex items-baseline gap-2">
+                  <div className="flex items-baseline gap-2 flex-wrap">
                     <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-flamencalia-black">
                       {formatPrice(product.price)}
                     </span>
+                    <PriceBadge currentPrice={product.price} history={priceHistory ?? []} />
                   </div>
                   <span
                     className={`inline-flex items-center gap-1.5 mt-2 text-xs font-medium ${

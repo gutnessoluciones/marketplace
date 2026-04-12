@@ -281,6 +281,18 @@ const paths: Record<string, ReactNode> = {
       <path d="M6 6l12 12" />
     </>
   ),
+  undo: (
+    <>
+      <path d="M3 7v6h6" />
+      <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13" />
+    </>
+  ),
+  trendingDown: (
+    <>
+      <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+      <polyline points="17 18 23 18 23 12" />
+    </>
+  ),
 };
 
 export function Icon({

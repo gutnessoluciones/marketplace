@@ -8,6 +8,7 @@ import { ReviewForm } from "@/components/products/review-form";
 import { OrderStatusUpdate } from "@/components/orders/order-status-update";
 import { ChatButton } from "@/components/social/chat-button";
 import { DisputeButton } from "@/components/orders/dispute-button";
+import { RefundRequest } from "@/components/orders/refund-request";
 
 const STATUS_MAP: Record<
   string,
@@ -390,6 +391,11 @@ export default async function OrderDetailPage({ params }: PageProps) {
                 {existingDispute.status === "open" ? "Abierta" : "En revisión"}
               </p>
             </div>
+          )}
+
+          {/* Refund Request (buyer only) */}
+          {isBuyer && (
+            <RefundRequest orderId={order.id} orderStatus={order.status} />
           )}
         </div>
 
