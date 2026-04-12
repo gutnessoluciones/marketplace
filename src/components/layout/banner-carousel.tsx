@@ -32,8 +32,9 @@ export function BannerCarousel() {
           className={`object-cover transition-opacity duration-1000 ${
             i === current ? "opacity-100" : "opacity-0"
           }`}
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          sizes="100vw"
           priority={i === 0}
+          quality={80}
         />
       ))}
 
