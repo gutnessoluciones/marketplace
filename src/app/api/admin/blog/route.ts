@@ -6,7 +6,14 @@ import { z } from "zod";
 
 const blogPostSchema = z.object({
   title: z.string().min(3).max(200),
-  slug: z.string().min(3).max(200),
+  slug: z
+    .string()
+    .min(3)
+    .max(200)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+      message:
+        "El slug solo puede contener letras minúsculas, números y guiones",
+    }),
   excerpt: z.string().max(500).optional(),
   content: z.string().min(10),
   cover_image: z
@@ -25,18 +32,25 @@ const blogPostSchema = z.object({
 });
 
 // GET /api/admin/blog — List blog posts
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const auth = await isAdmin();
     if (!auth.authorized) return apiResponse({ error: "Forbidden" }, 403);
 
-    const { data, error } = await supabaseAdmin
-      .from("blog_posts")
-      .select("*, author:profiles!author_id(display_name)")
-      .order("created_at", { ascending: false });
+    const { searchParams } = new URL(request.url);
+    const page = Math.max(1, Number(searchParams.get("page")) || 1);
+    const limit = Math.min(Math.max(1, Number(searchParams.get("limit")) || 20), 100);
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
 
-    if (error) return apiResponse({ error: error.message }, 500);
-    return apiResponse({ data });
+    const { data, error, count } = await supabaseAdmin
+      .from("blog_posts")
+      .select("*, author:profiles!author_id(display_name)", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (error) return apiResponse({ error: "Error al obtener posts" }, 500);
+    return apiResponse({ data, total: count, page, limit });
   } catch (error) {
     return apiError(error);
   }
@@ -64,7 +78,7 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al crear post" }, 500);
     return apiResponse({ data }, 201);
   } catch (error) {
     return apiError(error);

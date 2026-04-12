@@ -3,9 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 import { PaymentsService } from "@/services/payments.service";
 import { checkoutSchema } from "@/validations/schemas";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 
 // POST /api/payments/checkout
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {
@@ -20,7 +24,10 @@ export async function POST(request: NextRequest) {
     }
 
     const service = new PaymentsService(supabase);
-    const result = await service.createCheckoutSession(parsed.data.orderId, user.id);
+    const result = await service.createCheckoutSession(
+      parsed.data.orderId,
+      user.id,
+    );
     return apiResponse(result);
   } catch (error) {
     return apiError(error);

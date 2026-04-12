@@ -4,9 +4,13 @@ import { OrdersService } from "@/services/orders.service";
 import { CouponsService } from "@/services/coupons.service";
 import { createOrderSchema } from "@/validations/schemas";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 
 // POST /api/orders
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {

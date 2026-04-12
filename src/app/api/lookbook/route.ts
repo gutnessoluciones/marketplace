@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const createLookbookSchema = z.object({
@@ -19,6 +20,7 @@ export async function GET(request: NextRequest) {
     const page = Number(searchParams.get("page") || "1");
     const limit = Math.min(Number(searchParams.get("limit") || "20"), 50);
 
+    // Public endpoint — admin client is fine for read-only public data
     const { data, error } = await supabaseAdmin
       .from("lookbook_posts")
       .select(
@@ -28,7 +30,7 @@ export async function GET(request: NextRequest) {
       .order("created_at", { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al cargar lookbook" }, 500);
 
     // Get like counts
     if (data && data.length > 0) {
@@ -60,7 +62,11 @@ export async function GET(request: NextRequest) {
 
 // POST /api/lookbook — Create lookbook post
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
+    // H2 FIX: Use RLS-aware client for user operations
     const supabase = await createClient();
     const {
       data: { user },
@@ -72,7 +78,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success)
       return apiResponse({ error: parsed.error.flatten() }, 400);
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from("lookbook_posts")
       .insert({
         user_id: user.id,
@@ -82,7 +88,7 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al crear publicación" }, 500);
     return apiResponse({ data }, 201);
   } catch (error) {
     return apiError(error);

@@ -16,10 +16,9 @@ interface CreateOfferInput {
 export class OffersService {
   constructor(private supabase: SupabaseClient) {}
 
-  /** Check if a product accepts offers — all products accept offers by default */
+  /** Check if a product accepts offers */
   static isOfferable(_condition: string | null, negotiable?: boolean): boolean {
-    // If explicitly set to false, don't allow
-    if (negotiable === false) return true;
+    if (negotiable === false) return false;
     return true;
   }
 
@@ -100,69 +99,42 @@ export class OffersService {
           "Ya tienes una oferta pendiente para este producto",
           409,
         );
-      throw new AppError(error.message, 500);
+      throw new AppError("Error al crear la oferta", 500);
     }
 
     return offer;
   }
 
-  /** Accept an offer (seller only) — creates an order */
+  /** Accept an offer (seller only) — atomic to prevent race conditions */
   async accept(offerId: string, sellerId: string, response?: string) {
     await this.supabase.rpc("expire_pending_offers");
 
-    const { data: offer, error: oErr } = await this.supabase
+    // C4 FIX: Atomic acceptance via PostgreSQL function
+    const { data: success, error } = await this.supabase.rpc(
+      "accept_offer_atomic",
+      {
+        p_offer_id: offerId,
+        p_seller_id: sellerId,
+        p_response: response?.trim() || null,
+      },
+    );
+
+    if (error) throw new AppError("Error al aceptar la oferta", 500);
+    if (!success)
+      throw new AppError(
+        "Oferta no encontrada, ya no está pendiente, o no tienes permisos",
+        400,
+      );
+
+    // Fetch the updated offer
+    const { data: offer } = await this.supabase
       .from("offers")
       .select("*, product:products(id, price, stock, status, seller_id)")
       .eq("id", offerId)
       .single();
 
-    if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
-    if (offer.seller_id !== sellerId) throw new AppError("No autorizado", 403);
-    if (offer.status !== "pending")
-      throw new AppError(`La oferta ya está ${offer.status}`, 400);
-
-    const product = offer.product as {
-      id: string;
-      price: number;
-      stock: number;
-      status: string;
-      seller_id: string;
-    } | null;
-    if (!product || product.status !== "active" || product.stock < 1) {
-      // Auto-reject if product no longer available
-      await this.supabase
-        .from("offers")
-        .update({
-          status: "rejected",
-          seller_response: "Producto ya no disponible",
-        })
-        .eq("id", offerId);
-      throw new AppError("El producto ya no está disponible", 400);
-    }
-
-    // Update offer status
-    const { error: uErr } = await this.supabase
-      .from("offers")
-      .update({
-        status: "accepted",
-        seller_response: response?.trim() || null,
-      })
-      .eq("id", offerId);
-
-    if (uErr) throw new AppError(uErr.message, 500);
-
-    // Reject all other pending offers for this product
-    await this.supabase
-      .from("offers")
-      .update({
-        status: "rejected",
-        seller_response: "Otra oferta fue aceptada",
-      })
-      .eq("product_id", offer.product_id)
-      .eq("status", "pending")
-      .neq("id", offerId);
-
-    return { ...offer, status: "accepted" };
+    if (!offer) throw new AppError("Oferta no encontrada", 404);
+    return offer;
   }
 
   /** Reject an offer (seller only) */
@@ -186,7 +158,7 @@ export class OffersService {
       })
       .eq("id", offerId);
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al rechazar la oferta", 500);
     return { ...offer, status: "rejected" };
   }
 
@@ -235,7 +207,7 @@ export class OffersService {
       })
       .eq("id", offerId);
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al enviar la contraoferta", 500);
     return {
       ...offer,
       status: "countered",
@@ -244,9 +216,26 @@ export class OffersService {
     };
   }
 
-  /** Accept a counteroffer (buyer only) */
+  /** Accept a counteroffer (buyer only) — atomic */
   async acceptCounter(offerId: string, buyerId: string) {
-    const { data: offer, error: oErr } = await this.supabase
+    // C4 FIX: Atomic counter acceptance via PostgreSQL function
+    const { data: success, error } = await this.supabase.rpc(
+      "accept_counter_atomic",
+      {
+        p_offer_id: offerId,
+        p_buyer_id: buyerId,
+      },
+    );
+
+    if (error) throw new AppError("Error al aceptar la contraoferta", 500);
+    if (!success)
+      throw new AppError(
+        "Contraoferta no encontrada, ha expirado, o no tienes permisos",
+        400,
+      );
+
+    // Fetch updated offer
+    const { data: offer } = await this.supabase
       .from("offers")
       .select(
         "id, buyer_id, seller_id, product_id, amount, counter_amount, status, counter_expires_at",
@@ -254,38 +243,8 @@ export class OffersService {
       .eq("id", offerId)
       .single();
 
-    if (oErr || !offer) throw new AppError("Oferta no encontrada", 404);
-    if (offer.buyer_id !== buyerId) throw new AppError("No autorizado", 403);
-    if (offer.status !== "countered")
-      throw new AppError("Esta oferta no tiene contraoferta activa", 400);
-    if (
-      offer.counter_expires_at &&
-      new Date(offer.counter_expires_at) < new Date()
-    )
-      throw new AppError("La contraoferta ha expirado", 400);
-
-    const { error } = await this.supabase
-      .from("offers")
-      .update({
-        status: "accepted",
-        amount: offer.counter_amount, // update amount to counter amount
-      })
-      .eq("id", offerId);
-
-    if (error) throw new AppError(error.message, 500);
-
-    // Reject other pending offers for this product
-    await this.supabase
-      .from("offers")
-      .update({
-        status: "rejected",
-        seller_response: "Otra oferta fue aceptada",
-      })
-      .eq("product_id", offer.product_id)
-      .eq("status", "pending")
-      .neq("id", offerId);
-
-    return { ...offer, status: "accepted", amount: offer.counter_amount };
+    if (!offer) throw new AppError("Oferta no encontrada", 404);
+    return offer;
   }
 
   /** Reject a counteroffer (buyer only) */
@@ -308,7 +267,7 @@ export class OffersService {
       .update({ status: "rejected" })
       .eq("id", offerId);
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al rechazar la contraoferta", 500);
     return { ...offer, status: "rejected" };
   }
 
@@ -333,7 +292,7 @@ export class OffersService {
       .update({ status: "cancelled" })
       .eq("id", offerId);
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al cancelar la oferta", 500);
     return { ...offer, status: "cancelled" };
   }
 
@@ -355,7 +314,7 @@ export class OffersService {
       .order("created_at", { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al obtener ofertas", 500);
     return { data: data ?? [], total: count, page, limit };
   }
 
@@ -373,7 +332,7 @@ export class OffersService {
       .order("created_at", { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al obtener ofertas", 500);
     return { data: data ?? [], total: count, page, limit };
   }
 
@@ -388,7 +347,7 @@ export class OffersService {
       .eq("seller_id", sellerId)
       .order("created_at", { ascending: false });
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al obtener ofertas", 500);
     return data ?? [];
   }
 
@@ -406,7 +365,7 @@ export class OffersService {
       .limit(1)
       .maybeSingle();
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al obtener la oferta", 500);
     return data;
   }
 
@@ -420,7 +379,7 @@ export class OffersService {
       .eq("seller_id", sellerId)
       .eq("status", "pending");
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al contar ofertas", 500);
     return count ?? 0;
   }
 }

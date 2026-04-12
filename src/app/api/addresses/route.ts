@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { AddressesService } from "@/services/addresses.service";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const addressSchema = z.object({
@@ -36,6 +37,9 @@ export async function GET() {
 
 // POST /api/addresses
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {

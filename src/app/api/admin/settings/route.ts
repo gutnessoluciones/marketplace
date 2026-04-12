@@ -7,7 +7,7 @@ import { rateLimit } from "@/lib/rate-limit";
 
 // GET /api/admin/settings — Get all site settings
 export async function GET(request: NextRequest) {
-  const rl = rateLimit(request, "admin");
+  const rl = await rateLimit(request, "admin");
   if (rl) return rl;
 
   try {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       .select("*")
       .order("key");
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al obtener configuración" }, 500);
     return apiResponse(data);
   } catch (error) {
     return apiError(error);
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
 // PATCH /api/admin/settings — Update a site setting
 export async function PATCH(request: NextRequest) {
-  const rl = rateLimit(request, "admin");
+  const rl = await rateLimit(request, "admin");
   if (rl) return rl;
 
   try {
@@ -42,20 +42,22 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const parsed = updateSiteSettingSchema.parse(body);
+    const parsed = updateSiteSettingSchema.safeParse(body);
+    if (!parsed.success)
+      return apiResponse({ error: parsed.error.flatten() }, 400);
 
     const { data, error } = await supabaseAdmin
       .from("site_settings")
       .update({
-        value: parsed.value,
+        value: parsed.data.value,
         updated_at: new Date().toISOString(),
         updated_by: auth.userId,
       })
-      .eq("key", parsed.key)
+      .eq("key", parsed.data.key)
       .select()
       .single();
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al actualizar configuración" }, 500);
     return apiResponse(data);
   } catch (error) {
     return apiError(error);

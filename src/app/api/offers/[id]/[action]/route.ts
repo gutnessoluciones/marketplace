@@ -1,9 +1,11 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { OffersService } from "@/services/offers.service";
 import { NotificationsService } from "@/services/notifications.service";
 import { respondOfferSchema } from "@/validations/schemas";
 import { apiResponse, apiError, formatPrice } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 import { sendOfferAcceptedEmail, sendOfferCounteredEmail } from "@/lib/email";
 
 interface Ctx {
@@ -12,6 +14,9 @@ interface Ctx {
 
 // POST /api/offers/[id]/accept
 export async function POST(request: NextRequest, { params }: Ctx) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   const { id } = await params;
   const url = new URL(request.url);
   const action = url.pathname.split("/").pop(); // last segment
@@ -55,9 +60,8 @@ export async function POST(request: NextRequest, { params }: Ctx) {
         .select("title")
         .eq("id", offer.product_id)
         .single();
-      const { data: buyerAcceptAuth } = await supabase.auth.admin.getUserById(
-        offer.buyer_id,
-      );
+      const { data: buyerAcceptAuth } =
+        await supabaseAdmin.auth.admin.getUserById(offer.buyer_id);
       if (buyerAcceptAuth?.user?.email && prodAccept)
         sendOfferAcceptedEmail(
           buyerAcceptAuth.user.email,
@@ -116,9 +120,8 @@ export async function POST(request: NextRequest, { params }: Ctx) {
         .select("title")
         .eq("id", offer.product_id)
         .single();
-      const { data: buyerCounterAuth } = await supabase.auth.admin.getUserById(
-        offer.buyer_id,
-      );
+      const { data: buyerCounterAuth } =
+        await supabaseAdmin.auth.admin.getUserById(offer.buyer_id);
       if (buyerCounterAuth?.user?.email && prodCounter)
         sendOfferCounteredEmail(
           buyerCounterAuth.user.email,

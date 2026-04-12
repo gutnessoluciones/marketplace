@@ -5,6 +5,7 @@ import { FollowsService } from "@/services/follows.service";
 import { NotificationsService } from "@/services/notifications.service";
 import { createProductSchema } from "@/validations/schemas";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 
 // GET /api/products?page=1&category=electronics
 export async function GET(request: NextRequest) {
@@ -25,6 +26,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/products
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {

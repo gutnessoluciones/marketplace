@@ -21,18 +21,20 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const parsed = addAdminSchema.parse(body);
+    const parsed = addAdminSchema.safeParse(body);
+    if (!parsed.success)
+      return apiResponse({ error: parsed.error.flatten() }, 400);
 
     const { data, error } = await supabaseAdmin
       .from("admin_users")
       .upsert(
-        { user_id: parsed.user_id, role: parsed.role },
+        { user_id: parsed.data.user_id, role: parsed.data.role },
         { onConflict: "user_id" },
       )
       .select()
       .single();
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al gestionar admin" }, 500);
     return apiResponse(data, 201);
   } catch (error) {
     return apiError(error);
@@ -50,7 +52,7 @@ export async function GET() {
       .select("*, profile:profiles(id, display_name, avatar_url)")
       .order("created_at");
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al listar admins" }, 500);
     return apiResponse(data);
   } catch (error) {
     return apiError(error);
@@ -72,6 +74,11 @@ export async function DELETE(request: NextRequest) {
     const userId = searchParams.get("user_id");
     if (!userId) return apiResponse({ error: "user_id required" }, 400);
 
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId))
+      return apiResponse({ error: "user_id inválido" }, 400);
+
     // Can't remove yourself
     if (userId === auth.userId) {
       return apiResponse({ error: "No puedes eliminarte a ti mismo" }, 400);
@@ -82,7 +89,7 @@ export async function DELETE(request: NextRequest) {
       .delete()
       .eq("user_id", userId);
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al eliminar admin" }, 500);
     return apiResponse({ ok: true });
   } catch (error) {
     return apiError(error);

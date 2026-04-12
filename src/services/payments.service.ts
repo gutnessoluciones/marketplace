@@ -74,42 +74,34 @@ export class PaymentsService {
       session.payment_intent as string,
     );
 
-    // Verify payment amount matches the order
-    const { data: order } = await supabaseAdmin
-      .from("orders")
-      .select("total_amount, quantity")
-      .eq("id", orderId)
-      .single();
+    // H5 FIX: Idempotent payment processing via PostgreSQL function
+    const fee = paymentIntent.application_fee_amount || 0;
+    const { data: isNew, error: rpcError } = await supabaseAdmin.rpc(
+      "process_payment_idempotent",
+      {
+        p_order_id: orderId,
+        p_stripe_pi_id: paymentIntent.id,
+        p_amount: paymentIntent.amount,
+        p_platform_fee: fee,
+        p_seller_payout: paymentIntent.amount - fee,
+      },
+    );
 
-    if (!order) {
-      console.error(`Webhook: order ${orderId} not found`);
-      return;
-    }
-
-    if (paymentIntent.amount < order.total_amount) {
+    if (rpcError) {
       console.error(
-        `Webhook amount mismatch for order ${orderId}: expected ${order.total_amount}, got ${paymentIntent.amount}`,
+        `Webhook: idempotent payment RPC failed for order ${orderId}:`,
+        rpcError,
       );
       return;
     }
 
-    await supabaseAdmin
-      .from("orders")
-      .update({
-        status: "paid",
-        stripe_payment_intent_id: session.payment_intent as string,
-      })
-      .eq("id", orderId);
-
-    const fee = paymentIntent.application_fee_amount || 0;
-    await supabaseAdmin.from("payments").insert({
-      order_id: orderId,
-      stripe_payment_intent_id: paymentIntent.id,
-      amount: paymentIntent.amount,
-      platform_fee: fee,
-      seller_payout: paymentIntent.amount - fee,
-      status: "succeeded",
-    });
+    // If already processed, skip all side effects
+    if (!isNew) {
+      console.log(
+        `Webhook: payment ${paymentIntent.id} already processed, skipping`,
+      );
+      return;
+    }
 
     // Decrement stock
     const { data: stockOrder } = await supabaseAdmin
@@ -186,6 +178,21 @@ export class PaymentsService {
           }
         }
       }
+    }
+
+    // C2 FIX: If this order came from an offer, mark the offer as "paid" now
+    const { data: linkedOffer } = await supabaseAdmin
+      .from("offers")
+      .select("id")
+      .eq("order_id", orderId)
+      .eq("status", "checkout_pending")
+      .maybeSingle();
+
+    if (linkedOffer) {
+      await supabaseAdmin
+        .from("offers")
+        .update({ status: "paid" })
+        .eq("id", linkedOffer.id);
     }
   }
 

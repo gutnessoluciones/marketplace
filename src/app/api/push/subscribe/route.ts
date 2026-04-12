@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const subscribeSchema = z.object({
@@ -14,6 +15,9 @@ const subscribeSchema = z.object({
 
 // POST /api/push/subscribe — Subscribe to push notifications
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {
@@ -26,7 +30,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success)
       return apiResponse({ error: parsed.error.flatten() }, 400);
 
-    // Upsert subscription
+    // Push subscriptions need admin (no RLS table) — validated user.id above
     const { error } = await supabaseAdmin.from("push_subscriptions").upsert(
       {
         user_id: user.id,
@@ -37,7 +41,8 @@ export async function POST(request: NextRequest) {
       { onConflict: "endpoint" },
     );
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error)
+      return apiResponse({ error: "Error al guardar suscripción" }, 500);
     return apiResponse({ success: true }, 201);
   } catch (error) {
     return apiError(error);
@@ -62,7 +67,8 @@ export async function DELETE(request: NextRequest) {
       .eq("user_id", user.id)
       .eq("endpoint", endpoint);
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error)
+      return apiResponse({ error: "Error al eliminar suscripción" }, 500);
     return apiResponse({ success: true });
   } catch (error) {
     return apiError(error);

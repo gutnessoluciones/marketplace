@@ -6,7 +6,7 @@ import { rateLimit } from "@/lib/rate-limit";
 
 // GET /api/profile — Get current user profile
 export async function GET(request: NextRequest) {
-  const rl = rateLimit(request, "api");
+  const rl = await rateLimit(request, "api");
   if (rl) return rl;
 
   try {
@@ -31,6 +31,9 @@ export async function GET(request: NextRequest) {
 
 // PATCH /api/profile — Update current user profile
 export async function PATCH(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {
@@ -39,16 +42,19 @@ export async function PATCH(request: NextRequest) {
     if (!user) return apiResponse({ error: "Unauthorized" }, 401);
 
     const body = await request.json();
-    const parsed = updateProfileSchema.parse(body);
+    const parsed = updateProfileSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiResponse({ error: parsed.error.flatten() }, 400);
+    }
 
     const { data, error } = await supabase
       .from("profiles")
-      .update({ ...parsed, updated_at: new Date().toISOString() })
+      .update({ ...parsed.data, updated_at: new Date().toISOString() })
       .eq("id", user.id)
       .select()
       .single();
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al actualizar perfil" }, 500);
     return apiResponse(data);
   } catch (error) {
     return apiError(error);

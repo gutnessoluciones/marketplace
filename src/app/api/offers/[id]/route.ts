@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { OffersService } from "@/services/offers.service";
-import { OrdersService } from "@/services/orders.service";
+import { PaymentsService } from "@/services/payments.service";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 
 interface Ctx {
   params: Promise<{ id: string }>;
@@ -19,6 +19,7 @@ export async function GET(_request: NextRequest, { params }: Ctx) {
     } = await supabase.auth.getUser();
     if (!user) return apiResponse({ error: "Unauthorized" }, 401);
 
+    const { OffersService } = await import("@/services/offers.service");
     const service = new OffersService(supabase);
     const offer = await service.getActiveOffer(id, user.id);
     return apiResponse({ offer });
@@ -29,6 +30,9 @@ export async function GET(_request: NextRequest, { params }: Ctx) {
 
 // POST /api/offers/[id] — Pay for an accepted offer (creates order at offer price)
 export async function POST(request: NextRequest, { params }: Ctx) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   const { id: offerId } = await params;
 
   try {
@@ -61,10 +65,7 @@ export async function POST(request: NextRequest, { params }: Ctx) {
       return apiResponse({ error: "Producto ya no disponible" }, 400);
     }
 
-    // Create order at the offer price (override the product price temporarily)
-    const ordersService = new OrdersService(supabase);
-
-    // We create the order manually at the offer price
+    // Create order at the offer price
     const totalAmount = offer.amount;
     const platformFee = Math.round((totalAmount * 10) / 100);
 
@@ -82,36 +83,30 @@ export async function POST(request: NextRequest, { params }: Ctx) {
       .select()
       .single();
 
-    if (orderErr) return apiResponse({ error: orderErr.message }, 500);
+    if (orderErr)
+      return apiResponse({ error: "Error al crear el pedido" }, 500);
 
-    // Link order to offer
-    await supabase
-      .from("offers")
-      .update({ order_id: order.id, status: "paid" })
-      .eq("id", offerId);
+    // C2 FIX: Use checkout_pending instead of paid (confirmed only via webhook)
+    const { data: transitioned } = await supabase.rpc("offer_start_checkout", {
+      p_offer_id: offerId,
+      p_buyer_id: user.id,
+      p_order_id: order.id,
+    });
 
-    // Create checkout
-    const checkoutRes = await fetch(
-      new URL("/api/payments/checkout", request.url).toString(),
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          cookie: request.headers.get("cookie") ?? "",
-        },
-        body: JSON.stringify({ orderId: order.id }),
-      },
-    );
-
-    if (!checkoutRes.ok) {
-      const data = await checkoutRes.json();
+    if (!transitioned) {
       return apiResponse(
-        { error: data.error ?? "Error al iniciar el pago" },
-        500,
+        { error: "La oferta ya no está disponible para pago" },
+        409,
       );
     }
 
-    const { url } = await checkoutRes.json();
+    // H4 FIX: Direct service call instead of internal HTTP fetch
+    const paymentsService = new PaymentsService(supabase);
+    const { url } = await paymentsService.createCheckoutSession(
+      order.id,
+      user.id,
+    );
+
     return apiResponse({ url, order_id: order.id });
   } catch (error) {
     return apiError(error);

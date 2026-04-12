@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = request.nextUrl;
     const page = Number(searchParams.get("page") || "1");
-    const limit = Number(searchParams.get("limit") || "20");
+    const limit = Math.min(Number(searchParams.get("limit") || "20"), 50);
 
     const { data, error, count } = await supabaseAdmin
       .from("conversations")
@@ -25,7 +25,8 @@ export async function GET(request: NextRequest) {
       .order("last_message_at", { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error)
+      return apiResponse({ error: "Error al obtener conversaciones" }, 500);
 
     const conversations = (data ?? []).map(
       (c: {

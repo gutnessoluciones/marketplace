@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const createCollectionSchema = z.object({
@@ -19,13 +19,14 @@ export async function GET() {
     } = await supabase.auth.getUser();
     if (!user) return apiResponse({ error: "Unauthorized" }, 401);
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from("collections")
       .select("*, items:collection_items(count)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error)
+      return apiResponse({ error: "Error al obtener colecciones" }, 500);
     return apiResponse({ data });
   } catch (error) {
     return apiError(error);
@@ -34,6 +35,9 @@ export async function GET() {
 
 // POST /api/collections — Create collection
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {
@@ -46,7 +50,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success)
       return apiResponse({ error: parsed.error.flatten() }, 400);
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from("collections")
       .insert({
         user_id: user.id,
@@ -55,7 +59,7 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) return apiResponse({ error: error.message }, 500);
+    if (error) return apiResponse({ error: "Error al crear colección" }, 500);
     return apiResponse({ data }, 201);
   } catch (error) {
     return apiError(error);

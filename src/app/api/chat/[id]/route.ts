@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { ChatService } from "@/services/chat.service";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -35,6 +36,9 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
 // POST /api/chat/[id] — send a message
 export async function POST(request: NextRequest, context: RouteContext) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const { id } = await context.params;
     const supabase = await createClient();

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { OrdersService } from "@/services/orders.service";
 import { apiResponse, apiError } from "@/lib/utils";
 import { rateLimit } from "@/lib/rate-limit";
@@ -36,7 +37,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 
 // PATCH /api/orders/[id] — Update order status (seller only)
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
-  const rl = rateLimit(request, "api");
+  const rl = await rateLimit(request, "api");
   if (rl) return rl;
 
   try {
@@ -48,14 +49,17 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (!user) return apiResponse({ error: "Unauthorized" }, 401);
 
     const body = await request.json();
-    const parsed = updateOrderStatusSchema.parse(body);
+    const parsed = updateOrderStatusSchema.safeParse(body);
+    if (!parsed.success) {
+      return apiResponse({ error: parsed.error.flatten() }, 400);
+    }
 
     const service = new OrdersService(supabase);
-    const order = await service.updateStatus(id, user.id, parsed);
+    const order = await service.updateStatus(id, user.id, parsed.data);
 
     // Send email to buyer about status change
     if (order.buyer_id) {
-      const { data: buyerAuth } = await supabase.auth.admin.getUserById(
+      const { data: buyerAuth } = await supabaseAdmin.auth.admin.getUserById(
         order.buyer_id,
       );
       if (buyerAuth?.user?.email) {
@@ -67,7 +71,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         sendOrderStatusEmail(
           buyerAuth.user.email,
           prod?.title ?? "Producto",
-          parsed.status,
+          parsed.data.status,
           id,
         ).catch(() => {});
       }

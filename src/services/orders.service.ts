@@ -40,24 +40,37 @@ export class OrdersService {
     const finalAmount = Math.max(totalAmount - discount, 0);
     const platformFee = Math.round((finalAmount * PLATFORM_FEE_PERCENT) / 100);
 
-    const { data: order, error } = await this.supabase
+    // C1 FIX: Atomic stock decrement + order creation via PostgreSQL function
+    const { data: orderId, error } = await this.supabase.rpc(
+      "create_order_atomic",
+      {
+        p_buyer_id: buyerId,
+        p_seller_id: product.seller_id,
+        p_product_id: product.id,
+        p_quantity: input.quantity,
+        p_total_amount: finalAmount,
+        p_platform_fee: platformFee,
+        p_shipping_address: input.shipping_address || null,
+        p_coupon_id: input.coupon_id || null,
+        p_discount_amount: discount || null,
+      },
+    );
+
+    if (error) {
+      if (error.message?.includes("INSUFFICIENT_STOCK")) {
+        throw new AppError("Insufficient stock", 409);
+      }
+      throw new AppError("Error al crear el pedido", 500);
+    }
+
+    // Fetch the created order
+    const { data: order } = await this.supabase
       .from("orders")
-      .insert({
-        buyer_id: buyerId,
-        seller_id: product.seller_id,
-        product_id: product.id,
-        quantity: input.quantity,
-        total_amount: finalAmount,
-        platform_fee: platformFee,
-        shipping_address: input.shipping_address || null,
-        coupon_id: input.coupon_id || null,
-        discount_amount: discount || null,
-        status: "pending",
-      })
       .select()
+      .eq("id", orderId)
       .single();
 
-    if (error) throw new AppError(error.message, 500);
+    if (!order) throw new AppError("Error al crear el pedido", 500);
     return order;
   }
 
@@ -97,7 +110,7 @@ export class OrdersService {
       .order("created_at", { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al obtener pedidos", 500);
     return { data: data ?? [], total: count, page, limit };
   }
 
@@ -143,7 +156,7 @@ export class OrdersService {
       .select()
       .single();
 
-    if (error) throw new AppError(error.message, 500);
+    if (error) throw new AppError("Error al actualizar el pedido", 500);
     return updated;
   }
 }

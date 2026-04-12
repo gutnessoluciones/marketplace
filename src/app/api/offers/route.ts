@@ -1,13 +1,18 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { OffersService } from "@/services/offers.service";
 import { NotificationsService } from "@/services/notifications.service";
 import { createOfferSchema } from "@/validations/schemas";
 import { apiResponse, apiError, formatPrice } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 import { sendOfferReceivedEmail } from "@/lib/email";
 
 // POST /api/offers — Create a new offer
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {
@@ -49,7 +54,7 @@ export async function POST(request: NextRequest) {
       .select("title")
       .eq("id", offer.product_id)
       .single();
-    const { data: sellerAuth } = await supabase.auth.admin.getUserById(
+    const { data: sellerAuth } = await supabaseAdmin.auth.admin.getUserById(
       offer.seller_id,
     );
     if (sellerAuth?.user?.email && product) {

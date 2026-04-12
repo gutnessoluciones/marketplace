@@ -6,7 +6,7 @@ import { validateImageBytes } from "@/lib/validate-image";
 
 // POST /api/profile/avatar — Upload avatar image
 export async function POST(request: NextRequest) {
-  const rl = rateLimit(request, "upload");
+  const rl = await rateLimit(request, "upload");
   if (rl) return rl;
 
   try {

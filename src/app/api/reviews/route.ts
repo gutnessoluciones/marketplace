@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ReviewsService } from "@/services/reviews.service";
 import { createReviewSchema } from "@/validations/schemas";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 
 // GET /api/reviews?product_id=xxx&page=1
 export async function GET(request: NextRequest) {
@@ -13,6 +14,12 @@ export async function GET(request: NextRequest) {
 
     if (!productId) {
       return apiResponse({ error: "product_id is required" }, 400);
+    }
+
+    // UUID validation
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(productId)) {
+      return apiResponse({ error: "product_id inválido" }, 400);
     }
 
     const supabase = await createClient();
@@ -26,6 +33,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/reviews
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {

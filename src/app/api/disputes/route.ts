@@ -1,8 +1,10 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { DisputesService } from "@/services/disputes.service";
 import { NotificationsService } from "@/services/notifications.service";
 import { apiResponse, apiError } from "@/lib/utils";
+import { rateLimit } from "@/lib/rate-limit";
 import { sendDisputeOpenedEmail } from "@/lib/email";
 import { z } from "zod";
 
@@ -21,6 +23,9 @@ const createDisputeSchema = z.object({
 
 // POST /api/disputes
 export async function POST(request: NextRequest) {
+  const rl = await rateLimit(request, "api");
+  if (rl) return rl;
+
   try {
     const supabase = await createClient();
     const {
@@ -61,7 +66,7 @@ export async function POST(request: NextRequest) {
 
       // Email
       const { data: otherAuth } =
-        await supabase.auth.admin.getUserById(otherParty);
+        await supabaseAdmin.auth.admin.getUserById(otherParty);
       if (otherAuth?.user?.email) {
         sendDisputeOpenedEmail(
           otherAuth.user.email,
