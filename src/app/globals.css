@@ -317,3 +317,41 @@ select:focus {
     opacity: 0;
   }
 }
+
+/* ======== Scroll Reveal ======== */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.scroll-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ======== Focus styles accesibles ======== */
+:focus-visible {
+  outline: 2px solid var(--flamencalia-albero);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--flamencalia-albero);
+  outline-offset: 0px;
+}
+
+/* ======== Button press effect ======== */
+.btn-press {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.btn-press:active {
+  transform: scale(0.96);
+}

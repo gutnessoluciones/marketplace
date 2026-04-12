@@ -386,7 +386,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-flamencalia-black">
                       {formatPrice(product.price)}
                     </span>
-                    <PriceBadge currentPrice={product.price} history={priceHistory ?? []} />
+                    <PriceBadge
+                      currentPrice={product.price}
+                      history={priceHistory ?? []}
+                    />
                   </div>
                   <span
                     className={`inline-flex items-center gap-1.5 mt-2 text-xs font-medium ${

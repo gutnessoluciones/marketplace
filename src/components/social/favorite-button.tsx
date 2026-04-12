@@ -39,7 +39,7 @@ export function FavoriteButton({
         setFavorited(data.favorited);
         if (data.favorited) {
           setAnimating(true);
-          setTimeout(() => setAnimating(false), 300);
+          setTimeout(() => setAnimating(false), 600);
         }
       }
     } catch {
@@ -60,15 +60,20 @@ export function FavoriteButton({
         favorited
           ? "bg-flamencalia-red/10 text-flamencalia-red"
           : "bg-white/90 backdrop-blur-sm text-neutral-400 hover:text-flamencalia-red hover:bg-white"
-      } shadow-sm disabled:opacity-50 ${animating ? "scale-125" : "scale-100"}`}
+      } shadow-sm disabled:opacity-50`}
       aria-label={favorited ? "Quitar de favoritos" : "Añadir a favoritos"}
     >
       <svg
-        className={`${iconSize} transition-transform`}
+        className={`${iconSize} transition-transform ${animating ? "animate-heart" : ""}`}
         viewBox="0 0 24 24"
         fill={favorited ? "currentColor" : "none"}
         stroke="currentColor"
         strokeWidth={favorited ? 0 : 2}
+        style={
+          animating
+            ? { filter: "drop-shadow(0 0 6px rgba(200,16,46,0.5))" }
+            : undefined
+        }
       >
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
       </svg>

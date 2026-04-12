@@ -12,6 +12,7 @@ import { BannerCarousel } from "@/components/layout/banner-carousel";
 import { RecentlyViewed } from "@/components/social/recently-viewed";
 import AnimatedBrand from "@/components/animated-brand";
 import { MobileSearch } from "@/components/layout/mobile-search";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 const CATEGORIES = [
   {
@@ -332,105 +333,109 @@ export default async function HomePage() {
       {/* ═══ MAIN CONTENT ═══ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10 pb-12">
         {/* ── Categorías con imágenes grandes ── */}
-        <section className="mb-14">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="h-px flex-1 bg-flamencalia-albero-pale" />
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-flamencalia-black text-center">
-              Explora por Categoría
-            </h2>
-            <div className="h-px flex-1 bg-flamencalia-albero-pale" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={
-                  cat.slug === "todo"
-                    ? "/products"
-                    : `/products?category=${cat.slug}`
-                }
-                className="group relative overflow-hidden rounded-2xl"
-              >
-                <div className="aspect-4/5 relative">
-                  <Image
-                    src={cat.image}
-                    alt={cat.label}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                    <h3 className="font-serif text-base sm:text-lg font-bold text-white drop-shadow-md">
-                      {cat.label}
-                    </h3>
-                    <span className="text-xs text-white/70 font-medium mt-1 block group-hover:text-flamencalia-albero-light transition-colors">
-                      {cat.slug === "todo"
-                        ? "Explorar todo →"
-                        : "Ver colección →"}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Vendedores & Diseñadores ── */}
-        <section className="mb-10">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="h-px flex-1 bg-flamencalia-albero-pale" />
-            <h2 className="font-serif text-2xl font-bold text-flamencalia-black flex items-center gap-2">
-              <Icon name="fan" className="w-5 h-5 text-flamencalia-albero" />
-              Vendedores &amp; Diseñadores
-            </h2>
-            <div className="h-px flex-1 bg-flamencalia-albero-pale" />
-          </div>
-          {topSellers && topSellers.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {topSellers.map((seller) => (
+        <ScrollReveal>
+          <section className="mb-14">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="h-px flex-1 bg-flamencalia-albero-pale" />
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-flamencalia-black text-center">
+                Explora por Categoría
+              </h2>
+              <div className="h-px flex-1 bg-flamencalia-albero-pale" />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              {CATEGORIES.map((cat) => (
                 <Link
-                  key={seller.id}
-                  href={`/sellers/${seller.id}`}
-                  className="group relative bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                  key={cat.slug}
+                  href={
+                    cat.slug === "todo"
+                      ? "/products"
+                      : `/products?category=${cat.slug}`
+                  }
+                  className="group relative overflow-hidden rounded-2xl"
                 >
-                  {/* Avatar grande */}
-                  <div className="aspect-square relative bg-flamencalia-albero-pale/30">
-                    {seller.avatar_url ? (
-                      <img
-                        src={seller.avatar_url}
-                        alt={seller.display_name ?? "Vendedor"}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-flamencalia-albero/20 to-flamencalia-red/10">
-                        <Icon
-                          name="user"
-                          className="w-12 h-12 text-flamencalia-albero/60"
-                        />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                  {/* Info */}
-                  <div className="p-3 text-center">
-                    <p className="text-sm font-semibold text-flamencalia-black truncate group-hover:text-flamencalia-albero transition-colors">
-                      {seller.display_name ?? "Vendedor"}
-                    </p>
-                    <p className="text-xs text-neutral-400 mt-0.5">
-                      {seller.product_count} producto
-                      {seller.product_count !== 1 ? "s" : ""}
-                    </p>
+                  <div className="aspect-4/5 relative">
+                    <Image
+                      src={cat.image}
+                      alt={cat.label}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                      <h3 className="font-serif text-base sm:text-lg font-bold text-white drop-shadow-md">
+                        {cat.label}
+                      </h3>
+                      <span className="text-xs text-white/70 font-medium mt-1 block group-hover:text-flamencalia-albero-light transition-colors">
+                        {cat.slug === "todo"
+                          ? "Explorar todo →"
+                          : "Ver colección →"}
+                      </span>
+                    </div>
                   </div>
                 </Link>
               ))}
             </div>
-          ) : (
-            <p className="text-sm text-neutral-400 text-center py-4">
-              Pronto verás aquí a los mejores vendedores y diseñadores.
-            </p>
-          )}
-        </section>
+          </section>
+        </ScrollReveal>
+
+        {/* ── Vendedores & Diseñadores ── */}
+        <ScrollReveal delay={100}>
+          <section className="mb-10">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px flex-1 bg-flamencalia-albero-pale" />
+              <h2 className="font-serif text-2xl font-bold text-flamencalia-black flex items-center gap-2">
+                <Icon name="fan" className="w-5 h-5 text-flamencalia-albero" />
+                Vendedores &amp; Diseñadores
+              </h2>
+              <div className="h-px flex-1 bg-flamencalia-albero-pale" />
+            </div>
+            {topSellers && topSellers.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {topSellers.map((seller) => (
+                  <Link
+                    key={seller.id}
+                    href={`/sellers/${seller.id}`}
+                    className="group relative bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                  >
+                    {/* Avatar grande */}
+                    <div className="aspect-square relative bg-flamencalia-albero-pale/30">
+                      {seller.avatar_url ? (
+                        <img
+                          src={seller.avatar_url}
+                          alt={seller.display_name ?? "Vendedor"}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-flamencalia-albero/20 to-flamencalia-red/10">
+                          <Icon
+                            name="user"
+                            className="w-12 h-12 text-flamencalia-albero/60"
+                          />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    {/* Info */}
+                    <div className="p-3 text-center">
+                      <p className="text-sm font-semibold text-flamencalia-black truncate group-hover:text-flamencalia-albero transition-colors">
+                        {seller.display_name ?? "Vendedor"}
+                      </p>
+                      <p className="text-xs text-neutral-400 mt-0.5">
+                        {seller.product_count} producto
+                        {seller.product_count !== 1 ? "s" : ""}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-neutral-400 text-center py-4">
+                Pronto verás aquí a los mejores vendedores y diseñadores.
+              </p>
+            )}
+          </section>
+        </ScrollReveal>
 
         {/* ── Feed personalizado: Vendedores que sigues ── */}
         {followedProducts && followedProducts.length > 0 && (
@@ -457,30 +462,32 @@ export default async function HomePage() {
 
         {/* ── Productos Destacados ── */}
         {featuredProducts && featuredProducts.length > 0 && (
-          <section className="mb-10">
-            <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 overflow-hidden shadow-sm">
-              <div className="flex items-center justify-between p-5 pb-0">
-                <h2 className="font-serif text-2xl font-bold text-flamencalia-black flex items-center gap-2">
-                  <Icon
-                    name="sparkle"
-                    className="w-5 h-5 text-flamencalia-albero"
-                  />
-                  Productos Destacados
-                </h2>
-                <Link
-                  href="/products"
-                  className="text-sm text-flamencalia-albero font-medium hover:text-flamencalia-albero-light transition-colors"
-                >
-                  Ver todos →
-                </Link>
+          <ScrollReveal delay={100}>
+            <section className="mb-10">
+              <div className="bg-flamencalia-white rounded-2xl border border-flamencalia-albero-pale/50 overflow-hidden shadow-sm">
+                <div className="flex items-center justify-between p-5 pb-0">
+                  <h2 className="font-serif text-2xl font-bold text-flamencalia-black flex items-center gap-2">
+                    <Icon
+                      name="sparkle"
+                      className="w-5 h-5 text-flamencalia-albero"
+                    />
+                    Productos Destacados
+                  </h2>
+                  <Link
+                    href="/products"
+                    className="text-sm text-flamencalia-albero font-medium hover:text-flamencalia-albero-light transition-colors"
+                  >
+                    Ver todos →
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-flamencalia-albero-pale/30 mt-4">
+                  {featuredProducts.slice(0, 4).map((product) => (
+                    <ProductHomeCard key={product.id} product={product} />
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-flamencalia-albero-pale/30 mt-4">
-                {featuredProducts.slice(0, 4).map((product) => (
-                  <ProductHomeCard key={product.id} product={product} />
-                ))}
-              </div>
-            </div>
-          </section>
+            </section>
+          </ScrollReveal>
         )}
 
         {/* ── Two Column: Recientes + Mejores Precios ── */}
@@ -572,39 +579,41 @@ export default async function HomePage() {
         <RecentlyViewed />
 
         {/* ── CTA: Vende tu Flamenca ── */}
-        <section className="relative overflow-hidden rounded-2xl">
-          <div className="bg-linear-to-br from-flamencalia-red via-flamencalia-red-dark to-flamencalia-black p-8 sm:p-12 text-center text-white relative">
-            {/* Decoración farolillos */}
-            <div className="absolute top-3 left-[15%] farolillo opacity-30">
-              <div className="w-4 h-6 bg-flamencalia-albero rounded-full" />
-            </div>
-            <div
-              className="absolute top-5 right-[25%] farolillo opacity-20"
-              style={{ animationDelay: "0.7s" }}
-            >
-              <div className="w-5 h-7 bg-flamencalia-albero-light rounded-full" />
-            </div>
-
-            <div className="absolute -top-20 -right-20 w-60 h-60 bg-flamencalia-albero/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-flamencalia-red-light/10 rounded-full blur-3xl" />
-
-            <div className="relative">
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold">
-                ¿Tienes algo que vender?
-              </h2>
-              <p className="mt-3 text-white/70 max-w-md mx-auto">
-                Únete a la comunidad de Flamencalia. Vende tus vestidos,
-                complementos o dale una segunda vida a tu moda flamenca.
-              </p>
-              <Link
-                href="/register"
-                className="inline-flex mt-6 bg-flamencalia-albero text-flamencalia-black px-8 py-3.5 rounded-full text-sm font-bold hover:bg-flamencalia-albero-light transition-all hover:shadow-lg hover:shadow-flamencalia-albero/30 hover:-translate-y-0.5"
+        <ScrollReveal delay={100}>
+          <section className="relative overflow-hidden rounded-2xl">
+            <div className="bg-linear-to-br from-flamencalia-red via-flamencalia-red-dark to-flamencalia-black p-8 sm:p-12 text-center text-white relative">
+              {/* Decoración farolillos */}
+              <div className="absolute top-3 left-[15%] farolillo opacity-30">
+                <div className="w-4 h-6 bg-flamencalia-albero rounded-full" />
+              </div>
+              <div
+                className="absolute top-5 right-[25%] farolillo opacity-20"
+                style={{ animationDelay: "0.7s" }}
               >
-                Crear Cuenta Gratis
-              </Link>
+                <div className="w-5 h-7 bg-flamencalia-albero-light rounded-full" />
+              </div>
+
+              <div className="absolute -top-20 -right-20 w-60 h-60 bg-flamencalia-albero/10 rounded-full blur-3xl" />
+              <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-flamencalia-red-light/10 rounded-full blur-3xl" />
+
+              <div className="relative">
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold">
+                  ¿Tienes algo que vender?
+                </h2>
+                <p className="mt-3 text-white/70 max-w-md mx-auto">
+                  Únete a la comunidad de Flamencalia. Vende tus vestidos,
+                  complementos o dale una segunda vida a tu moda flamenca.
+                </p>
+                <Link
+                  href="/register"
+                  className="inline-flex mt-6 bg-flamencalia-albero text-flamencalia-black px-8 py-3.5 rounded-full text-sm font-bold hover:bg-flamencalia-albero-light transition-all hover:shadow-lg hover:shadow-flamencalia-albero/30 hover:-translate-y-0.5 btn-press"
+                >
+                  Crear Cuenta Gratis
+                </Link>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </ScrollReveal>
       </main>
 
       {/* ═══ FOOTER ═══ */}
