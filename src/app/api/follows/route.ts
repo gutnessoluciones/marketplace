@@ -4,7 +4,8 @@ import { FollowsService } from "@/services/follows.service";
 import { apiResponse, apiError } from "@/lib/utils";
 import { rateLimit } from "@/lib/rate-limit";
 
-const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const uuidRegex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // GET /api/follows?following_id=xxx — check if current user follows someone
 export async function GET(request: NextRequest) {

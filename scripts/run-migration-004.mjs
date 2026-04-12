@@ -2,7 +2,7 @@ import fs from "fs";
 
 const sql = fs.readFileSync(
   "./supabase/migrations/004_security_atomic_operations.sql",
-  "utf8"
+  "utf8",
 );
 
 const SUPABASE_URL = "https://hyolejmmvsizlceaslum.supabase.co";
@@ -10,10 +10,7 @@ const SERVICE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5b2xlam1tdnNpemxjZWFzbHVtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTQxNDMxMSwiZXhwIjoyMDkwOTkwMzExfQ.wlegjyC36y4DXLhVv79EdkQCf442W1ecevKevc-e9Zs";
 
 // Try the Supabase SQL API endpoint
-const endpoints = [
-  `${SUPABASE_URL}/pg/query`,
-  `${SUPABASE_URL}/rest/v1/sql`,
-];
+const endpoints = [`${SUPABASE_URL}/pg/query`, `${SUPABASE_URL}/rest/v1/sql`];
 
 for (const url of endpoints) {
   try {
@@ -56,7 +53,11 @@ if (accessToken) {
 } else {
   console.log("\nNo automated endpoint worked.");
   console.log("Please run the migration manually:");
-  console.log("1. Go to https://supabase.com/dashboard/project/hyolejmmvsizlceaslum/sql");
-  console.log("2. Paste the contents of supabase/migrations/004_security_atomic_operations.sql");
+  console.log(
+    "1. Go to https://supabase.com/dashboard/project/hyolejmmvsizlceaslum/sql",
+  );
+  console.log(
+    "2. Paste the contents of supabase/migrations/004_security_atomic_operations.sql",
+  );
   console.log("3. Click 'Run'");
 }

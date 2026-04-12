@@ -20,7 +20,9 @@ function createLimiter(maxRequests: number, windowSec: number, prefix: string) {
   }
   // Dev fallback: in-memory with ephemeral cache
   return new Ratelimit({
-    redis: new Map() as unknown as ConstructorParameters<typeof Ratelimit>[0]["redis"],
+    redis: new Map() as unknown as ConstructorParameters<
+      typeof Ratelimit
+    >[0]["redis"],
     limiter: Ratelimit.slidingWindow(maxRequests, `${windowSec} s`),
     prefix: `rl:${prefix}`,
     ephemeralCache: new Map(),

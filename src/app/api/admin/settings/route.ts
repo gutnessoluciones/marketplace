@@ -19,7 +19,8 @@ export async function GET(request: NextRequest) {
       .select("*")
       .order("key");
 
-    if (error) return apiResponse({ error: "Error al obtener configuración" }, 500);
+    if (error)
+      return apiResponse({ error: "Error al obtener configuración" }, 500);
     return apiResponse(data);
   } catch (error) {
     return apiError(error);
@@ -57,7 +58,8 @@ export async function PATCH(request: NextRequest) {
       .select()
       .single();
 
-    if (error) return apiResponse({ error: "Error al actualizar configuración" }, 500);
+    if (error)
+      return apiResponse({ error: "Error al actualizar configuración" }, 500);
     return apiResponse(data);
   } catch (error) {
     return apiError(error);

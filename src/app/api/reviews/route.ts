@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
     }
 
     // UUID validation
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(productId)) {
       return apiResponse({ error: "product_id inválido" }, 400);
     }
