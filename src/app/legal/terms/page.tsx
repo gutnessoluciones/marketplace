@@ -95,7 +95,11 @@ export default function TermsPage() {
       <h2>10. Contacto</h2>
       <p>
         Para consultas legales, puedes contactarnos en{" "}
-        <a href="https://flamencalia.com" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://flamencalia.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           flamencalia.com
         </a>
         .

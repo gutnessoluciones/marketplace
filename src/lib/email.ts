@@ -1,14 +1,28 @@
 /**
- * Email notification utility
- * Currently logs to console. Connect to Resend/SendGrid by setting EMAIL_API_KEY.
- * Works as a fire-and-forget: never throws, just logs errors.
+ * Email notification utility — Office365 SMTP via nodemailer
+ * Fire-and-forget: never throws, just logs errors.
  */
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+import nodemailer from "nodemailer";
+
+const SMTP_HOST = process.env.SMTP_HOST || "smtp.office365.com";
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 587;
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
 const FROM_EMAIL =
-  process.env.FROM_EMAIL || "Flamencalia <no-reply@flamencalia.com>";
-const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://marketplace-three-mu.vercel.app";
+  process.env.FROM_EMAIL || "Flamencalia <soporte@flamencalia.com>";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://flamencalia.com";
+
+const transporter =
+  SMTP_USER && SMTP_PASS
+    ? nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: false, // STARTTLS
+        auth: { user: SMTP_USER, pass: SMTP_PASS },
+        tls: { ciphers: "SSLv3" },
+      })
+    : null;
 
 interface EmailPayload {
   to: string;
@@ -17,26 +31,21 @@ interface EmailPayload {
 }
 
 async function sendEmail(payload: EmailPayload): Promise<boolean> {
-  if (!RESEND_API_KEY) {
-    console.log(`[EMAIL] Would send to ${payload.to}: ${payload.subject}`);
+  if (!transporter) {
+    console.log(
+      `[EMAIL] SMTP not configured — would send to ${payload.to}: ${payload.subject}`,
+    );
     return true;
   }
 
   try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: FROM_EMAIL,
-        to: payload.to,
-        subject: payload.subject,
-        html: payload.html,
-      }),
+    await transporter.sendMail({
+      from: FROM_EMAIL,
+      to: payload.to,
+      subject: payload.subject,
+      html: payload.html,
     });
-    return res.ok;
+    return true;
   } catch (err) {
     console.error("[EMAIL] Failed to send:", err);
     return false;

@@ -1,5 +1,6 @@
 import { isAdmin } from "@/lib/admin";
 import { apiResponse, apiError } from "@/lib/utils";
+import nodemailer from "nodemailer";
 
 // POST /api/admin/dev-stats/alert — Send alert email when approaching limits
 export async function POST(request: Request) {
@@ -28,12 +29,10 @@ export async function POST(request: Request) {
       return apiResponse({ error: "No recipients" }, 400);
     }
 
-    const resendKey = process.env.RESEND_API_KEY;
-    if (!resendKey) {
-      return apiResponse(
-        { error: "RESEND_API_KEY no configurado en el servidor" },
-        500,
-      );
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+    if (!smtpUser || !smtpPass) {
+      return apiResponse({ error: "SMTP no configurado en el servidor" }, 500);
     }
 
     // Build email HTML
@@ -76,33 +75,22 @@ export async function POST(request: Request) {
       </div>
     `;
 
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${resendKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Flamencalia Dev <onboarding@resend.dev>",
-        to: recipients,
-        subject: `⚠️ Alerta servicios: ${alerts.length} aviso(s) — Flamencalia`,
-        html,
-      }),
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || "smtp.office365.com",
+      port: Number(process.env.SMTP_PORT) || 587,
+      secure: false,
+      auth: { user: smtpUser, pass: smtpPass },
+      tls: { ciphers: "SSLv3" },
     });
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      return apiResponse(
-        {
-          error: "Error enviando email",
-          detail: err,
-        },
-        500,
-      );
-    }
+    await transporter.sendMail({
+      from: process.env.FROM_EMAIL || "Flamencalia <soporte@flamencalia.com>",
+      to: recipients.join(", "),
+      subject: `⚠️ Alerta servicios: ${alerts.length} aviso(s) — Flamencalia`,
+      html,
+    });
 
-    const result = await res.json();
-    return apiResponse({ sent: true, id: result.id });
+    return apiResponse({ sent: true });
   } catch (error) {
     return apiError(error);
   }

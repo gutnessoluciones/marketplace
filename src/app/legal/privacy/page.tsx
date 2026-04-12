@@ -21,8 +21,9 @@ export default function PrivacyPage() {
 
       <h2>1. Responsable del tratamiento</h2>
       <p>
-        Flamencalia, accesible desde flamencalia.com, es responsable del tratamiento
-        de los datos personales recogidos a través de esta plataforma.
+        Flamencalia, accesible desde flamencalia.com, es responsable del
+        tratamiento de los datos personales recogidos a través de esta
+        plataforma.
       </p>
 
       <h2>2. Datos que recopilamos</h2>
@@ -89,7 +90,11 @@ export default function PrivacyPage() {
       <h2>7. Contacto</h2>
       <p>
         Para cualquier consulta sobre privacidad, puedes contactarnos en{" "}
-        <a href="https://flamencalia.com" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://flamencalia.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           flamencalia.com
         </a>
         .

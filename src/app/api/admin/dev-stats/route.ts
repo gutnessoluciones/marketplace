@@ -20,9 +20,8 @@ const FREE_LIMITS = {
   stripe: {
     // No free tier limit, just per-transaction fees
   },
-  resend: {
-    emailsPerMonth: 3000,
-    emailsPerDay: 100,
+  email: {
+    emailsPerDay: 10_000, // Office365 business limit
   },
   upstash: {
     commandsPerDay: 10_000,
@@ -232,26 +231,19 @@ export async function GET() {
       pricingUrl: "https://stripe.com/es/pricing",
     };
 
-    const resendStats = {
-      label: "Resend",
-      plan: "Free",
+    const emailStats = {
+      label: "Email (Office365)",
+      plan: "Business",
       metrics: [
-        {
-          name: "Emails/mes",
-          current: (emailsSent as { monthly?: number }).monthly ?? 0,
-          limit: FREE_LIMITS.resend.emailsPerMonth,
-          unit: "",
-        },
         {
           name: "Emails/día",
           current: (emailsSent as { daily?: number }).daily ?? 0,
-          limit: FREE_LIMITS.resend.emailsPerDay,
+          limit: FREE_LIMITS.email.emailsPerDay,
           unit: "",
         },
       ],
-      dashboardUrl: "https://resend.com/overview",
-      pricingUrl: "https://resend.com/pricing",
-      note: "Contador interno. Configura el tracking en las funciones de envío.",
+      dashboardUrl: "https://admin.microsoft.com",
+      note: "SMTP: smtp.office365.com — Contador interno.",
     };
 
     const upstashStats = {
@@ -285,7 +277,7 @@ export async function GET() {
       message: string;
     }> = [];
 
-    const allServices = [supabaseStats, vercelStats, resendStats, upstashStats];
+    const allServices = [supabaseStats, vercelStats, emailStats, upstashStats];
     for (const svc of allServices) {
       for (const m of svc.metrics) {
         if (m.current != null && m.limit != null && m.limit > 0) {
@@ -316,7 +308,7 @@ export async function GET() {
         supabase: supabaseStats,
         vercel: vercelStats,
         stripe: stripeStats,
-        resend: resendStats,
+        email: emailStats,
         upstash: upstashStats,
       },
       alerts,
