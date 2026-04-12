@@ -46,6 +46,7 @@ export default function AboutPage() {
             src="/categorias/feria.jpg"
             alt=""
             fill
+            sizes="100vw"
             className="object-cover opacity-30"
             priority
           />
