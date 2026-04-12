@@ -18,7 +18,7 @@ export function AdminToast({ message, type, onClose }: AdminToastProps) {
   if (!message) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[60] animate-in slide-in-from-bottom-4 fade-in duration-300">
+    <div className="fixed bottom-6 right-6 z-60 animate-in slide-in-from-bottom-4 fade-in duration-300">
       <div
         className={`flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg text-sm font-medium ${
           type === "success"

@@ -50,7 +50,7 @@ export default function AboutPage() {
             priority
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-flamencalia-black/60 via-flamencalia-black/40 to-flamencalia-black/80" />
+        <div className="absolute inset-0 bg-linear-to-b from-flamencalia-black/60 via-flamencalia-black/40 to-flamencalia-black/80" />
 
         {/* Toldo decorativo superior */}
         <div className="relative h-1.5 toldo-rayas" />
