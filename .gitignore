@@ -44,3 +44,6 @@ next-env.d.ts
 supabase/.temp/
 .env*.local
 flamencalia-marca.af~lock~
+
+# Private docs
+FLAMENCALIA-PRIVADO.txt
