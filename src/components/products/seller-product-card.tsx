@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { formatPrice } from "@/lib/utils";
 import { Icon } from "@/components/icons";
 
@@ -120,10 +121,12 @@ export function SellerProductCard({
         onClick={handleDoubleTap}
       >
         {product.images?.length > 0 ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.title}
-            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
             draggable={false}
           />
         ) : (
@@ -282,9 +285,11 @@ export function SellerProductCard({
               <div key={review.id} className="flex gap-2">
                 <div className="w-6 h-6 rounded-full bg-flamencalia-albero-pale/30 overflow-hidden shrink-0 mt-0.5">
                   {review.buyer?.avatar_url ? (
-                    <img
+                    <Image
                       src={review.buyer.avatar_url}
                       alt=""
+                      width={24}
+                      height={24}
                       className="w-full h-full object-cover"
                     />
                   ) : (

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { formatPrice } from "@/lib/utils";
 import { Icon } from "@/components/icons";
 import { FavoriteButton } from "@/components/social/favorite-button";
@@ -31,10 +32,12 @@ export function ProductCard({
       {/* Image — tall like Vinted */}
       <div className="aspect-3/4 bg-flamencalia-cream relative overflow-hidden">
         {product.images?.length > 0 ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.title}
-            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="flex flex-col items-center justify-center h-full gap-2 text-flamencalia-albero/30">
@@ -100,9 +103,11 @@ export function ProductCard({
           <div className="flex items-center gap-1.5 mt-2.5 pt-2.5 border-t border-flamencalia-cream">
             <div className="w-5 h-5 rounded-full bg-flamencalia-cream overflow-hidden shrink-0 ring-1 ring-flamencalia-albero-pale/30">
               {product.seller.avatar_url ? (
-                <img
+                <Image
                   src={product.seller.avatar_url}
                   alt=""
+                  width={20}
+                  height={20}
                   className="w-full h-full object-cover"
                 />
               ) : (

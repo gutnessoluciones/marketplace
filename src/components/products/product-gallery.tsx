@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import { Icon } from "@/components/icons";
 
 interface ProductGalleryProps {
@@ -66,9 +67,11 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                     : "border-neutral-200 opacity-60 hover:border-neutral-400"
                 }`}
               >
-                <img
+                <Image
                   src={img}
                   alt={`Foto ${i + 1}`}
+                  width={64}
+                  height={64}
                   className="w-full h-full object-cover"
                 />
               </button>
@@ -218,9 +221,11 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   : "border-transparent opacity-50"
               }`}
             >
-              <img
+              <Image
                 src={img}
                 alt={`Foto ${i + 1}`}
+                width={56}
+                height={56}
                 className="w-full h-full object-cover"
               />
             </button>

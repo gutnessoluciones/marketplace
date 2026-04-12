@@ -8,12 +8,14 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -28,6 +30,20 @@ export const metadata: Metadata = {
     "moda flamenca",
     "complementos flamencos",
   ],
+  openGraph: {
+    title: "Flamencalia — Larga vida a tu Flamenca",
+    description:
+      "Compra y vende vestidos de flamenca, mantones, complementos y más en la comunidad flamenca.",
+    siteName: "Flamencalia",
+    locale: "es_ES",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Flamencalia — Larga vida a tu Flamenca",
+    description:
+      "Marketplace de moda flamenca. Compra, vende y dale larga vida a tu flamenca.",
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

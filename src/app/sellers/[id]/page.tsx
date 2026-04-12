@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+
+export const revalidate = 1800;
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SellerProductCard } from "@/components/products/seller-product-card";
@@ -168,10 +170,13 @@ export default async function SellerProfilePage({
         {/* Banner image or gradient fallback */}
         {profile.banner_url ? (
           <div className="absolute inset-0">
-            <img
+            <Image
               src={profile.banner_url}
               alt=""
-              className="w-full h-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority
             />
             <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/50 to-black/80" />
           </div>
@@ -188,10 +193,12 @@ export default async function SellerProfilePage({
             <div className="relative mb-4">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-3 border-flamencalia-albero/40 bg-flamencalia-albero-pale/20 overflow-hidden shadow-2xl ring-4 ring-white/5">
                 {profile.avatar_url ? (
-                  <img
+                  <Image
                     src={profile.avatar_url}
                     alt={profile.display_name ?? "Vendedor"}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="112px"
+                    className="object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+
+export const revalidate = 600;
 import { createClient } from "@/lib/supabase/server";
 import { ProductsService } from "@/services/products.service";
 import { ReviewsService } from "@/services/reviews.service";
@@ -539,9 +541,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     >
                       <div className="w-12 h-12 rounded-full bg-flamencalia-albero-pale/30 overflow-hidden ring-2 ring-flamencalia-albero-pale/30">
                         {product.seller.avatar_url ? (
-                          <img
+                          <Image
                             src={product.seller.avatar_url}
                             alt={product.seller.display_name ?? ""}
+                            width={48}
+                            height={48}
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -657,9 +661,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 >
                   <div className="w-9 h-9 rounded-full bg-flamencalia-albero-pale/30 overflow-hidden shrink-0">
                     {review.buyer?.avatar_url ? (
-                      <img
+                      <Image
                         src={review.buyer.avatar_url}
                         alt=""
+                        width={36}
+                        height={36}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -726,10 +732,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   >
                     <div className="aspect-3/4 bg-flamencalia-albero-pale/30 overflow-hidden">
                       {rpTyped.images?.length > 0 ? (
-                        <img
+                        <Image
                           src={rpTyped.images[0]}
                           alt={rpTyped.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          fill
+                          sizes="(max-width: 768px) 50vw, 25vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-neutral-200">

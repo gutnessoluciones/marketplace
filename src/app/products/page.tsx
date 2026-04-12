@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+
+export const revalidate = 300;
 import { createClient } from "@/lib/supabase/server";
 import { ProductsService } from "@/services/products.service";
 import { FavoritesService } from "@/services/favorites.service";
@@ -172,7 +174,9 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       ? new FavoritesService(supabase).getUserFavoriteIds(user.id)
       : Promise.resolve([] as string[]),
   ]);
-  const sellerProfile = sellerProfileResult as { display_name: string | null } | null;
+  const sellerProfile = sellerProfileResult as {
+    display_name: string | null;
+  } | null;
 
   const sellerMap = new Map<
     string,
@@ -594,9 +598,11 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       >
                         <div className="w-5 h-5 rounded-full bg-neutral-100 overflow-hidden shrink-0">
                           {s.avatar_url ? (
-                            <img
+                            <Image
                               src={s.avatar_url}
                               alt=""
+                              width={20}
+                              height={20}
                               className="w-full h-full object-cover"
                             />
                           ) : (

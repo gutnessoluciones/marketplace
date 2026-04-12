@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
+
+export const revalidate = 3600;
 import { formatPrice } from "@/lib/utils";
 import { Icon } from "@/components/icons";
 import { ProductCard } from "@/components/products/product-card";
@@ -406,10 +408,12 @@ export default async function HomePage() {
                     {/* Avatar grande */}
                     <div className="aspect-square relative bg-flamencalia-albero-pale/30">
                       {seller.avatar_url ? (
-                        <img
+                        <Image
                           src={seller.avatar_url}
                           alt={seller.display_name ?? "Vendedor"}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-flamencalia-albero/20 to-flamencalia-red/10">
@@ -649,10 +653,12 @@ function ProductHomeCard({
         className={`${size === "sm" ? "h-32" : "h-44"} bg-flamencalia-cream rounded-xl flex items-center justify-center overflow-hidden mb-3 relative`}
       >
         {product.images?.length > 0 ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.title}
-            className="object-cover w-full h-full rounded-xl group-hover:scale-105 transition-transform duration-300"
+            fill
+            sizes="(max-width: 1024px) 50vw, 25vw"
+            className="object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <span className="text-flamencalia-albero/40 text-xs">Sin imagen</span>

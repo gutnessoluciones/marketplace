@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/footer";
 import { Icon } from "@/components/icons";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

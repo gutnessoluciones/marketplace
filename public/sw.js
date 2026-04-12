@@ -1,7 +1,7 @@
 // Push notification + PWA service worker
 // This file must be served from /public/sw.js
 
-const CACHE_NAME = "flamencalia-v1";
+const CACHE_NAME = "flamencalia-v2";
 const OFFLINE_URL = "/";
 
 // Cache essential assets on install
@@ -15,6 +15,7 @@ self.addEventListener("install", (event) => {
           "/icons/icon-192.png",
           "/icons/icon-512.png",
           "/cliente/Abanico.svg",
+          "/cliente/marca-flamencalia.svg",
         ]),
       ),
   );
