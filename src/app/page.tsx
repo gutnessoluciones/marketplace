@@ -278,7 +278,7 @@ export default async function HomePage() {
       </header>
 
       {/* ═══ HERO BANNER — Carrusel de colección ═══ */}
-      <section className="relative overflow-hidden bg-flamencalia-black min-h-svh sm:min-h-[calc(100svh-8rem)]">
+      <section className="relative overflow-hidden bg-flamencalia-black h-[70svh] sm:h-[80svh] lg:min-h-[calc(100svh-8rem)]">
         {/* Carrusel de fondo a pantalla completa */}
         <div className="absolute inset-0">
           <BannerCarousel />
@@ -287,18 +287,18 @@ export default async function HomePage() {
         {/* Overlay oscuro para legibilidad */}
         <div className="absolute inset-0 bg-black/50" />
 
-        <div className="relative flex items-center justify-center min-h-svh sm:min-h-[calc(100svh-8rem)]">
+        <div className="relative flex items-center justify-center h-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* Marca animada — F gira como flamenca */}
-            <div className="flex justify-center items-center mb-6 animate-fade-in-up">
-              <div className="w-62 sm:w-96 lg:w-150">
+            <div className="flex justify-center items-center mb-4 sm:mb-6 animate-fade-in-up">
+              <div className="w-44 sm:w-96 lg:w-150">
                 <AnimatedBrand className="w-full h-auto text-white drop-shadow-lg" />
               </div>
             </div>
 
             {/* Slogan SVG */}
             <div
-              className="flex justify-center mb-6 animate-fade-in-up"
+              className="flex justify-center mb-4 sm:mb-6 animate-fade-in-up"
               style={{ animationDelay: "0.1s" }}
             >
               <Image
@@ -306,13 +306,13 @@ export default async function HomePage() {
                 alt="Larga vida a tu Flamenca"
                 width={600}
                 height={80}
-                className="object-contain w-full max-w-xs sm:max-w-md h-auto drop-shadow-lg"
+                className="object-contain w-full max-w-[200px] sm:max-w-md h-auto drop-shadow-lg"
                 unoptimized
                 priority
               />
             </div>
             <p
-              className="mt-4 text-base sm:text-lg text-white/80 max-w-2xl mx-auto animate-fade-in-up"
+              className="mt-2 sm:mt-4 text-sm sm:text-lg text-white/80 max-w-2xl mx-auto px-2 animate-fade-in-up"
               style={{ animationDelay: "0.2s" }}
             >
               Vestidos, mantones, flores y complementos de diseñadores y de la

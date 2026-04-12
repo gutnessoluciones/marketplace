@@ -25,9 +25,9 @@ export default async function MyProductsPage() {
 
   return (
     <div className="max-w-4xl">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-flamencalia-black">
+          <h1 className="text-xl sm:text-2xl font-bold text-flamencalia-black">
             Mis Productos
           </h1>
           <p className="text-sm text-neutral-400 mt-0.5">
@@ -36,7 +36,7 @@ export default async function MyProductsPage() {
         </div>
         <Link
           href="/dashboard/products/new"
-          className="bg-flamencalia-red text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark transition-all shadow-sm flex items-center gap-2"
+          className="bg-flamencalia-red text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-flamencalia-red-dark transition-all shadow-sm flex items-center gap-2 w-fit"
         >
           <svg
             className="w-4 h-4"
@@ -65,9 +65,9 @@ export default async function MyProductsPage() {
             return (
               <div
                 key={product.id}
-                className="flex items-center justify-between p-4 hover:bg-neutral-50/50 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 gap-3 hover:bg-neutral-50/50 transition-colors"
               >
-                <div className="flex items-center gap-4 min-w-0">
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                   <div className="w-12 h-12 rounded-xl bg-neutral-100 shrink-0 overflow-hidden">
                     {product.images?.length > 0 ? (
                       <img
@@ -81,11 +81,11 @@ export default async function MyProductsPage() {
                       </div>
                     )}
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-neutral-700 truncate">
                       {product.title}
                     </p>
-                    <div className="flex items-center gap-2 mt-0.5">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-0.5">
                       <span
                         className={`text-xs px-2 py-0.5 rounded-full font-medium ${status.color}`}
                       >
@@ -95,14 +95,14 @@ export default async function MyProductsPage() {
                         Stock: {product.stock}
                       </span>
                       {product.category && (
-                        <span className="text-xs text-neutral-400">
+                        <span className="text-xs text-neutral-400 hidden sm:inline">
                           · {product.category}
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 shrink-0">
+                <div className="flex items-center gap-3 sm:gap-4 shrink-0 pl-15 sm:pl-0">
                   <p className="text-sm font-bold text-flamencalia-red-dark">
                     {formatPrice(product.price)}
                   </p>
