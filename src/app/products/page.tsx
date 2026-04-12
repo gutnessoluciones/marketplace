@@ -118,20 +118,37 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 
   const supabase = await createClient();
   const service = new ProductsService(supabase);
-  const result = await service.list(page, 24, category, q, seller, {
-    color,
-    size,
-    condition,
-    brand,
-    priceMin: priceMin ? Math.round(Number(priceMin) * 100) : undefined,
-    priceMax: priceMax ? Math.round(Number(priceMax) * 100) : undefined,
-    sort,
-  });
-
-  // Prioritize boosted products (only on default sort, page 1)
   const boostService = new BoostsService(supabase);
-  const boostedIds =
-    !sort && page === 1 ? await boostService.getBoostedProductIds() : [];
+
+  // Parallelizar queries independientes para reducir TTFB
+  const [
+    result,
+    boostedIds,
+    { data: sellersRaw },
+    {
+      data: { user },
+    },
+  ] = await Promise.all([
+    service.list(page, 24, category, q, seller, {
+      color,
+      size,
+      condition,
+      brand,
+      priceMin: priceMin ? Math.round(Number(priceMin) * 100) : undefined,
+      priceMax: priceMax ? Math.round(Number(priceMax) * 100) : undefined,
+      sort,
+    }),
+    !sort && page === 1
+      ? boostService.getBoostedProductIds()
+      : Promise.resolve([]),
+    supabase
+      .from("products")
+      .select(
+        "seller_id, seller:profiles!seller_id(id, display_name, avatar_url)",
+      )
+      .eq("status", "active"),
+    supabase.auth.getUser(),
+  ]);
   const boostedSet = new Set(boostedIds);
   const products =
     boostedIds.length > 0
@@ -141,22 +158,21 @@ export default async function ProductsPage({ searchParams }: PageProps) {
         ]
       : result.data;
 
-  let sellerProfile: { display_name: string | null } | null = null;
-  if (seller) {
-    const { data } = await supabase
-      .from("profiles")
-      .select("display_name")
-      .eq("id", seller)
-      .single();
-    sellerProfile = data;
-  }
-
-  const { data: sellersRaw } = await supabase
-    .from("products")
-    .select(
-      "seller_id, seller:profiles!seller_id(id, display_name, avatar_url)",
-    )
-    .eq("status", "active");
+  // Secondary parallel queries (depend on user/seller)
+  const [sellerProfileResult, favoriteIds] = await Promise.all([
+    seller
+      ? supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", seller)
+          .single()
+          .then(({ data }) => data)
+      : Promise.resolve(null),
+    user
+      ? new FavoritesService(supabase).getUserFavoriteIds(user.id)
+      : Promise.resolve([] as string[]),
+  ]);
+  const sellerProfile = sellerProfileResult as { display_name: string | null } | null;
 
   const sellerMap = new Map<
     string,
@@ -183,16 +199,6 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     (a, b) => b.count - a.count,
   );
   const totalPages = Math.ceil((result.total ?? 0) / result.limit);
-
-  // Fetch favorite IDs for logged-in user
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  let favoriteIds: string[] = [];
-  if (user) {
-    const favService = new FavoritesService(supabase);
-    favoriteIds = await favService.getUserFavoriteIds(user.id);
-  }
 
   function buildUrl(overrides: Record<string, string | undefined>) {
     const current: Record<string, string | undefined> = {

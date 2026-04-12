@@ -69,40 +69,48 @@ const CATEGORIES = [
 export default async function HomePage() {
   const supabase = await createClient();
 
-  const { data: featuredProducts } = await supabase
-    .from("products")
-    .select(
-      "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
-    )
-    .eq("status", "active")
-    .order("created_at", { ascending: false })
-    .limit(8);
-
-  const { data: recentProducts } = await supabase
-    .from("products")
-    .select(
-      "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
-    )
-    .eq("status", "active")
-    .order("created_at", { ascending: false })
-    .limit(4);
-
-  const { data: dealProducts } = await supabase
-    .from("products")
-    .select(
-      "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
-    )
-    .eq("status", "active")
-    .order("price", { ascending: true })
-    .limit(4);
-
-  // Top sellers: profiles that have active products, ordered by product count
-  const { data: topSellersRaw } = await supabase
-    .from("products")
-    .select(
-      "seller_id, seller:profiles!seller_id(id, display_name, avatar_url)",
-    )
-    .eq("status", "active");
+  // Parallelizar todas las queries independientes para reducir TTFB
+  const [
+    { data: featuredProducts },
+    { data: recentProducts },
+    { data: dealProducts },
+    { data: topSellersRaw },
+    {
+      data: { user },
+    },
+  ] = await Promise.all([
+    supabase
+      .from("products")
+      .select(
+        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+      )
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .limit(8),
+    supabase
+      .from("products")
+      .select(
+        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+      )
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .limit(4),
+    supabase
+      .from("products")
+      .select(
+        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+      )
+      .eq("status", "active")
+      .order("price", { ascending: true })
+      .limit(4),
+    supabase
+      .from("products")
+      .select(
+        "seller_id, seller:profiles!seller_id(id, display_name, avatar_url)",
+      )
+      .eq("status", "active"),
+    supabase.auth.getUser(),
+  ]);
 
   const sellerMap = new Map<
     string,
@@ -133,19 +141,20 @@ export default async function HomePage() {
     .slice(0, 10);
 
   // Personalized feed: products from sellers the user follows
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
   let followedProducts: typeof featuredProducts = null;
   let favoriteIds: string[] = [];
 
   if (user) {
-    // Get followed seller IDs
-    const { data: followsData } = await supabase
-      .from("follows")
-      .select("following_id")
-      .eq("follower_id", user.id);
+    // Parallelizar follows + favorites
+    const [{ data: followsData }, favIds] = await Promise.all([
+      supabase
+        .from("follows")
+        .select("following_id")
+        .eq("follower_id", user.id),
+      new FavoritesService(supabase).getUserFavoriteIds(user.id),
+    ]);
 
+    favoriteIds = favIds;
     const followedIds = (followsData ?? []).map((f) => f.following_id);
 
     if (followedIds.length > 0) {
@@ -158,10 +167,6 @@ export default async function HomePage() {
         .limit(8);
       followedProducts = data;
     }
-
-    // Get favorite IDs
-    const favService = new FavoritesService(supabase);
-    favoriteIds = await favService.getUserFavoriteIds(user.id);
   }
 
   return (
