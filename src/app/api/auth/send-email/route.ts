@@ -78,7 +78,9 @@ export async function POST(request: NextRequest) {
   if (!hookSecret) {
     console.error("[AUTH-HOOK] SEND_EMAIL_HOOK_SECRET not configured");
     return new Response(
-      JSON.stringify({ error: { http_code: 500, message: "Hook not configured" } }),
+      JSON.stringify({
+        error: { http_code: 500, message: "Hook not configured" },
+      }),
       { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }
@@ -99,7 +101,9 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("[AUTH-HOOK] Signature verification failed:", err);
     return new Response(
-      JSON.stringify({ error: { http_code: 401, message: "Invalid signature" } }),
+      JSON.stringify({
+        error: { http_code: 401, message: "Invalid signature" },
+      }),
       { status: 401, headers: { "Content-Type": "application/json" } },
     );
   }
@@ -108,9 +112,7 @@ export async function POST(request: NextRequest) {
   const baseUrl = getBaseUrl();
   const actionType = email_data.email_action_type;
 
-  console.log(
-    `[AUTH-HOOK] ${actionType} email for ${user.email}`,
-  );
+  console.log(`[AUTH-HOOK] ${actionType} email for ${user.email}`);
 
   try {
     switch (actionType) {
