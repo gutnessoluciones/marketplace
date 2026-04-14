@@ -66,7 +66,7 @@ export function RecentlyViewed() {
             href={`/products/${product.id}`}
             className="shrink-0 w-36 group"
           >
-            <div className="aspect-3/4 bg-flamencalia-cream rounded-lg overflow-hidden">
+            <div className="aspect-3/4 bg-flamencalia-cream rounded-lg overflow-hidden relative">
               {product.image ? (
                 <Image
                   src={product.image}

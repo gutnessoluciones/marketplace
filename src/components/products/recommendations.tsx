@@ -84,7 +84,7 @@ export function Recommendations({
             href={`/products/${product.id}`}
             className="group bg-white rounded-xl overflow-hidden hover:shadow-md transition-shadow"
           >
-            <div className="aspect-3/4 relative bg-gray-50">
+            <div className="aspect-3/4 relative bg-gray-50 overflow-hidden">
               {product.images?.[0] ? (
                 <Image
                   src={product.images[0]}

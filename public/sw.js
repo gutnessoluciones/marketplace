@@ -1,7 +1,7 @@
 // Push notification + PWA service worker
 // This file must be served from /public/sw.js
 
-const CACHE_NAME = "flamencalia-v2";
+const CACHE_NAME = "flamencalia-v3";
 const OFFLINE_URL = "/";
 
 // Cache essential assets on install

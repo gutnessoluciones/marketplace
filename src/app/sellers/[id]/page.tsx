@@ -191,7 +191,7 @@ export default async function SellerProfilePage({
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
             <div className="relative mb-4">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-3 border-flamencalia-albero/40 bg-flamencalia-albero-pale/20 overflow-hidden shadow-2xl ring-4 ring-white/5">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-3 border-flamencalia-albero/40 bg-flamencalia-albero-pale/20 overflow-hidden shadow-2xl ring-4 ring-white/5 relative">
                 {profile.avatar_url ? (
                   <Image
                     src={profile.avatar_url}

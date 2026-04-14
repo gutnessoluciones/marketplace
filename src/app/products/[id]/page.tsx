@@ -730,7 +730,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     href={`/products/${rpTyped.id}`}
                     className="group bg-flamencalia-white rounded-xl overflow-hidden border border-flamencalia-albero-pale/30 hover:shadow-md transition-all"
                   >
-                    <div className="aspect-3/4 bg-flamencalia-albero-pale/30 overflow-hidden">
+                    <div className="aspect-3/4 bg-flamencalia-albero-pale/30 overflow-hidden relative">
                       {rpTyped.images?.length > 0 ? (
                         <Image
                           src={rpTyped.images[0]}
