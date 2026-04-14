@@ -9,12 +9,15 @@ const PROJECT_REF = "hyolejmmvsizlceaslum";
 
 // ── Templates ────────────────────────────────────────────────
 
-const HEADER = `<div style="max-width:520px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"><div style="background:linear-gradient(135deg,#1A1A1A,#C8102E);border-radius:16px 16px 0 0;padding:32px 24px;text-align:center"><img src="{{ .SiteURL }}/email/logo-email.png" alt="Flamencalia" width="280" style="margin-bottom:8px"/><img src="{{ .SiteURL }}/email/slogan-email.png" alt="Larga vida a tu Flamenca" width="220" style="display:block;margin:0 auto"/></div>`;
+// URL base para imágenes (hardcoded — {{ .SiteURL }} puede apuntar a Supabase, no a Vercel)
+const IMG_BASE = "https://marketplace-three-mu.vercel.app";
+
+const HEADER = `<div style="max-width:520px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif"><div style="background:linear-gradient(135deg,#1A1A1A,#C8102E);border-radius:16px 16px 0 0;padding:32px 24px;text-align:center"><img src="${IMG_BASE}/email/logo-email.png" alt="Flamencalia" width="280" style="margin-bottom:8px"/><img src="${IMG_BASE}/email/slogan-email.png" alt="Larga vida a tu Flamenca" width="220" style="display:block;margin:0 auto"/></div>`;
 
 const BODY_START = `<div style="background:#ffffff;padding:32px 24px;border:1px solid #e2e8f0;border-top:none">`;
 const BODY_END = `</div>`;
 
-const FOOTER = `<div style="background:#fff9f0;border-radius:0 0 16px 16px;padding:16px 24px;text-align:center;border:1px solid #e2e8f0;border-top:none"><img src="{{ .SiteURL }}/email/logo-email-red.png" alt="Flamencalia" width="120" style="margin-bottom:8px"/><p style="color:#94a3b8;font-size:11px;margin:0">&copy; 2026 Flamencalia. Todos los derechos reservados.</p></div></div>`;
+const FOOTER = `<div style="background:#fff9f0;border-radius:0 0 16px 16px;padding:16px 24px;text-align:center;border:1px solid #e2e8f0;border-top:none"><img src="${IMG_BASE}/email/logo-email-red.png" alt="Flamencalia" width="120" style="margin-bottom:8px"/><p style="color:#94a3b8;font-size:11px;margin:0">&copy; 2026 Flamencalia. Todos los derechos reservados.</p></div></div>`;
 
 const BUTTON = (href, text) =>
   `<div style="text-align:center;margin:24px 0"><a href="${href}" style="display:inline-block;background:#C8102E;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 32px;border-radius:12px">${text}</a></div>`;

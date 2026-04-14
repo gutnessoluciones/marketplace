@@ -1,6 +1,6 @@
 import { isAdmin } from "@/lib/admin";
 import { apiResponse, apiError } from "@/lib/utils";
-import nodemailer from "nodemailer";
+import { sendAdminAlertEmail, isEmailConfigured } from "@/lib/email";
 
 // POST /api/admin/dev-stats/alert — Send alert email when approaching limits
 export async function POST(request: Request) {
@@ -29,66 +29,15 @@ export async function POST(request: Request) {
       return apiResponse({ error: "No recipients" }, 400);
     }
 
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-    if (!smtpUser || !smtpPass) {
-      return apiResponse({ error: "SMTP no configurado en el servidor" }, 500);
+    if (!isEmailConfigured()) {
+      return apiResponse({ error: "Email no configurado en el servidor" }, 500);
     }
 
-    // Build email HTML
-    const alertRows = alerts
-      .map(
-        (a) =>
-          `<tr style="border-bottom:1px solid #eee">
-            <td style="padding:8px 12px;font-weight:600;color:${a.level === "critical" ? "#c8102e" : "#d4a843"}">${a.level === "critical" ? "🔴" : "🟡"} ${a.service}</td>
-            <td style="padding:8px 12px">${a.metric}</td>
-            <td style="padding:8px 12px;text-align:center;font-weight:700">${a.percent}%</td>
-            <td style="padding:8px 12px">${a.message}</td>
-          </tr>`,
-      )
-      .join("");
+    const sent = await sendAdminAlertEmail(recipients, alerts);
 
-    const html = `
-      <div style="font-family:'DM Sans',Arial,sans-serif;max-width:600px;margin:0 auto;background:#fff9f0;border-radius:12px;overflow:hidden">
-        <div style="background:linear-gradient(135deg,#1a1a1a,#c8102e);padding:24px 32px">
-          <h1 style="color:#fff;margin:0;font-size:20px">⚠️ Alerta de Servicios — Flamencalia</h1>
-          <p style="color:#d4a843;margin:4px 0 0;font-size:13px">Zona Desarrolladores</p>
-        </div>
-        <div style="padding:24px 32px">
-          <p style="color:#333;font-size:14px">Se han detectado <strong>${alerts.length}</strong> alerta(s) en los servicios:</p>
-          <table style="width:100%;border-collapse:collapse;font-size:13px;margin:16px 0">
-            <thead>
-              <tr style="background:#f5f5f5">
-                <th style="padding:8px 12px;text-align:left">Servicio</th>
-                <th style="padding:8px 12px;text-align:left">Métrica</th>
-                <th style="padding:8px 12px;text-align:center">Uso</th>
-                <th style="padding:8px 12px;text-align:left">Detalle</th>
-              </tr>
-            </thead>
-            <tbody>${alertRows}</tbody>
-          </table>
-          <p style="color:#666;font-size:13px">Revisa la <a href="${process.env.NEXT_PUBLIC_APP_URL}/flamencadmin-8x9k2m/dev" style="color:#c8102e">Zona Dev</a> para más detalles.</p>
-        </div>
-        <div style="background:#f5f5f5;padding:16px 32px;text-align:center;font-size:11px;color:#999">
-          Email automático de Flamencalia — No responder
-        </div>
-      </div>
-    `;
-
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.office365.com",
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: false,
-      auth: { user: smtpUser, pass: smtpPass },
-      tls: { ciphers: "SSLv3" },
-    });
-
-    await transporter.sendMail({
-      from: process.env.FROM_EMAIL || "Flamencalia <soporte@flamencalia.com>",
-      to: recipients.join(", "),
-      subject: `⚠️ Alerta servicios: ${alerts.length} aviso(s) — Flamencalia`,
-      html,
-    });
+    if (!sent) {
+      return apiResponse({ error: "Error al enviar la alerta" }, 500);
+    }
 
     return apiResponse({ sent: true });
   } catch (error) {
