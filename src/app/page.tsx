@@ -230,13 +230,6 @@ export default async function HomePage() {
           </form>
 
           <div className="flex items-center">
-            <Image
-              src="/cliente/Abanico.svg"
-              alt=""
-              width={28}
-              height={28}
-              className="w-7 h-7 sm:hidden mr-1"
-            />
             <MobileSearch />
             <UserNav variant="light" />
           </div>
