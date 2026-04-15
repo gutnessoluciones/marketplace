@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import { CookieBanner } from "@/components/layout/cookie-banner";
 import { CartProvider } from "@/components/cart/cart-provider";
+import { NavigationProgress } from "@/components/layout/navigation-progress";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -71,6 +73,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#c8102e" />
       </head>
       <body className="min-h-full flex flex-col bg-flamencalia-cream text-foreground">
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         <CartProvider>
           {children}
           <CookieBanner />

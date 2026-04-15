@@ -27,7 +27,7 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product.id}`}
-      className={`group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1${boosted ? " ring-2 ring-flamencalia-albero/40 glass-shine" : ""}`}
+      className={`group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:scale-[0.97] active:shadow-sm${boosted ? " ring-2 ring-flamencalia-albero/40 glass-shine" : ""}`}
     >
       {/* Image — tall like Vinted */}
       <div className="aspect-3/4 bg-flamencalia-cream relative overflow-hidden">

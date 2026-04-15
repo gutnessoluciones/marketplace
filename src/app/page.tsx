@@ -397,7 +397,7 @@ export default async function HomePage() {
                       ? "/products"
                       : `/products?category=${cat.slug}`
                   }
-                  className="group relative overflow-hidden rounded-2xl"
+                  className="group relative overflow-hidden rounded-2xl active:scale-[0.97] transition-transform"
                 >
                   <div className="aspect-4/5 relative">
                     <Image
