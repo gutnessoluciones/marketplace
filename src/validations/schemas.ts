@@ -11,6 +11,15 @@ export const VALID_CATEGORIES = [
   "zapatos",
 ] as const;
 
+export const VALID_SUBCATEGORIES = [
+  "mantones",
+  "flores",
+  "pendientes",
+  "broches-mantones",
+  "sombreros",
+  "panuelos",
+] as const;
+
 export const VALID_COLORS = [
   "blanco",
   "negro",
@@ -62,6 +71,7 @@ export const createProductSchema = z.object({
   description: z.string().max(5000).optional(),
   price: z.number().int().positive().max(99999999),
   category: z.enum(VALID_CATEGORIES),
+  subcategory: z.enum(VALID_SUBCATEGORIES).optional().nullable(),
   color: z.string().max(30).optional().nullable(),
   size: z.string().max(10).optional().nullable(),
   condition: z.enum(VALID_CONDITIONS).optional().nullable(),

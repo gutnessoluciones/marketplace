@@ -70,11 +70,11 @@ export default async function DashboardLayout({
           className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-white mb-8 px-1"
         >
           <Image
-            src="/cliente/flamencalia.jpg"
+            src="/cliente/Abanico.svg"
             alt="Flamencalia"
-            width={36}
-            height={36}
-            className="rounded-lg"
+            width={32}
+            height={32}
+            className="w-8 h-8"
           />
           <div>
             <span className="font-serif text-base tracking-wide">

@@ -7,7 +7,19 @@ import { PublicMobileNav } from "@/components/layout/public-mobile-nav";
 const CATEGORIES = [
   { slug: "feria", label: "Feria", icon: "fan" },
   { slug: "camino", label: "Camino", icon: "flower" },
-  { slug: "complementos-flamencos", label: "Complementos", icon: "earring" },
+  {
+    slug: "complementos-flamencos",
+    label: "Complementos",
+    icon: "earring",
+    subcategories: [
+      { slug: "mantones", label: "Mantones" },
+      { slug: "flores", label: "Flores" },
+      { slug: "pendientes", label: "Pendientes" },
+      { slug: "broches-mantones", label: "Broches para mantones" },
+      { slug: "sombreros", label: "Sombreros" },
+      { slug: "panuelos", label: "Pañuelos" },
+    ],
+  },
   { slug: "invitada-flamenca", label: "Invitada Flamenca", icon: "dress" },
   { slug: "moda-infantil", label: "Moda Infantil", icon: "child" },
   { slug: "equitacion", label: "Equitación", icon: "horseshoe" },
@@ -88,19 +100,47 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
           >
             Todo
           </Link>
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/products?category=${cat.slug}`}
-              className={`text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
-                activeCategory === cat.slug
-                  ? "text-flamencalia-white bg-flamencalia-black"
-                  : "text-flamencalia-black/70 hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero"
-              }`}
-            >
-              {cat.label}
-            </Link>
-          ))}
+          {CATEGORIES.map((cat) =>
+            "subcategories" in cat && cat.subcategories ? (
+              <div key={cat.slug} className="relative group">
+                <Link
+                  href={`/products?category=${cat.slug}`}
+                  className={`text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
+                    activeCategory === cat.slug
+                      ? "text-flamencalia-white bg-flamencalia-black"
+                      : "text-flamencalia-black/70 hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero"
+                  }`}
+                >
+                  {cat.label}
+                </Link>
+                <div className="absolute top-full left-0 pt-1 hidden group-hover:block z-50">
+                  <div className="bg-white rounded-xl shadow-lg border border-neutral-100 py-2 min-w-[180px]">
+                    {cat.subcategories.map((sub) => (
+                      <Link
+                        key={sub.slug}
+                        href={`/products?category=${cat.slug}&subcategory=${sub.slug}`}
+                        className="block px-4 py-2 text-xs font-medium text-flamencalia-black/70 hover:bg-flamencalia-albero/10 hover:text-flamencalia-red transition-colors"
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link
+                key={cat.slug}
+                href={`/products?category=${cat.slug}`}
+                className={`text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
+                  activeCategory === cat.slug
+                    ? "text-flamencalia-white bg-flamencalia-black"
+                    : "text-flamencalia-black/70 hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero"
+                }`}
+              >
+                {cat.label}
+              </Link>
+            ),
+          )}
 
           {/* Separador */}
           <span className="w-px h-4 bg-flamencalia-albero-pale/50 mx-1" />

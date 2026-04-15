@@ -8,7 +8,19 @@ import { Icon } from "@/components/icons";
 const CATEGORIES = [
   { slug: "feria", label: "Feria", icon: "fan" },
   { slug: "camino", label: "Camino", icon: "flower" },
-  { slug: "complementos-flamencos", label: "Complementos", icon: "earring" },
+  {
+    slug: "complementos-flamencos",
+    label: "Complementos",
+    icon: "earring",
+    subcategories: [
+      { slug: "mantones", label: "Mantones" },
+      { slug: "flores", label: "Flores" },
+      { slug: "pendientes", label: "Pendientes" },
+      { slug: "broches-mantones", label: "Broches para mantones" },
+      { slug: "sombreros", label: "Sombreros" },
+      { slug: "panuelos", label: "Pañuelos" },
+    ],
+  },
   { slug: "invitada-flamenca", label: "Invitada Flamenca", icon: "dress" },
   { slug: "moda-infantil", label: "Moda Infantil", icon: "child" },
   { slug: "equitacion", label: "Equitación", icon: "horseshoe" },
@@ -24,6 +36,7 @@ const NAV_LINKS = [
 
 export function PublicMobileNav() {
   const [open, setOpen] = useState(false);
+  const [expandedCat, setExpandedCat] = useState<string | null>(null);
 
   return (
     <>
@@ -140,18 +153,67 @@ export function PublicMobileNav() {
                 </p>
                 <div className="px-3 py-2">
                   {CATEGORIES.map((cat) => (
-                    <Link
-                      key={cat.slug}
-                      href={`/products?category=${cat.slug}`}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-flamencalia-black/60 hover:bg-flamencalia-albero-pale/20 hover:text-flamencalia-red transition-colors"
-                    >
-                      <Icon
-                        name={cat.icon}
-                        className="w-4 h-4 text-flamencalia-albero/70"
-                      />
-                      {cat.label}
-                    </Link>
+                    <div key={cat.slug}>
+                      {"subcategories" in cat && cat.subcategories ? (
+                        <>
+                          <button
+                            onClick={() =>
+                              setExpandedCat(
+                                expandedCat === cat.slug ? null : cat.slug,
+                              )
+                            }
+                            className="flex items-center justify-between w-full gap-3 px-3 py-2.5 rounded-xl text-sm text-flamencalia-black/60 hover:bg-flamencalia-albero-pale/20 hover:text-flamencalia-red transition-colors"
+                          >
+                            <span className="flex items-center gap-3">
+                              <Icon
+                                name={cat.icon}
+                                className="w-4 h-4 text-flamencalia-albero/70"
+                              />
+                              {cat.label}
+                            </span>
+                            <svg
+                              className={`w-4 h-4 transition-transform ${expandedCat === cat.slug ? "rotate-180" : ""}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              strokeWidth={2}
+                            >
+                              <path d="m6 9 6 6 6-6" />
+                            </svg>
+                          </button>
+                          <Link
+                            href={`/products?category=${cat.slug}`}
+                            onClick={() => setOpen(false)}
+                            className="flex items-center gap-3 px-3 py-2 pl-11 rounded-xl text-sm text-flamencalia-black/50 hover:bg-flamencalia-albero-pale/20 hover:text-flamencalia-red transition-colors"
+                          >
+                            Todos los complementos
+                          </Link>
+                          {expandedCat === cat.slug &&
+                            cat.subcategories.map((sub) => (
+                              <Link
+                                key={sub.slug}
+                                href={`/products?category=${cat.slug}&subcategory=${sub.slug}`}
+                                onClick={() => setOpen(false)}
+                                className="flex items-center gap-3 px-3 py-2 pl-11 rounded-xl text-sm text-flamencalia-black/50 hover:bg-flamencalia-albero-pale/20 hover:text-flamencalia-red transition-colors"
+                              >
+                                {sub.label}
+                              </Link>
+                            ))}
+                        </>
+                      ) : (
+                        <Link
+                          href={`/products?category=${cat.slug}`}
+                          onClick={() => setOpen(false)}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-flamencalia-black/60 hover:bg-flamencalia-albero-pale/20 hover:text-flamencalia-red transition-colors"
+                        >
+                          <Icon
+                            name={cat.icon}
+                            className="w-4 h-4 text-flamencalia-albero/70"
+                          />
+                          {cat.label}
+                        </Link>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>

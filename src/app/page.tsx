@@ -35,6 +35,14 @@ const CATEGORIES = [
     label: "Complementos",
     icon: "flower",
     image: "/categorias/complementos.jpg",
+    subcategories: [
+      { slug: "mantones", label: "Mantones" },
+      { slug: "flores", label: "Flores" },
+      { slug: "pendientes", label: "Pendientes" },
+      { slug: "broches-mantones", label: "Broches para mantones" },
+      { slug: "sombreros", label: "Sombreros" },
+      { slug: "panuelos", label: "Pañuelos" },
+    ],
   },
   {
     slug: "invitada-flamenca",
@@ -172,7 +180,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-flamencalia-cream">
+    <div className="flex flex-col min-h-screen bg-white">
       {/* ═══ HEADER ═══ */}
       <header className="bg-flamencalia-white sticky top-0 z-30 shadow-sm">
         {/* Top decorative toldo */}
@@ -222,6 +230,13 @@ export default async function HomePage() {
           </form>
 
           <div className="flex items-center">
+            <Image
+              src="/cliente/Abanico.svg"
+              alt=""
+              width={28}
+              height={28}
+              className="w-7 h-7 sm:hidden mr-1"
+            />
             <MobileSearch />
             <UserNav variant="light" />
           </div>
@@ -236,15 +251,39 @@ export default async function HomePage() {
             >
               Todo
             </Link>
-            {CATEGORIES.filter((cat) => cat.slug !== "todo").map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/products?category=${cat.slug}`}
-                className="text-flamencalia-black/70 text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
-              >
-                {cat.label}
-              </Link>
-            ))}
+            {CATEGORIES.filter((cat) => cat.slug !== "todo").map((cat) =>
+              "subcategories" in cat && cat.subcategories ? (
+                <div key={cat.slug} className="relative group">
+                  <Link
+                    href={`/products?category=${cat.slug}`}
+                    className="text-flamencalia-black/70 text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
+                  >
+                    {cat.label}
+                  </Link>
+                  <div className="absolute top-full left-0 pt-1 hidden group-hover:block z-50">
+                    <div className="bg-white rounded-xl shadow-lg border border-neutral-100 py-2 min-w-[180px]">
+                      {cat.subcategories.map((sub) => (
+                        <Link
+                          key={sub.slug}
+                          href={`/products?category=${cat.slug}&subcategory=${sub.slug}`}
+                          className="block px-4 py-2 text-xs font-medium text-flamencalia-black/70 hover:bg-flamencalia-albero/10 hover:text-flamencalia-red transition-colors"
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={cat.slug}
+                  href={`/products?category=${cat.slug}`}
+                  className="text-flamencalia-black/70 text-xs font-serif font-medium uppercase tracking-wide px-3 py-1.5 rounded-full hover:bg-flamencalia-albero/10 hover:text-flamencalia-albero transition-colors whitespace-nowrap"
+                >
+                  {cat.label}
+                </Link>
+              ),
+            )}
 
             {/* Separador */}
             <span className="w-px h-4 bg-flamencalia-albero-pale/50 mx-1" />
@@ -331,7 +370,7 @@ export default async function HomePage() {
           >
             <path
               d="M0 100V50C180 10 360 0 540 20s360 40 540 20 180-30 360-20v80H0z"
-              fill="var(--flamencalia-cream)"
+              fill="#ffffff"
             />
           </svg>
         </div>

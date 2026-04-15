@@ -6,6 +6,7 @@ interface CreateProductInput {
   description?: string;
   price: number;
   category: string;
+  subcategory?: string | null;
   color?: string | null;
   size?: string | null;
   condition?: string | null;
@@ -30,6 +31,7 @@ export class ProductsService {
       size?: string;
       condition?: string;
       brand?: string;
+      subcategory?: string;
       priceMin?: number;
       priceMax?: number;
       sort?: string;
@@ -37,14 +39,19 @@ export class ProductsService {
   ) {
     let query = this.supabase
       .from("products")
-      .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)", {
-        count: "exact",
-      })
+      .select(
+        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+        {
+          count: "exact",
+        },
+      )
       .eq("status", "active")
       .range((page - 1) * limit, page * limit - 1);
 
     if (category) query = query.eq("category", category);
     if (sellerId) query = query.eq("seller_id", sellerId);
+    if (filters?.subcategory)
+      query = query.eq("subcategory", filters.subcategory);
     if (filters?.color) query = query.eq("color", filters.color);
     if (filters?.size) query = query.eq("size", filters.size);
     if (filters?.condition) query = query.eq("condition", filters.condition);
@@ -78,15 +85,20 @@ export class ProductsService {
     if (error?.message?.includes("fts")) {
       let fallbackQuery = this.supabase
         .from("products")
-        .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)", {
-          count: "exact",
-        })
+        .select(
+          "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+          {
+            count: "exact",
+          },
+        )
         .eq("status", "active")
         .range((page - 1) * limit, page * limit - 1);
 
       if (category) fallbackQuery = fallbackQuery.eq("category", category);
       if (sellerId) fallbackQuery = fallbackQuery.eq("seller_id", sellerId);
       if (q) fallbackQuery = fallbackQuery.ilike("title", `%${q}%`);
+      if (filters?.subcategory)
+        fallbackQuery = fallbackQuery.eq("subcategory", filters.subcategory);
       if (filters?.color)
         fallbackQuery = fallbackQuery.eq("color", filters.color);
       if (filters?.size) fallbackQuery = fallbackQuery.eq("size", filters.size);
@@ -123,7 +135,9 @@ export class ProductsService {
   async getById(id: string) {
     const { data, error } = await this.supabase
       .from("products")
-      .select("*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)")
+      .select(
+        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+      )
       .eq("id", id)
       .single();
 

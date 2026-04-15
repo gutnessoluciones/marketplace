@@ -176,7 +176,7 @@ export default async function DashboardPage() {
                   Ingresos
                 </span>
                 <span className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-400">
-                  <Icon name="dollar" className="w-4 h-4" />
+                  <Icon name="euro" className="w-4 h-4" />
                 </span>
               </div>
               <p className="text-3xl font-bold text-flamencalia-black">
@@ -305,18 +305,18 @@ export default async function DashboardPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
             <Link
               href="/dashboard/products/new"
-              className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
+              className="bg-flamencalia-red border border-flamencalia-red rounded-2xl p-5 shadow-sm hover:shadow-md hover:bg-flamencalia-red-dark transition-all group"
             >
-              <span className="text-2xl block mb-2 text-neutral-400">
+              <span className="text-2xl block mb-2 text-white/80">
                 <Icon name="plus" className="w-6 h-6" />
               </span>
-              <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
-                Añadir Producto
+              <p className="text-sm font-semibold text-white transition-colors">
+                Subir Producto
               </p>
-              <p className="text-xs text-neutral-400 mt-0.5">
+              <p className="text-xs text-white/70 mt-0.5">
                 Publica un nuevo artículo
               </p>
             </Link>
@@ -332,6 +332,20 @@ export default async function DashboardPage() {
               </p>
               <p className="text-xs text-neutral-400 mt-0.5">
                 Edita precios, stock y más
+              </p>
+            </Link>
+            <Link
+              href={`/sellers/${user.id}`}
+              className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
+            >
+              <span className="text-2xl block mb-2 text-neutral-400">
+                <Icon name="user" className="w-6 h-6" />
+              </span>
+              <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
+                Ver mi Perfil
+              </p>
+              <p className="text-xs text-neutral-400 mt-0.5">
+                Tu tienda pública
               </p>
             </Link>
           </div>

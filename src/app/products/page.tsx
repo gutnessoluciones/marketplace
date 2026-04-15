@@ -22,6 +22,7 @@ interface PageProps {
   searchParams: Promise<{
     page?: string;
     category?: string;
+    subcategory?: string;
     q?: string;
     seller?: string;
     color?: string;
@@ -106,6 +107,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   const {
     page: pageStr,
     category,
+    subcategory,
     q,
     seller,
     color,
@@ -136,6 +138,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       size,
       condition,
       brand,
+      subcategory,
       priceMin: priceMin ? Math.round(Number(priceMin) * 100) : undefined,
       priceMax: priceMax ? Math.round(Number(priceMax) * 100) : undefined,
       sort,

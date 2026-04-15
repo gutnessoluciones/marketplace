@@ -26,11 +26,11 @@ export default function AuthLayout({
 
         <div className="relative text-center px-12">
           <Image
-            src="/cliente/flamencalia.jpg"
+            src="/cliente/Abanico.svg"
             alt="Flamencalia"
-            width={80}
-            height={80}
-            className="rounded-2xl mx-auto mb-6"
+            width={64}
+            height={64}
+            className="mx-auto mb-4"
           />
           <h2 className="font-serif text-3xl font-bold text-white mb-3">
             FLAMENCALIA
@@ -52,11 +52,11 @@ export default function AuthLayout({
             className="lg:hidden flex items-center justify-center gap-2.5 mb-8"
           >
             <Image
-              src="/cliente/flamencalia.jpg"
+              src="/cliente/Abanico.svg"
               alt="Flamencalia"
-              width={40}
-              height={40}
-              className="rounded-lg"
+              width={32}
+              height={32}
+              className="w-8 h-8"
             />
             <div className="text-center">
               <span className="font-serif font-bold text-xl tracking-wide text-flamencalia-black">

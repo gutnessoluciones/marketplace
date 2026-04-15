@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { OffersService } from "@/services/offers.service";
@@ -58,6 +59,53 @@ export default async function OffersPage({ searchParams }: PageProps) {
     ? await service.listBySeller(user.id, status ?? undefined, currentPage)
     : await service.listByBuyer(user.id, currentPage);
 
+  // Fetch products with recent price drops
+  const { data: priceDrops } = await supabase
+    .from("price_history")
+    .select("product_id, old_price, new_price, changed_at")
+    .order("changed_at", { ascending: false })
+    .limit(20);
+
+  // Filter to only price drops (new_price < old_price) and deduplicate by product
+  const droppedProductIds = new Map<
+    string,
+    { old_price: number; new_price: number }
+  >();
+  for (const ph of priceDrops ?? []) {
+    if (ph.new_price < ph.old_price && !droppedProductIds.has(ph.product_id)) {
+      droppedProductIds.set(ph.product_id, {
+        old_price: ph.old_price,
+        new_price: ph.new_price,
+      });
+    }
+  }
+
+  let priceDropProducts: {
+    id: string;
+    title: string;
+    images: string[];
+    price: number;
+    seller: {
+      id: string;
+      display_name: string | null;
+      avatar_url: string | null;
+    } | null;
+  }[] = [];
+  if (droppedProductIds.size > 0) {
+    const { data: products } = await supabase
+      .from("products")
+      .select(
+        "id, title, images, price, seller:profiles!seller_id(id, display_name, avatar_url)",
+      )
+      .in("id", Array.from(droppedProductIds.keys()))
+      .eq("status", "active")
+      .limit(8);
+    priceDropProducts = (products ?? []).map((p) => ({
+      ...p,
+      seller: Array.isArray(p.seller) ? p.seller[0] : p.seller,
+    }));
+  }
+
   const tabs = [
     { value: "", label: "Todas" },
     { value: "pending", label: "Pendientes" },
@@ -101,6 +149,72 @@ export default async function OffersPage({ searchParams }: PageProps) {
               {tab.label}
             </Link>
           ))}
+        </div>
+      )}
+
+      {/* Price-Dropped Products Section */}
+      {priceDropProducts.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Icon name="tag" className="w-4 h-4 text-flamencalia-red" />
+            <h2 className="text-sm font-semibold text-neutral-700">
+              Productos rebajados
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {priceDropProducts.map((product) => {
+              const drop = droppedProductIds.get(product.id);
+              const discount = drop
+                ? Math.round((1 - drop.new_price / drop.old_price) * 100)
+                : 0;
+              return (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.id}`}
+                  className="bg-white rounded-xl border border-neutral-100 overflow-hidden hover:shadow-md transition-shadow group"
+                >
+                  <div className="relative aspect-square bg-neutral-50">
+                    {product.images?.[0] ? (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 640px) 50vw, 25vw"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Icon
+                          name="dress"
+                          className="w-8 h-8 text-neutral-200"
+                        />
+                      </div>
+                    )}
+                    {discount > 0 && (
+                      <span className="absolute top-2 left-2 bg-flamencalia-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                        -{discount}%
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-3">
+                    <p className="text-xs font-medium text-neutral-700 line-clamp-1">
+                      {product.title}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-sm font-bold text-flamencalia-red">
+                        {formatPrice(product.price)}
+                      </span>
+                      {drop && (
+                        <span className="text-[10px] text-neutral-400 line-through">
+                          {formatPrice(drop.old_price)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
 

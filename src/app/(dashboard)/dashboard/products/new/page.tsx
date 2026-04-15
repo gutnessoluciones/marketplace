@@ -16,6 +16,15 @@ const CATEGORIES = [
   { value: "zapatos", label: "Zapatos" },
 ];
 
+const SUBCATEGORIES = [
+  { value: "mantones", label: "Mantones" },
+  { value: "flores", label: "Flores" },
+  { value: "pendientes", label: "Pendientes" },
+  { value: "broches-mantones", label: "Broches para mantones" },
+  { value: "sombreros", label: "Sombreros" },
+  { value: "panuelos", label: "Pañuelos" },
+];
+
 const COLORS = [
   { value: "blanco", label: "Blanco" },
   { value: "negro", label: "Negro" },
@@ -65,6 +74,7 @@ const CONDITIONS = [
 export default function NewProductPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const router = useRouter();
 
@@ -83,6 +93,7 @@ export default function NewProductPage() {
         description: formData.get("description"),
         price: Math.round(Number(formData.get("price")) * 100),
         category: formData.get("category") as string,
+        subcategory: formData.get("subcategory") || null,
         color: formData.get("color") || null,
         size: formData.get("size") || null,
         condition: formData.get("condition") || null,
@@ -198,6 +209,7 @@ export default function NewProductPage() {
               id="category"
               name="category"
               required
+              onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
             >
               <option value="">Selecciona categoría *</option>
@@ -208,6 +220,29 @@ export default function NewProductPage() {
               ))}
             </select>
           </div>
+
+          {selectedCategory === "complementos-flamencos" && (
+            <div>
+              <label
+                htmlFor="subcategory"
+                className="block text-sm font-medium text-neutral-700 mb-1.5"
+              >
+                Subcategoría
+              </label>
+              <select
+                id="subcategory"
+                name="subcategory"
+                className="w-full border border-neutral-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all bg-neutral-50/50"
+              >
+                <option value="">Selecciona subcategoría</option>
+                {SUBCATEGORIES.map((sub) => (
+                  <option key={sub.value} value={sub.value}>
+                    {sub.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         {/* Attributes */}

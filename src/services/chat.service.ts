@@ -66,9 +66,12 @@ export class ChatService {
   async getMessages(conversationId: string, page = 1, limit = 50) {
     const { data, error, count } = await this.supabase
       .from("messages")
-      .select("*, sender:profiles!sender_id(id, display_name, avatar_url)", {
-        count: "exact",
-      })
+      .select(
+        "*, sender:profiles!sender_id(id, display_name, avatar_url, role)",
+        {
+          count: "exact",
+        },
+      )
       .eq("conversation_id", conversationId)
       .order("created_at", { ascending: true })
       .range((page - 1) * limit, page * limit - 1);
@@ -99,7 +102,9 @@ export class ChatService {
         sender_id: senderId,
         content: trimmed,
       })
-      .select("*, sender:profiles!sender_id(id, display_name, avatar_url)")
+      .select(
+        "*, sender:profiles!sender_id(id, display_name, avatar_url, role)",
+      )
       .single();
 
     if (error) throw new AppError(error.message, 500);

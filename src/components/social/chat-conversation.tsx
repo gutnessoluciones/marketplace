@@ -15,6 +15,7 @@ interface Message {
     id: string;
     display_name: string | null;
     avatar_url: string | null;
+    role?: string | null;
   };
 }
 
@@ -281,13 +282,19 @@ export function ChatConversation({
               {!isOwn && (
                 <div className="w-7 shrink-0">
                   {showAvatar ? (
-                    <div className="w-7 h-7 rounded-full bg-linear-to-br from-flamencalia-albero-pale/40 to-flamencalia-albero-pale/20 overflow-hidden mt-1">
+                    <div
+                      className={`w-7 h-7 rounded-full overflow-hidden mt-1 ${sender?.role === "admin" ? "ring-2 ring-flamencalia-red" : "bg-linear-to-br from-flamencalia-albero-pale/40 to-flamencalia-albero-pale/20"}`}
+                    >
                       {sender?.avatar_url ? (
                         <img
                           src={sender.avatar_url}
                           alt=""
                           className="w-full h-full object-cover"
                         />
+                      ) : sender?.role === "admin" ? (
+                        <div className="w-full h-full flex items-center justify-center bg-flamencalia-red text-[10px] font-bold text-white">
+                          ★
+                        </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-flamencalia-albero">
                           {(sender?.display_name || "?")
@@ -301,6 +308,11 @@ export function ChatConversation({
               )}
 
               <div className="max-w-xs lg:max-w-sm">
+                {showAvatar && sender?.role === "admin" && (
+                  <p className="text-[10px] font-semibold text-flamencalia-red mb-0.5 px-1">
+                    Administrador
+                  </p>
+                )}
                 <div
                   className={`px-4 py-2.5 text-sm leading-relaxed shadow-sm ${
                     isOwn

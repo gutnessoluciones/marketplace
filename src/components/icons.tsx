@@ -198,6 +198,9 @@ const paths: Record<string, ReactNode> = {
   dollar: (
     <path d="M12 2v20m5-17H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7" />
   ),
+  euro: (
+    <path d="M4 10h12M4 14h12M17.5 4.5C16.6 3.5 15.4 3 14 3c-3.3 0-6 3.1-6 7s2.7 7 6 7c1.4 0 2.6-.5 3.5-1.5" />
+  ),
   plus: <path d="M12 5v14m-7-7h14" />,
   clipboard: (
     <>
