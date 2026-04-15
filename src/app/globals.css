@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fff9f0;
+  --background: #ffffff;
   --foreground: #1a1a1a;
   --flamencalia-red: #c8102e;
   --flamencalia-red-dark: #9b0d23;
@@ -30,10 +30,6 @@
   --color-flamencalia-farolillo: var(--flamencalia-farolillo);
   --font-sans: var(--font-dm-sans);
   --font-serif: var(--font-playfair);
-}
-
-html {
-  overflow-x: hidden;
 }
 
 body {
