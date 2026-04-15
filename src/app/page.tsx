@@ -397,7 +397,7 @@ export default async function HomePage() {
                       ? "/products"
                       : `/products?category=${cat.slug}`
                   }
-                  className="group relative overflow-hidden rounded-2xl active:scale-[0.97] transition-transform"
+                  className="group relative overflow-hidden rounded-2xl active:scale-95 active:opacity-80 transition-all duration-200"
                 >
                   <div className="aspect-4/5 relative">
                     <Image
@@ -686,7 +686,7 @@ function ProductHomeCard({
   return (
     <Link
       href={`/products/${product.id}`}
-      className="bg-flamencalia-white p-4 hover:bg-flamencalia-albero-pale/30 transition-colors group block"
+      className="bg-flamencalia-white p-4 hover:bg-flamencalia-albero-pale/30 transition-all duration-200 group block active:scale-95 active:opacity-80"
     >
       <div
         className={`${size === "sm" ? "h-32" : "h-44"} bg-flamencalia-cream rounded-xl flex items-center justify-center overflow-hidden mb-3 relative`}

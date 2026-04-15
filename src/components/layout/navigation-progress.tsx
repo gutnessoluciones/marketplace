@@ -47,7 +47,13 @@ export function NavigationProgress() {
 
   useEffect(() => {
     document.addEventListener("click", handleClick, true);
-    return () => document.removeEventListener("click", handleClick, true);
+    // Empty touchstart listener enables :active CSS on iOS Safari
+    const noop = () => {};
+    document.addEventListener("touchstart", noop, { passive: true });
+    return () => {
+      document.removeEventListener("click", handleClick, true);
+      document.removeEventListener("touchstart", noop);
+    };
   }, [handleClick]);
 
   // Animate progress while loading

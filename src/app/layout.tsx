@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import { CookieBanner } from "@/components/layout/cookie-banner";
@@ -19,6 +19,11 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "Flamencalia — Larga vida a tu Flamenca",
