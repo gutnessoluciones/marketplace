@@ -243,7 +243,7 @@ export async function GET() {
         },
       ],
       dashboardUrl: "https://admin.microsoft.com",
-      note: "SMTP: smtp.office365.com — Contador interno.",
+      note: "Microsoft Graph API — Contador interno.",
     };
 
     const upstashStats = {
