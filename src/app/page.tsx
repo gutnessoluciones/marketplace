@@ -186,7 +186,7 @@ export default async function HomePage() {
         {/* Top decorative toldo */}
         <div className="h-1.5 toldo-rayas" />
 
-        <nav className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 h-20 flex items-center justify-between gap-4">
+        <nav className="max-w-360 mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 h-20 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             {/* Mobile hamburger — left of logo */}
             <PublicMobileNav />
@@ -244,7 +244,7 @@ export default async function HomePage() {
 
         {/* Categories bar — hidden on mobile (hamburger menu covers it) */}
         <div className="hidden sm:block border-t border-flamencalia-albero-pale/50">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 flex items-center gap-1 py-2">
+          <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 flex items-center gap-1 py-2">
             <Link
               href="/products"
               className="text-flamencalia-white bg-flamencalia-black text-xs font-serif font-semibold uppercase tracking-wide px-3.5 py-1.5 rounded-full hover:bg-flamencalia-black/80 transition-colors whitespace-nowrap"
@@ -261,7 +261,7 @@ export default async function HomePage() {
                     {cat.label}
                   </Link>
                   <div className="absolute top-full left-0 pt-1 hidden group-hover:block z-50">
-                    <div className="bg-white rounded-xl shadow-lg border border-neutral-100 py-2 min-w-[180px]">
+                    <div className="bg-white rounded-xl shadow-lg border border-neutral-100 py-2 min-w-45">
                       {cat.subcategories.map((sub) => (
                         <Link
                           key={sub.slug}
@@ -327,7 +327,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-black/50" />
 
         <div className="relative flex items-center justify-center h-full">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 text-center">
+          <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 text-center">
             {/* Marca animada — F gira como flamenca */}
             <div className="flex justify-center items-center mb-4 sm:mb-6 animate-fade-in-up">
               <div className="w-44 sm:w-96 lg:w-150">
@@ -345,7 +345,7 @@ export default async function HomePage() {
                 alt="Larga vida a tu Flamenca"
                 width={600}
                 height={80}
-                className="object-contain w-full max-w-[200px] sm:max-w-md h-auto drop-shadow-lg"
+                className="object-contain w-full max-w-50 sm:max-w-md h-auto drop-shadow-lg"
                 unoptimized
                 priority
               />
@@ -377,7 +377,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══ MAIN CONTENT ═══ */}
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 pt-6 relative z-10 pb-12">
+      <main className="max-w-360 mx-auto px-4 sm:px-6 lg:px-10 xl:px-16 pt-6 relative z-10 pb-12">
         {/* ── Categorías con imágenes grandes ── */}
         <ScrollReveal>
           <section className="mb-14">

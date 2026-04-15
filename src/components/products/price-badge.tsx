@@ -52,7 +52,7 @@ export function PriceBadge({ currentPrice, history }: PriceBadgeProps) {
             className="fixed inset-0 z-40"
             onClick={() => setShowHistory(false)}
           />
-          <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-neutral-200 rounded-xl shadow-lg p-3 min-w-[200px]">
+          <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-neutral-200 rounded-xl shadow-lg p-3 min-w-50">
             <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">
               Historial de precio
             </p>

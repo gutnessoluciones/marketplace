@@ -72,7 +72,7 @@ export function NavigationProgress() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-[9999] h-[3px] pointer-events-none"
+      className="fixed top-0 left-0 right-0 z-9999 h-0.75 pointer-events-none"
       role="progressbar"
       aria-valuenow={Math.round(progress)}
     >

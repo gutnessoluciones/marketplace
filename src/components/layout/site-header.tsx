@@ -114,7 +114,7 @@ export function SiteHeader({ activeCategory, defaultSearch }: SiteHeaderProps) {
                   {cat.label}
                 </Link>
                 <div className="absolute top-full left-0 pt-1 hidden group-hover:block z-50">
-                  <div className="bg-white rounded-xl shadow-lg border border-neutral-100 py-2 min-w-[180px]">
+                  <div className="bg-white rounded-xl shadow-lg border border-neutral-100 py-2 min-w-45">
                     {cat.subcategories.map((sub) => (
                       <Link
                         key={sub.slug}
