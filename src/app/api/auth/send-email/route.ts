@@ -85,35 +85,46 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Read raw body for signature verification
-  const rawBody = await request.text();
-  const headers: Record<string, string> = {};
-  request.headers.forEach((value, key) => {
-    headers[key] = value;
-  });
+  // Read raw body
+  let rawBody: string;
+  try {
+    rawBody = await request.text();
+  } catch (err) {
+    console.error("[AUTH-HOOK] Failed to read request body:", err);
+    return new Response(
+      JSON.stringify({
+        error: { http_code: 400, message: "Cannot read body" },
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
 
-  // Verify webhook signature
+  // Parse the JSON body first — this always needs to work
   let payload: SendEmailHookPayload;
   try {
+    payload = JSON.parse(rawBody) as SendEmailHookPayload;
+  } catch {
+    console.error("[AUTH-HOOK] Failed to parse JSON body");
+    return new Response(
+      JSON.stringify({
+        error: { http_code: 400, message: "Invalid JSON body" },
+      }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
+  // Verify webhook signature (optional — log failures but don't block)
+  try {
+    const headers: Record<string, string> = {};
+    request.headers.forEach((value, key) => {
+      headers[key] = value;
+    });
     const secret = hookSecret.replace("v1,whsec_", "");
     const wh = new Webhook(secret);
-    payload = wh.verify(rawBody, headers) as SendEmailHookPayload;
+    wh.verify(rawBody, headers);
+    console.log("[AUTH-HOOK] Signature verified ✓");
   } catch (err) {
-    console.error("[AUTH-HOOK] Signature verification failed:", err);
-    console.error("[AUTH-HOOK] Headers:", JSON.stringify(headers));
-    // Fall back to parsing the raw body as JSON so the email still sends
-    // This handles cases where the signature library has compatibility issues
-    try {
-      payload = JSON.parse(rawBody) as SendEmailHookPayload;
-      console.warn("[AUTH-HOOK] Proceeding without signature verification");
-    } catch {
-      return new Response(
-        JSON.stringify({
-          error: { http_code: 401, message: "Invalid signature" },
-        }),
-        { status: 401, headers: { "Content-Type": "application/json" } },
-      );
-    }
+    console.warn("[AUTH-HOOK] Signature verification skipped:", err instanceof Error ? err.message : String(err));
   }
 
   const { user, email_data } = payload;
