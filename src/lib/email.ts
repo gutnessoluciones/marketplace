@@ -1,10 +1,10 @@
 /**
- * Email barrel — re-exports from the Graph API email module.
+ * Email barrel — re-exports from the Brevo email module.
  *
  * This file exists for backward compatibility so existing imports
  * from "@/lib/email" continue to work without changes.
  *
- * Implementation: src/lib/email/index.ts (Microsoft Graph API)
+ * Implementation: src/lib/email/index.ts (Brevo transactional API)
  */
 
 export {

@@ -1,14 +1,14 @@
 /**
- * Flamencalia Email Service — Microsoft Graph API
+ * Flamencalia Email Service — Brevo (formerly Sendinblue)
  *
  * Central email module. All email sending in the application goes through here.
- * Uses Microsoft Graph API with OAuth 2.0 client credentials flow.
+ * Uses Brevo transactional email API.
  *
  * Usage:
  *   import { sendEmail, sendOfferReceivedEmail } from "@/lib/email";
  */
 
-import { sendGraphMail, type SendGraphMailOptions } from "./graph-send";
+import { sendBrevoMail, type SendBrevoMailOptions } from "./brevo-send";
 import { isEmailConfigured } from "./config";
 import {
   welcomeTemplate,
@@ -38,20 +38,20 @@ export interface SendEmailOptions {
 }
 
 /**
- * Send an email via Microsoft Graph API.
+ * Send an email via Brevo transactional API.
  * Fire-and-forget safe: returns boolean, never throws.
  * Logs errors server-side for debugging.
  */
 export async function sendEmail(options: SendEmailOptions): Promise<boolean> {
   if (!isEmailConfigured()) {
     console.log(
-      `[EMAIL] Graph API not configured — would send to ${Array.isArray(options.to) ? options.to.join(", ") : options.to}: "${options.subject}"`,
+      `[EMAIL] Brevo not configured — would send to ${Array.isArray(options.to) ? options.to.join(", ") : options.to}: "${options.subject}"`,
     );
     return true; // Don't block flows when email is not configured
   }
 
   try {
-    const graphOptions: SendGraphMailOptions = {
+    const brevoOptions: SendBrevoMailOptions = {
       to: options.to,
       subject: options.subject,
       html: options.html,
@@ -59,11 +59,10 @@ export async function sendEmail(options: SendEmailOptions): Promise<boolean> {
       replyTo: options.replyTo,
       cc: options.cc,
       bcc: options.bcc,
-      category: options.category,
-      saveToSentItems: true,
+      tags: options.category ? [options.category] : undefined,
     };
 
-    await sendGraphMail(graphOptions);
+    await sendBrevoMail(brevoOptions);
     return true;
   } catch (error) {
     console.error("[EMAIL] Failed to send:", error);

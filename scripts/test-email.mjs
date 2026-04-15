@@ -1,10 +1,7 @@
 /**
- * Quick email test — sends a test email via Microsoft Graph API.
- * Usage: node scripts/test-email.mjs
+ * Quick email test — sends a test email via Brevo transactional API.
+ * Usage: node scripts/test-email.mjs [email@example.com]
  */
-import { ClientSecretCredential } from "@azure/identity";
-import { Client } from "@microsoft/microsoft-graph-client";
-import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials/index.js";
 import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -12,83 +9,64 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const envFile = readFileSync(resolve(__dirname, "../.env.local"), "utf-8");
 for (const line of envFile.split("\n")) {
-  const match = line.match(/^([^#=]+)=(.*)$/);
+  const match = line.match(/^([^#=]+)=["']?([^"'\n]*)["']?$/);
   if (match) process.env[match[1].trim()] = match[2].trim();
 }
 
-const tenantId = process.env.MS_TENANT_ID;
-const clientId = process.env.MS_CLIENT_ID;
-const clientSecret = process.env.MS_CLIENT_SECRET;
-const sender = process.env.MS_SENDER || "noreply@flamencalia.com";
+const apiKey = process.env.BREVO_API_KEY;
+const senderEmail = process.env.BREVO_SENDER_EMAIL || "noreply@flamencalia.com";
+const senderName = process.env.BREVO_SENDER_NAME || "Flamencalia";
 
-if (!tenantId || !clientId || !clientSecret) {
-  console.error(
-    "❌ Missing MS_TENANT_ID, MS_CLIENT_ID, or MS_CLIENT_SECRET in .env.local",
-  );
+if (!apiKey || apiKey === "TU_API_KEY_AQUI") {
+  console.error("❌ Missing or placeholder BREVO_API_KEY in .env.local");
+  console.error("   Get your key at: https://app.brevo.com/settings/keys/api");
   process.exit(1);
 }
 
-// Target: send to specified email or default test
 const TO = process.argv[2] || "vendedor@marketplace.com";
 
-console.log("📧 Testing Graph API email...");
-console.log(`   Tenant: ${tenantId}`);
-console.log(`   Client: ${clientId}`);
-console.log(`   Sender: ${sender}`);
+console.log("📧 Testing Brevo transactional email...");
+console.log(`   Sender: ${senderName} <${senderEmail}>`);
 console.log(`   To:     ${TO}`);
 
 try {
-  const credential = new ClientSecretCredential(
-    tenantId,
-    clientId,
-    clientSecret,
-  );
-  const authProvider = new TokenCredentialAuthenticationProvider(credential, {
-    scopes: ["https://graph.microsoft.com/.default"],
-  });
-  const client = Client.initWithMiddleware({ authProvider });
-
-  console.log("\n🔑 Acquiring token...");
-
-  await client.api(`/users/${sender}/sendMail`).post({
-    message: {
-      subject: "✅ Test Flamencalia — Email funciona!",
-      body: {
-        contentType: "HTML",
-        content: `
-            <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
-              <h2 style="color: #c8102e;">🎉 ¡Email funcionando!</h2>
-              <p>Este es un email de prueba enviado desde <strong>flamencalia.com</strong> usando Microsoft Graph API.</p>
-              <p>Fecha: ${new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}</p>
-              <hr style="border: 1px solid #f5e6c0;" />
-              <p style="font-size: 12px; color: #999;">Flamencalia — Larga vida a tu Flamenca</p>
-            </div>
-          `,
-      },
-      toRecipients: [{ emailAddress: { address: TO } }],
-      from: { emailAddress: { address: sender } },
-      replyTo: [{ emailAddress: { address: "info@flamencalia.com" } }],
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "api-key": apiKey,
+      "content-type": "application/json",
     },
-    saveToSentItems: true,
+    body: JSON.stringify({
+      sender: { email: senderEmail, name: senderName },
+      to: [{ email: TO }],
+      replyTo: { email: "info@flamencalia.com" },
+      subject: "✅ Test Flamencalia — Email funciona!",
+      htmlContent: `
+        <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #c8102e;">🎉 ¡Email funcionando!</h2>
+          <p>Este es un email de prueba enviado desde <strong>flamencalia.com</strong> usando Brevo.</p>
+          <p>Fecha: ${new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}</p>
+          <hr style="border: 1px solid #f5e6c0;" />
+          <p style="font-size: 12px; color: #999;">Flamencalia — Larga vida a tu Flamenca</p>
+        </div>
+      `,
+      tags: ["test"],
+    }),
   });
 
+  if (!response.ok) {
+    const errorBody = await response.text();
+    console.error(`\n❌ Brevo API error (HTTP ${response.status}):`);
+    console.error(`   ${errorBody}`);
+    process.exit(1);
+  }
+
+  const result = await response.json();
   console.log(`\n✅ Email sent successfully to ${TO}!`);
+  console.log(`   Message ID: ${result.messageId || "n/a"}`);
   console.log("   Check the inbox (and spam folder) for the test email.");
 } catch (error) {
   console.error("\n❌ Error sending email:");
-  if (error.statusCode) console.error(`   HTTP ${error.statusCode}`);
-  if (error.code) console.error(`   Code: ${error.code}`);
-  if (error.body) {
-    try {
-      const body =
-        typeof error.body === "string" ? JSON.parse(error.body) : error.body;
-      console.error(
-        `   Message: ${body?.error?.message || JSON.stringify(body)}`,
-      );
-    } catch {
-      console.error(`   Body: ${error.body}`);
-    }
-  } else {
-    console.error(`   ${error.message}`);
-  }
+  console.error(`   ${error.message}`);
 }

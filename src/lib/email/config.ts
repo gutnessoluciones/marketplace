@@ -1,13 +1,12 @@
 /**
  * Email configuration — validates and exports environment variables
- * for Microsoft Graph API email sending.
+ * for Brevo (formerly Sendinblue) transactional email API.
  */
 
 export interface EmailConfig {
-  tenantId: string;
-  clientId: string;
-  clientSecret: string;
-  sender: string;
+  apiKey: string;
+  senderEmail: string;
+  senderName: string;
   replyTo: string;
   baseUrl: string;
 }
@@ -21,29 +20,20 @@ let cachedConfig: EmailConfig | null = null;
 export function getEmailConfig(): EmailConfig {
   if (cachedConfig) return cachedConfig;
 
-  const required: Record<string, string | undefined> = {
-    MS_TENANT_ID: process.env.MS_TENANT_ID,
-    MS_CLIENT_ID: process.env.MS_CLIENT_ID,
-    MS_CLIENT_SECRET: process.env.MS_CLIENT_SECRET,
-  };
+  const apiKey = process.env.BREVO_API_KEY;
 
-  const missing = Object.entries(required)
-    .filter(([, v]) => !v)
-    .map(([k]) => k);
-
-  if (missing.length > 0) {
+  if (!apiKey) {
     throw new Error(
-      `[EMAIL] Missing required environment variables: ${missing.join(", ")}. ` +
-        "Ensure Microsoft Entra app registration is configured.",
+      "[EMAIL] Missing required environment variable: BREVO_API_KEY. " +
+        "Get your API key from https://app.brevo.com/settings/keys/api",
     );
   }
 
   cachedConfig = {
-    tenantId: required.MS_TENANT_ID!,
-    clientId: required.MS_CLIENT_ID!,
-    clientSecret: required.MS_CLIENT_SECRET!,
-    sender: process.env.MS_SENDER || "noreply@flamencalia.com",
-    replyTo: process.env.MS_REPLY_TO || "info@flamencalia.com",
+    apiKey,
+    senderEmail: process.env.BREVO_SENDER_EMAIL || "noreply@flamencalia.com",
+    senderName: process.env.BREVO_SENDER_NAME || "Flamencalia",
+    replyTo: process.env.BREVO_REPLY_TO || "info@flamencalia.com",
     baseUrl:
       process.env.NEXT_PUBLIC_SITE_URL ||
       process.env.NEXT_PUBLIC_BASE_URL ||
@@ -58,9 +48,5 @@ export function getEmailConfig(): EmailConfig {
  * Does not throw — safe for conditional checks.
  */
 export function isEmailConfigured(): boolean {
-  return !!(
-    process.env.MS_TENANT_ID &&
-    process.env.MS_CLIENT_ID &&
-    process.env.MS_CLIENT_SECRET
-  );
+  return !!process.env.BREVO_API_KEY;
 }

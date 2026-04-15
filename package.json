@@ -9,8 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@azure/identity": "^4.13.1",
-    "@microsoft/microsoft-graph-client": "^3.0.7",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
     "@upstash/ratelimit": "^2.0.8",
