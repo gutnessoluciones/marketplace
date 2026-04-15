@@ -124,7 +124,10 @@ export async function POST(request: NextRequest) {
     wh.verify(rawBody, headers);
     console.log("[AUTH-HOOK] Signature verified ✓");
   } catch (err) {
-    console.warn("[AUTH-HOOK] Signature verification skipped:", err instanceof Error ? err.message : String(err));
+    console.warn(
+      "[AUTH-HOOK] Signature verification skipped:",
+      err instanceof Error ? err.message : String(err),
+    );
   }
 
   const { user, email_data } = payload;
