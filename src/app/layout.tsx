@@ -77,7 +77,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <meta name="theme-color" content="#c8102e" />
       </head>
-      <body className="min-h-full flex flex-col bg-white text-foreground">
+      <body className="min-h-full flex flex-col bg-flamencalia-cream text-foreground">
         <Suspense fallback={null}>
           <NavigationProgress />
         </Suspense>

@@ -180,7 +180,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-flamencalia-cream">
       {/* ═══ HEADER ═══ */}
       <header className="bg-flamencalia-white sticky top-0 z-30 shadow-sm">
         {/* Top decorative toldo */}
@@ -370,7 +370,7 @@ export default async function HomePage() {
           >
             <path
               d="M0 100V50C180 10 360 0 540 20s360 40 540 20 180-30 360-20v80H0z"
-              fill="#ffffff"
+              fill="#fff9f0"
             />
           </svg>
         </div>
