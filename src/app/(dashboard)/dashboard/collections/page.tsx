@@ -352,6 +352,15 @@ export default function CollectionsPage() {
 
               {expanded === c.id && (
                 <div className="border-t border-gray-100 p-4 sm:p-5">
+                  <div className="flex justify-end mb-3">
+                    <Link
+                      href="/products"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-flamencalia-red/10 text-flamencalia-red rounded-lg text-xs font-medium hover:bg-flamencalia-red/20 transition-colors"
+                    >
+                      <Icon name="plus" className="w-3.5 h-3.5" />
+                      Añadir productos
+                    </Link>
+                  </div>
                   {loadingItems === c.id ? (
                     <div className="flex justify-center py-8">
                       <div className="w-6 h-6 border-2 border-flamencalia-red border-t-transparent rounded-full animate-spin" />
