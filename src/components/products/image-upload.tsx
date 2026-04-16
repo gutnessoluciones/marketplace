@@ -183,7 +183,8 @@ export function ImageUpload({
 
       {error && <p className="text-xs text-red-500">{error}</p>}
       <p className="text-xs text-neutral-400">
-        JPG, PNG, WebP o GIF. Máximo 5MB por imagen. <strong>Mínimo 2 fotos obligatorias.</strong>
+        JPG, PNG, WebP o GIF. Máximo 5MB por imagen.{" "}
+        <strong>Mínimo 2 fotos obligatorias.</strong>
       </p>
     </div>
   );

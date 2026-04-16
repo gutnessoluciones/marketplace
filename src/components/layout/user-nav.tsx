@@ -115,6 +115,14 @@ export function UserNav({ variant = "dark" }: { variant?: "dark" | "light" }) {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 mt-2 w-48 bg-flamencalia-white rounded-xl shadow-lg border border-flamencalia-albero-pale/50 py-1.5 z-50">
             <Link
+              href={`/sellers/${user?.id}`}
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"
+            >
+              <Icon name="user" className="w-4 h-4 text-flamencalia-albero" />
+              Ver mi perfil
+            </Link>
+            <Link
               href="/dashboard"
               onClick={() => setOpen(false)}
               className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"
