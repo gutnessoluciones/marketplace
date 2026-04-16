@@ -45,10 +45,7 @@ interface SendEmailHookPayload {
 }
 
 function getBaseUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    "https://www.flamencalia.com"
-  );
+  return process.env.NEXT_PUBLIC_BASE_URL || "https://www.flamencalia.com";
 }
 
 function buildConfirmUrl(

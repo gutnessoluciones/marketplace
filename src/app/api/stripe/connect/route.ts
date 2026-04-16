@@ -41,10 +41,12 @@ export async function POST() {
         .eq("id", user.id);
     }
 
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "https://www.flamencalia.com";
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings`,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings?stripe=complete`,
+      refresh_url: `${baseUrl}/dashboard/settings`,
+      return_url: `${baseUrl}/dashboard/settings?stripe=complete`,
       type: "account_onboarding",
     });
 
