@@ -47,11 +47,7 @@ interface SendEmailHookPayload {
 function getBaseUrl(): string {
   return (
     process.env.NEXT_PUBLIC_BASE_URL ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(
-      ".supabase.co",
-      ".vercel.app",
-    ) ||
-    "https://marketplace-three-mu.vercel.app"
+    "https://www.flamencalia.com"
   );
 }
 
