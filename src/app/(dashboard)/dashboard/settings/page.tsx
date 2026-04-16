@@ -83,60 +83,108 @@ export default async function SettingsPage() {
                     <span className="text-lg">📋</span> Guía paso a paso
                   </h3>
                   <p className="text-xs text-neutral-500 mb-3">
-                    Al pulsar el botón, Stripe te redirigirá a su plataforma segura para crear tu cuenta de cobros. Aquí tienes lo que necesitas saber:
+                    Al pulsar el botón, Stripe te redirigirá a su plataforma
+                    segura para crear tu cuenta de cobros. Aquí tienes lo que
+                    necesitas saber:
                   </p>
 
                   <div className="space-y-3">
                     <div className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">1</span>
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">
+                        1
+                      </span>
                       <div>
-                        <p className="text-sm font-semibold text-neutral-700">Tipo de cuenta</p>
-                        <p className="text-xs text-neutral-500">Selecciona <strong>&quot;Particular&quot;</strong> si vendes como persona física, o <strong>&quot;Empresa&quot;</strong> si tienes un negocio registrado.</p>
+                        <p className="text-sm font-semibold text-neutral-700">
+                          Tipo de cuenta
+                        </p>
+                        <p className="text-xs text-neutral-500">
+                          Selecciona <strong>&quot;Particular&quot;</strong> si
+                          vendes como persona física, o{" "}
+                          <strong>&quot;Empresa&quot;</strong> si tienes un
+                          negocio registrado.
+                        </p>
                       </div>
                     </div>
 
                     <div className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">2</span>
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">
+                        2
+                      </span>
                       <div>
-                        <p className="text-sm font-semibold text-neutral-700">Tu número de teléfono</p>
-                        <p className="text-xs text-neutral-500">Stripe te pedirá un <strong>teléfono móvil</strong> para verificar tu identidad con un código SMS.</p>
+                        <p className="text-sm font-semibold text-neutral-700">
+                          Tu número de teléfono
+                        </p>
+                        <p className="text-xs text-neutral-500">
+                          Stripe te pedirá un <strong>teléfono móvil</strong>{" "}
+                          para verificar tu identidad con un código SMS.
+                        </p>
                       </div>
                     </div>
 
                     <div className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">3</span>
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">
+                        3
+                      </span>
                       <div>
-                        <p className="text-sm font-semibold text-neutral-700">Datos personales</p>
-                        <p className="text-xs text-neutral-500">Nombre completo, fecha de nacimiento y dirección. Exactamente como aparecen en tu <strong>DNI/NIE</strong>.</p>
+                        <p className="text-sm font-semibold text-neutral-700">
+                          Datos personales
+                        </p>
+                        <p className="text-xs text-neutral-500">
+                          Nombre completo, fecha de nacimiento y dirección.
+                          Exactamente como aparecen en tu{" "}
+                          <strong>DNI/NIE</strong>.
+                        </p>
                       </div>
                     </div>
 
                     <div className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">4</span>
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">
+                        4
+                      </span>
                       <div>
-                        <p className="text-sm font-semibold text-neutral-700">Datos bancarios (IBAN)</p>
-                        <p className="text-xs text-neutral-500">Tu número de cuenta bancaria <strong>(ESXX XXXX XXXX XXXX XXXX XXXX)</strong> donde recibirás los pagos de tus ventas.</p>
+                        <p className="text-sm font-semibold text-neutral-700">
+                          Datos bancarios (IBAN)
+                        </p>
+                        <p className="text-xs text-neutral-500">
+                          Tu número de cuenta bancaria{" "}
+                          <strong>(ESXX XXXX XXXX XXXX XXXX XXXX)</strong> donde
+                          recibirás los pagos de tus ventas.
+                        </p>
                       </div>
                     </div>
 
                     <div className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">5</span>
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-flamencalia-red text-white text-xs font-bold flex items-center justify-center">
+                        5
+                      </span>
                       <div>
-                        <p className="text-sm font-semibold text-neutral-700">Verificación de identidad</p>
-                        <p className="text-xs text-neutral-500">Es posible que Stripe te pida una <strong>foto de tu DNI/NIE</strong> (anverso y reverso). Ten el documento a mano.</p>
+                        <p className="text-sm font-semibold text-neutral-700">
+                          Verificación de identidad
+                        </p>
+                        <p className="text-xs text-neutral-500">
+                          Es posible que Stripe te pida una{" "}
+                          <strong>foto de tu DNI/NIE</strong> (anverso y
+                          reverso). Ten el documento a mano.
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
                     <p className="text-xs text-blue-700">
-                      <strong>💡 Importante:</strong> Flamencalia retiene un <strong>10% de comisión</strong> por cada venta. El <strong>90% restante</strong> se transfiere directamente a tu cuenta bancaria. Los pagos se procesan de forma segura a través de Stripe.
+                      <strong>💡 Importante:</strong> Flamencalia retiene un{" "}
+                      <strong>10% de comisión</strong> por cada venta. El{" "}
+                      <strong>90% restante</strong> se transfiere directamente a
+                      tu cuenta bancaria. Los pagos se procesan de forma segura
+                      a través de Stripe.
                     </p>
                   </div>
 
                   <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
                     <p className="text-xs text-amber-700">
-                      <strong>⏱️ ¿Cuánto tarda?</strong> El proceso completo lleva unos <strong>5-10 minutos</strong>. Si lo dejas a medias, puedes retomarlo volviendo a pulsar el botón.
+                      <strong>⏱️ ¿Cuánto tarda?</strong> El proceso completo
+                      lleva unos <strong>5-10 minutos</strong>. Si lo dejas a
+                      medias, puedes retomarlo volviendo a pulsar el botón.
                     </p>
                   </div>
                 </div>

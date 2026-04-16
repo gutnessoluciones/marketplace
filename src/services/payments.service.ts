@@ -55,8 +55,8 @@ export class PaymentsService {
         order_id: order.id,
         buyer_id: buyerId,
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/orders/${order.id}?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/products/${order.product_id}?cancelled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.flamencalia.com"}/dashboard/orders/${order.id}?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.flamencalia.com"}/products/${order.product_id}?cancelled=true`,
     });
 
     await this.supabase

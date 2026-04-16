@@ -78,8 +78,8 @@ export async function POST(request: NextRequest) {
         seller_id: user.id,
         boost_type,
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/products/${product_id}?boost=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/products/${product_id}?boost=cancelled`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.flamencalia.com"}/dashboard/products/${product_id}?boost=success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.flamencalia.com"}/dashboard/products/${product_id}?boost=cancelled`,
     });
 
     return apiResponse({ url: session.url });

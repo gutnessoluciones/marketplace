@@ -142,8 +142,8 @@ export async function POST(request: NextRequest) {
         order_ids: orderIds.join(","),
         buyer_id: user.id,
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/orders?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/cart?cancelled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.flamencalia.com"}/dashboard/orders?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.flamencalia.com"}/dashboard/cart?cancelled=true`,
     });
 
     // Store session ID on all orders

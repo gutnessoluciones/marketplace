@@ -113,6 +113,14 @@ function LoginForm() {
               />
             </button>
           </div>
+          <div className="flex justify-end mt-1">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-flamencalia-red hover:text-flamencalia-red-dark transition-colors"
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
         </div>
 
         <button
