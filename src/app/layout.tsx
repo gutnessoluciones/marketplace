@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     url: "https://www.flamencalia.com",
     images: [
       {
-        url: "https://www.flamencalia.com/icons/icon-512.png",
+        url: "https://www.flamencalia.com/cliente/abanico-og.png",
         width: 512,
         height: 512,
         alt: "Flamencalia — Moda Flamenca",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     title: "Flamencalia — Larga vida a tu Flamenca",
     description:
       "Marketplace de moda flamenca. Compra, vende y dale larga vida a tu flamenca.",
-    images: ["https://www.flamencalia.com/icons/icon-512.png"],
+    images: ["https://www.flamencalia.com/cliente/abanico-og.png"],
   },
   manifest: "/manifest.json",
   appleWebApp: {
@@ -83,8 +83,14 @@ export default function RootLayout({
       className={`${dmSans.variable} ${playfair.variable} h-full antialiased`}
     >
       <head>
+        <link
+          rel="icon"
+          href="/cliente/favicon-32.png"
+          type="image/png"
+          sizes="32x32"
+        />
         <link rel="icon" href="/cliente/Abanico.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <link rel="apple-touch-icon" href="/cliente/apple-touch-icon.png" />
         <meta name="theme-color" content="#c8102e" />
       </head>
       <body className="min-h-full flex flex-col bg-flamencalia-cream text-foreground">
