@@ -108,10 +108,8 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
           display_name: displayName.trim(),
           bio: bio.trim() || null,
           phone: phone.trim() || null,
-          ...(isSeller && {
-            shipping_policy: shippingPolicy.trim() || null,
-            return_policy: returnPolicy.trim() || null,
-          }),
+          shipping_policy: shippingPolicy.trim() || null,
+          return_policy: returnPolicy.trim() || null,
         }),
       });
       const data = await res.json();
@@ -129,7 +127,6 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
     }
   };
 
-  const isSeller = profile.role === "seller";
   const initial = displayName?.charAt(0).toUpperCase() ?? "U";
 
   return (
@@ -272,11 +269,7 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
               onChange={(e) => setBio(e.target.value)}
               maxLength={500}
               rows={3}
-              placeholder={
-                isSeller
-                  ? "Cuéntale a tus clientes sobre ti..."
-                  : "Cuéntanos algo sobre ti..."
-              }
+              placeholder="Cuéntale a tus clientes sobre ti..."
               className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all resize-none"
             />
             <p className="text-xs text-neutral-300 mt-1 text-right">
@@ -298,37 +291,33 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
             />
           </div>
 
-          {/* Seller-only fields */}
-          {isSeller && (
-            <>
-              <div>
-                <label className="block text-xs font-medium text-neutral-500 mb-1.5">
-                  Política de envío
-                </label>
-                <textarea
-                  value={shippingPolicy}
-                  onChange={(e) => setShippingPolicy(e.target.value)}
-                  maxLength={1000}
-                  rows={3}
-                  placeholder="Ej: Envío en 2-3 días laborables. Envío gratis para pedidos superiores a 50€..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all resize-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-neutral-500 mb-1.5">
-                  Política de devoluciones
-                </label>
-                <textarea
-                  value={returnPolicy}
-                  onChange={(e) => setReturnPolicy(e.target.value)}
-                  maxLength={1000}
-                  rows={3}
-                  placeholder="Ej: Aceptamos devoluciones en un plazo de 14 días. El artículo debe estar sin usar..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all resize-none"
-                />
-              </div>
-            </>
-          )}
+          {/* Campos de política */}
+          <div>
+            <label className="block text-xs font-medium text-neutral-500 mb-1.5">
+              Política de envío
+            </label>
+            <textarea
+              value={shippingPolicy}
+              onChange={(e) => setShippingPolicy(e.target.value)}
+              maxLength={1000}
+              rows={3}
+              placeholder="Ej: Envío en 2-3 días laborables. Envío gratis para pedidos superiores a 50€..."
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all resize-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-neutral-500 mb-1.5">
+              Política de devoluciones
+            </label>
+            <textarea
+              value={returnPolicy}
+              onChange={(e) => setReturnPolicy(e.target.value)}
+              maxLength={1000}
+              rows={3}
+              placeholder="Ej: Aceptamos devoluciones en un plazo de 14 días. El artículo debe estar sin usar..."
+              className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 text-sm text-flamencalia-black focus:outline-none focus:ring-2 focus:ring-flamencalia-red/20 focus:border-flamencalia-red transition-all resize-none"
+            />
+          </div>
         </div>
 
         {/* Info cards */}
@@ -337,11 +326,9 @@ export function ProfileEditor({ profile, email }: ProfileEditorProps) {
             <p className="text-xs text-neutral-400 mb-1">Rol</p>
             <div className="flex items-center gap-2">
               <span className="text-neutral-400">
-                <Icon name={isSeller ? "store" : "cart"} className="w-5 h-5" />
+                <Icon name="store" className="w-5 h-5" />
               </span>
-              <p className="text-sm font-semibold text-neutral-700">
-                {isSeller ? "Vendedor" : "Comprador"}
-              </p>
+              <p className="text-sm font-semibold text-neutral-700">Miembro</p>
             </div>
           </div>
           <div className="bg-neutral-50 rounded-xl p-4">

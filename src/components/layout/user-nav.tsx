@@ -150,6 +150,17 @@ export function UserNav({ variant = "dark" }: { variant?: "dark" | "light" }) {
               Mis Favoritos
             </Link>
             <Link
+              href="/dashboard/chat"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"
+            >
+              <Icon
+                name="message"
+                className="w-4 h-4 text-flamencalia-albero"
+              />
+              Mensajes
+            </Link>
+            <Link
               href="/dashboard/settings"
               onClick={() => setOpen(false)}
               className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"

@@ -8,7 +8,10 @@ const STATUS_MAP: Record<string, { label: string; color: string }> = {
   pending: { label: "Pendiente", color: "bg-amber-50 text-amber-700" },
   paid: { label: "Pagado", color: "bg-emerald-50 text-emerald-700" },
   shipped: { label: "Enviado", color: "bg-blue-50 text-blue-700" },
-  delivered: { label: "Entregado", color: "bg-flamencalia-albero-pale/30 text-flamencalia-red-dark" },
+  delivered: {
+    label: "Entregado",
+    color: "bg-flamencalia-albero-pale/30 text-flamencalia-red-dark",
+  },
   cancelled: { label: "Cancelado", color: "bg-red-50 text-red-700" },
   refunded: { label: "Reembolsado", color: "bg-neutral-100 text-neutral-600" },
 };
@@ -20,26 +23,17 @@ export default async function OrdersPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  const isSeller = profile?.role === "seller";
-  const column = isSeller ? "seller_id" : "buyer_id";
-
   const { data: orders } = await supabase
     .from("orders")
     .select("*, product:products(title, images)")
-    .eq(column, user.id)
+    .eq("seller_id", user.id)
     .order("created_at", { ascending: false });
 
   return (
     <div className="max-w-4xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-flamencalia-black">
-          {isSeller ? "Pedidos recibidos" : "Mis Compras"}
+          Pedidos recibidos
         </h1>
         <p className="text-sm text-neutral-400 mt-0.5">
           {orders?.length ?? 0} pedidos en total
@@ -89,7 +83,7 @@ export default async function OrdersPage() {
                         <span className="text-xs text-neutral-400">
                           Cant: {order.quantity}
                         </span>
-                        {isSeller && order.platform_fee > 0 && (
+                        {order.platform_fee > 0 && (
                           <>
                             <span className="text-xs text-neutral-300">·</span>
                             <span className="text-xs text-neutral-400">
@@ -118,21 +112,13 @@ export default async function OrdersPage() {
       ) : (
         <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm p-12 text-center">
           <span className="text-5xl block mb-4 text-neutral-300">
-            {isSeller ? (
-              <Icon name="inbox" className="w-12 h-12 mx-auto" />
-            ) : (
-              <Icon name="cart" className="w-12 h-12 mx-auto" />
-            )}
+            <Icon name="inbox" className="w-12 h-12 mx-auto" />
           </span>
           <h3 className="font-semibold text-neutral-700 mb-1">
-            {isSeller
-              ? "Aún no tienes pedidos"
-              : "No has comprado nada todavía"}
+            Aún no tienes pedidos
           </h3>
           <p className="text-sm text-neutral-400">
-            {isSeller
-              ? "Cuando alguien compre tus productos, los pedidos aparecerán aquí."
-              : "Explora productos y haz tu primera compra."}
+            Cuando alguien compre tus productos, los pedidos aparecerán aquí.
           </p>
         </div>
       )}

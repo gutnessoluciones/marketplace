@@ -10,14 +10,9 @@ import { SignOutButton } from "@/components/layout/sign-out-button";
 interface MobileSidebarProps {
   navItems: { href: string; label: string; icon: string }[];
   displayName: string;
-  isSeller: boolean;
 }
 
-export function MobileSidebar({
-  navItems,
-  displayName,
-  isSeller,
-}: MobileSidebarProps) {
+export function MobileSidebar({ navItems, displayName }: MobileSidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -133,9 +128,7 @@ export function MobileSidebar({
                   <p className="text-sm font-medium text-white truncate">
                     {displayName}
                   </p>
-                  <p className="text-xs text-flamencalia-albero/60">
-                    {isSeller ? "Proveedor" : "Cliente"}
-                  </p>
+                  <p className="text-xs text-flamencalia-albero/60">Miembro</p>
                 </div>
               </div>
               <SignOutButton />

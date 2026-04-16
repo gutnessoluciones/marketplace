@@ -14,14 +14,12 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role, stripe_onboarding_complete, display_name")
+    .select("stripe_onboarding_complete, display_name")
     .eq("id", user.id)
     .single();
 
-  const isSeller = profile?.role === "seller";
-
-  // Fetch recent orders
-  const column = isSeller ? "seller_id" : "buyer_id";
+  // Fetch recent orders (both as seller and buyer)
+  const column = "seller_id";
   const { data: recentOrders, count: totalOrders } = (await supabase
     .from("orders")
     .select(
@@ -43,15 +41,12 @@ export default async function DashboardPage() {
     count: number | null;
   };
 
-  // Products count for sellers
-  let productCount = 0;
-  if (isSeller) {
-    const { count } = await supabase
-      .from("products")
-      .select("id", { count: "exact", head: true })
-      .eq("seller_id", user.id);
-    productCount = count ?? 0;
-  }
+  // Products count
+  const { count: productCountRaw } = await supabase
+    .from("products")
+    .select("id", { count: "exact", head: true })
+    .eq("seller_id", user.id);
+  const productCount = productCountRaw ?? 0;
 
   // Revenue for sellers
   let totalRevenue = 0;
@@ -60,7 +55,7 @@ export default async function DashboardPage() {
   let totalFavorites = 0;
   let pendingOffers = 0;
   let monthlyRevenue: { month: string; amount: number }[] = [];
-  if (isSeller) {
+  {
     const { data: paidOrders } = await supabase
       .from("orders")
       .select("total_amount, status, created_at")
@@ -112,14 +107,12 @@ export default async function DashboardPage() {
           ¡Hola, {profile?.display_name}!
         </h1>
         <p className="text-sm text-neutral-400 mt-1">
-          {isSeller
-            ? "Aquí tienes un resumen de tu actividad"
-            : "Aquí puedes ver tus compras y actividad"}
+          Aquí tienes un resumen de tu actividad
         </p>
       </div>
 
       {/* Aviso de onboarding Stripe */}
-      {isSeller && !profile?.stripe_onboarding_complete && (
+      {!profile?.stripe_onboarding_complete && (
         <div className="bg-linear-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-6 flex items-center justify-between">
           <div>
             <p className="text-sm font-semibold text-amber-800">
@@ -144,7 +137,7 @@ export default async function DashboardPage() {
         <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
-              {isSeller ? "Total Pedidos" : "Mis Compras"}
+              Total Pedidos
             </span>
             <span className="w-8 h-8 rounded-lg bg-flamencalia-red/5 flex items-center justify-center text-flamencalia-red">
               <Icon name="receipt" className="w-4 h-4" />
@@ -155,208 +148,177 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        {isSeller && (
-          <>
-            <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
-                  Productos
-                </span>
-                <span className="w-8 h-8 rounded-lg bg-flamencalia-albero-pale/30 flex items-center justify-center text-flamencalia-albero">
-                  <Icon name="package" className="w-4 h-4" />
-                </span>
-              </div>
-              <p className="text-3xl font-bold text-flamencalia-black">
-                {productCount}
-              </p>
-            </div>
-            <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
-                  Ingresos
-                </span>
-                <span className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-400">
-                  <Icon name="euro" className="w-4 h-4" />
-                </span>
-              </div>
-              <p className="text-3xl font-bold text-flamencalia-black">
-                {formatPrice(totalRevenue)}
-              </p>
-            </div>
-          </>
-        )}
-
-        {!isSeller && (
-          <div className="bg-flamencalia-red rounded-2xl p-5 text-white col-span-2 flex items-center justify-between">
-            <div>
-              <p className="text-sm font-semibold opacity-90">
-                ¿Buscas algo nuevo?
-              </p>
-              <p className="text-xs opacity-70 mt-0.5">
-                Explora cientos de productos únicos
-              </p>
-            </div>
-            <Link
-              href="/products"
-              className="bg-white text-flamencalia-red-dark px-5 py-2 rounded-lg text-sm font-bold hover:bg-flamencalia-red/5 transition-colors"
-            >
-              Explorar
-            </Link>
+        <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
+              Productos
+            </span>
+            <span className="w-8 h-8 rounded-lg bg-flamencalia-albero-pale/30 flex items-center justify-center text-flamencalia-albero">
+              <Icon name="package" className="w-4 h-4" />
+            </span>
           </div>
-        )}
+          <p className="text-3xl font-bold text-flamencalia-black">
+            {productCount}
+          </p>
+        </div>
+        <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
+              Ingresos
+            </span>
+            <span className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-400">
+              <Icon name="euro" className="w-4 h-4" />
+            </span>
+          </div>
+          <p className="text-3xl font-bold text-flamencalia-black">
+            {formatPrice(totalRevenue)}
+          </p>
+        </div>
       </div>
 
       {/* Seller Balance */}
-      {isSeller && profile?.stripe_onboarding_complete && (
+      {profile?.stripe_onboarding_complete && (
         <div className="mb-6">
           <SellerBalance />
         </div>
       )}
 
-      {/* Quick Actions for Sellers */}
-      {isSeller && (
-        <>
-          {/* Extra stats row */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
-              <span className="text-xs text-neutral-400">Visitas totales</span>
-              <p className="text-xl font-bold text-neutral-800 mt-1">
-                {totalViews.toLocaleString("es-ES")}
-              </p>
-            </div>
-            <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
-              <span className="text-xs text-neutral-400">Favoritos</span>
-              <p className="text-xl font-bold text-neutral-800 mt-1">
-                {totalFavorites}
-              </p>
-            </div>
-            <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
-              <span className="text-xs text-neutral-400">
-                Ofertas pendientes
-              </span>
-              <p className="text-xl font-bold text-amber-600 mt-1">
-                {pendingOffers}
-              </p>
-            </div>
-            <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
-              <span className="text-xs text-neutral-400">Entregado</span>
-              <p className="text-xl font-bold text-emerald-600 mt-1">
-                {formatPrice(deliveredRevenue)}
-              </p>
-            </div>
+      {/* Quick Actions */}
+      {/* Extra stats row */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
+          <span className="text-xs text-neutral-400">Visitas totales</span>
+          <p className="text-xl font-bold text-neutral-800 mt-1">
+            {totalViews.toLocaleString("es-ES")}
+          </p>
+        </div>
+        <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
+          <span className="text-xs text-neutral-400">Favoritos</span>
+          <p className="text-xl font-bold text-neutral-800 mt-1">
+            {totalFavorites}
+          </p>
+        </div>
+        <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
+          <span className="text-xs text-neutral-400">Ofertas pendientes</span>
+          <p className="text-xl font-bold text-amber-600 mt-1">
+            {pendingOffers}
+          </p>
+        </div>
+        <div className="bg-white border border-neutral-100 rounded-xl p-4 shadow-sm">
+          <span className="text-xs text-neutral-400">Entregado</span>
+          <p className="text-xl font-bold text-emerald-600 mt-1">
+            {formatPrice(deliveredRevenue)}
+          </p>
+        </div>
+      </div>
+
+      {/* Monthly Revenue Chart (simple bar) */}
+      {monthlyRevenue.length > 0 && (
+        <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm mb-6">
+          <h3 className="text-sm font-semibold text-neutral-700 mb-4">
+            Ingresos mensuales
+          </h3>
+          <div className="flex items-end gap-2 h-32">
+            {monthlyRevenue.map((m) => {
+              const maxAmount = Math.max(
+                ...monthlyRevenue.map((r) => r.amount),
+                1,
+              );
+              const height = Math.max((m.amount / maxAmount) * 100, 4);
+              const [year, month] = m.month.split("-");
+              const label = new Date(
+                Number(year),
+                Number(month) - 1,
+              ).toLocaleDateString("es-ES", { month: "short" });
+              return (
+                <div
+                  key={m.month}
+                  className="flex-1 flex flex-col items-center gap-1"
+                >
+                  <span className="text-[10px] text-neutral-400 font-medium">
+                    {formatPrice(m.amount)}
+                  </span>
+                  <div
+                    className="w-full bg-flamencalia-albero/80 rounded-t-md"
+                    style={{ height: `${height}%` }}
+                  />
+                  <span className="text-[10px] text-neutral-500 capitalize">
+                    {label}
+                  </span>
+                </div>
+              );
+            })}
           </div>
-
-          {/* Monthly Revenue Chart (simple bar) */}
-          {monthlyRevenue.length > 0 && (
-            <div className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm mb-6">
-              <h3 className="text-sm font-semibold text-neutral-700 mb-4">
-                Ingresos mensuales
-              </h3>
-              <div className="flex items-end gap-2 h-32">
-                {monthlyRevenue.map((m) => {
-                  const maxAmount = Math.max(
-                    ...monthlyRevenue.map((r) => r.amount),
-                    1,
-                  );
-                  const height = Math.max((m.amount / maxAmount) * 100, 4);
-                  const [year, month] = m.month.split("-");
-                  const label = new Date(
-                    Number(year),
-                    Number(month) - 1,
-                  ).toLocaleDateString("es-ES", { month: "short" });
-                  return (
-                    <div
-                      key={m.month}
-                      className="flex-1 flex flex-col items-center gap-1"
-                    >
-                      <span className="text-[10px] text-neutral-400 font-medium">
-                        {formatPrice(m.amount)}
-                      </span>
-                      <div
-                        className="w-full bg-flamencalia-albero/80 rounded-t-md"
-                        style={{ height: `${height}%` }}
-                      />
-                      <span className="text-[10px] text-neutral-500 capitalize">
-                        {label}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Conversion metric */}
-          {totalViews > 0 && (totalOrders ?? 0) > 0 && (
-            <div className="bg-linear-to-r from-flamencalia-cream to-flamencalia-albero-pale/20 border border-flamencalia-albero-pale/30 rounded-2xl p-5 mb-6 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
-                  Tasa de conversión
-                </p>
-                <p className="text-2xl font-bold text-flamencalia-black mt-1">
-                  {(((totalOrders ?? 0) / totalViews) * 100).toFixed(2)}%
-                </p>
-              </div>
-              <div className="text-right text-xs text-neutral-400">
-                <p>
-                  {totalViews} visitas → {totalOrders} pedidos
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
-            <Link
-              href="/dashboard/products/new"
-              className="bg-flamencalia-red border border-flamencalia-red rounded-2xl p-5 shadow-sm hover:shadow-md hover:bg-flamencalia-red-dark transition-all group"
-            >
-              <span className="text-2xl block mb-2 text-white/80">
-                <Icon name="plus" className="w-6 h-6" />
-              </span>
-              <p className="text-sm font-semibold text-white transition-colors">
-                Subir Producto
-              </p>
-              <p className="text-xs text-white/70 mt-0.5">
-                Publica un nuevo artículo
-              </p>
-            </Link>
-            <Link
-              href="/dashboard/products"
-              className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
-            >
-              <span className="text-2xl block mb-2 text-neutral-400">
-                <Icon name="clipboard" className="w-6 h-6" />
-              </span>
-              <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
-                Gestionar Productos
-              </p>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Edita precios, stock y más
-              </p>
-            </Link>
-            <Link
-              href={`/sellers/${user.id}`}
-              className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
-            >
-              <span className="text-2xl block mb-2 text-neutral-400">
-                <Icon name="user" className="w-6 h-6" />
-              </span>
-              <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
-                Ver mi Perfil
-              </p>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Tu tienda pública
-              </p>
-            </Link>
-          </div>
-        </>
+        </div>
       )}
+
+      {/* Conversion metric */}
+      {totalViews > 0 && (totalOrders ?? 0) > 0 && (
+        <div className="bg-linear-to-r from-flamencalia-cream to-flamencalia-albero-pale/20 border border-flamencalia-albero-pale/30 rounded-2xl p-5 mb-6 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
+              Tasa de conversión
+            </p>
+            <p className="text-2xl font-bold text-flamencalia-black mt-1">
+              {(((totalOrders ?? 0) / totalViews) * 100).toFixed(2)}%
+            </p>
+          </div>
+          <div className="text-right text-xs text-neutral-400">
+            <p>
+              {totalViews} visitas → {totalOrders} pedidos
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+        <Link
+          href="/dashboard/products/new"
+          className="bg-flamencalia-red border border-flamencalia-red rounded-2xl p-5 shadow-sm hover:shadow-md hover:bg-flamencalia-red-dark transition-all group"
+        >
+          <span className="text-2xl block mb-2 text-white/80">
+            <Icon name="plus" className="w-6 h-6" />
+          </span>
+          <p className="text-sm font-semibold text-white transition-colors">
+            Subir Producto
+          </p>
+          <p className="text-xs text-white/70 mt-0.5">
+            Publica un nuevo artículo
+          </p>
+        </Link>
+        <Link
+          href="/dashboard/products"
+          className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
+        >
+          <span className="text-2xl block mb-2 text-neutral-400">
+            <Icon name="clipboard" className="w-6 h-6" />
+          </span>
+          <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
+            Gestionar Productos
+          </p>
+          <p className="text-xs text-neutral-400 mt-0.5">
+            Edita precios, stock y más
+          </p>
+        </Link>
+        <Link
+          href={`/sellers/${user.id}`}
+          className="bg-white border border-neutral-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-flamencalia-albero-pale transition-all group"
+        >
+          <span className="text-2xl block mb-2 text-neutral-400">
+            <Icon name="user" className="w-6 h-6" />
+          </span>
+          <p className="text-sm font-semibold text-neutral-700 group-hover:text-flamencalia-red-dark transition-colors">
+            Ver mi Perfil
+          </p>
+          <p className="text-xs text-neutral-400 mt-0.5">Tu tienda pública</p>
+        </Link>
+      </div>
 
       {/* Recent Orders */}
       <div className="bg-white border border-neutral-100 rounded-2xl shadow-sm overflow-hidden">
         <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
           <h2 className="text-base font-semibold text-flamencalia-black">
-            {isSeller ? "Últimos pedidos" : "Últimas compras"}
+            Últimos pedidos
           </h2>
           <Link
             href="/dashboard/orders"
@@ -418,14 +380,6 @@ export default async function DashboardPage() {
               <Icon name="inbox" className="w-10 h-10 mx-auto" />
             </span>
             <p className="text-sm text-neutral-400">Aún no hay pedidos.</p>
-            {!isSeller && (
-              <Link
-                href="/products"
-                className="text-sm text-flamencalia-red font-medium mt-2 inline-block hover:text-flamencalia-red-dark"
-              >
-                Explorar productos →
-              </Link>
-            )}
           </div>
         )}
       </div>

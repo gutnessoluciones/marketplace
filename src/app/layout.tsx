@@ -44,12 +44,22 @@ export const metadata: Metadata = {
     siteName: "Flamencalia",
     locale: "es_ES",
     type: "website",
+    url: "https://www.flamencalia.com",
+    images: [
+      {
+        url: "https://www.flamencalia.com/icons/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "Flamencalia — Moda Flamenca",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Flamencalia — Larga vida a tu Flamenca",
     description:
       "Marketplace de moda flamenca. Compra, vende y dale larga vida a tu flamenca.",
+    images: ["https://www.flamencalia.com/icons/icon-512.png"],
   },
   manifest: "/manifest.json",
   appleWebApp: {

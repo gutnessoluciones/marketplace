@@ -45,19 +45,14 @@ export default async function OffersPage({ searchParams }: PageProps) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  const isSeller = profile?.role === "seller";
   const service = new OffersService(supabase);
   const currentPage = parseInt(page ?? "1");
 
-  const result = isSeller
-    ? await service.listBySeller(user.id, status ?? undefined, currentPage)
-    : await service.listByBuyer(user.id, currentPage);
+  const result = await service.listBySeller(
+    user.id,
+    status ?? undefined,
+    currentPage,
+  );
 
   // Fetch products with recent price drops
   const { data: priceDrops } = await supabase
@@ -119,38 +114,34 @@ export default async function OffersPage({ searchParams }: PageProps) {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-bold text-neutral-800">
-            {isSeller ? "Ofertas recibidas" : "Mis ofertas"}
+            Ofertas recibidas
           </h1>
           <p className="text-sm text-neutral-400 mt-0.5">
-            {isSeller
-              ? "Gestiona las ofertas de tus compradores"
-              : "Revisa el estado de tus ofertas"}
+            Gestiona las ofertas de tus compradores
           </p>
         </div>
       </div>
 
-      {/* Filter tabs — seller only */}
-      {isSeller && (
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.value}
-              href={
-                tab.value
-                  ? `/dashboard/offers?status=${tab.value}`
-                  : "/dashboard/offers"
-              }
-              className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                (status ?? "") === tab.value
-                  ? "bg-flamencalia-black text-white"
-                  : "bg-white border border-neutral-200 text-neutral-500 hover:border-neutral-300"
-              }`}
-            >
-              {tab.label}
-            </Link>
-          ))}
-        </div>
-      )}
+      {/* Filter tabs */}
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.value}
+            href={
+              tab.value
+                ? `/dashboard/offers?status=${tab.value}`
+                : "/dashboard/offers"
+            }
+            className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+              (status ?? "") === tab.value
+                ? "bg-flamencalia-black text-white"
+                : "bg-white border border-neutral-200 text-neutral-500 hover:border-neutral-300"
+            }`}
+          >
+            {tab.label}
+          </Link>
+        ))}
+      </div>
 
       {/* Price-Dropped Products Section */}
       {priceDropProducts.length > 0 && (
@@ -225,9 +216,7 @@ export default async function OffersPage({ searchParams }: PageProps) {
           </div>
           <p className="text-sm font-medium text-neutral-500">No hay ofertas</p>
           <p className="text-xs text-neutral-400 mt-1">
-            {isSeller
-              ? "Cuando recibas ofertas en tus productos aparecerán aquí"
-              : "Explora productos de segunda mano y envía ofertas"}
+            Cuando recibas ofertas en tus productos aparecerán aquí
           </p>
         </div>
       ) : (
@@ -264,7 +253,7 @@ export default async function OffersPage({ searchParams }: PageProps) {
               (1 - o.amount / o.original_price) * 100,
             );
             const statusCfg = STATUS_CONFIG[o.status] ?? STATUS_CONFIG.pending;
-            const counterpart = isSeller ? o.buyer : o.seller;
+            const counterpart = o.buyer;
 
             return (
               <div
@@ -308,7 +297,7 @@ export default async function OffersPage({ searchParams }: PageProps) {
                         <div className="flex items-center gap-2 mt-0.5">
                           {counterpart && (
                             <span className="text-xs text-neutral-400">
-                              {isSeller ? "De" : "A"}{" "}
+                              De{" "}
                               <span className="font-medium text-neutral-500">
                                 {counterpart.display_name}
                               </span>
@@ -356,20 +345,12 @@ export default async function OffersPage({ searchParams }: PageProps) {
                     {/* Actions */}
                     {o.status === "pending" && (
                       <div className="mt-3">
-                        {isSeller ? (
-                          <OfferActions offerId={o.id} amount={o.amount} />
-                        ) : (
-                          <OfferActions
-                            offerId={o.id}
-                            amount={o.amount}
-                            buyerMode
-                          />
-                        )}
+                        {<OfferActions offerId={o.id} amount={o.amount} />}
                       </div>
                     )}
 
                     {/* Countered — buyer can accept/reject counter */}
-                    {o.status === "countered" && !isSeller && (
+                    {o.status === "countered" && (
                       <div className="mt-3">
                         <OfferActions
                           offerId={o.id}
@@ -380,13 +361,12 @@ export default async function OffersPage({ searchParams }: PageProps) {
                               .counter_amount as number
                           }
                           offerStatus="countered"
-                          buyerMode
                         />
                       </div>
                     )}
 
-                    {/* Accepted — buyer can pay */}
-                    {o.status === "accepted" && !isSeller && (
+                    {/* Accepted */}
+                    {o.status === "accepted" && (
                       <div className="mt-3">
                         <OfferActions
                           offerId={o.id}

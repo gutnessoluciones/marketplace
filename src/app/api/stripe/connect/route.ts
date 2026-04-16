@@ -14,15 +14,11 @@ export async function POST() {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("stripe_account_id, role")
+      .select("stripe_account_id")
       .eq("id", user.id)
       .single();
 
-    if (profile?.role !== "seller") {
-      return apiResponse({ error: "Only sellers can connect Stripe" }, 403);
-    }
-
-    let accountId = profile.stripe_account_id;
+    let accountId = profile?.stripe_account_id;
 
     if (!accountId) {
       const account = await stripe.accounts.create({

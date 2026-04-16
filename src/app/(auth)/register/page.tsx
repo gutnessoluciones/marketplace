@@ -120,7 +120,7 @@ export default function RegisterPage() {
       options: {
         data: {
           display_name: displayName,
-          role: formData.get("role") as string,
+          role: "seller",
         },
         emailRedirectTo: `${window.location.origin}/api/auth/callback`,
       },
@@ -315,50 +315,6 @@ export default function RegisterPage() {
               </ul>
             </div>
           )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="role"
-            className="block text-sm font-medium text-flamencalia-black/80 mb-1.5"
-          >
-            Quiero...
-          </label>
-          <div className="grid grid-cols-2 gap-3">
-            <label className="relative">
-              <input
-                type="radio"
-                name="role"
-                value="buyer"
-                defaultChecked
-                className="peer sr-only"
-              />
-              <div className="border-2 border-flamencalia-albero-pale rounded-xl p-3 text-center cursor-pointer peer-checked:border-flamencalia-red peer-checked:bg-flamencalia-red/5 transition-all hover:border-flamencalia-albero">
-                <span className="text-xl block mb-1 text-neutral-400">
-                  <Icon name="cart" className="w-5 h-5 mx-auto" />
-                </span>
-                <span className="text-xs font-semibold text-flamencalia-black/70 peer-checked:text-flamencalia-red">
-                  Comprar
-                </span>
-              </div>
-            </label>
-            <label className="relative">
-              <input
-                type="radio"
-                name="role"
-                value="seller"
-                className="peer sr-only"
-              />
-              <div className="border-2 border-flamencalia-albero-pale rounded-xl p-3 text-center cursor-pointer peer-checked:border-flamencalia-red peer-checked:bg-flamencalia-red/5 transition-all hover:border-flamencalia-albero">
-                <span className="text-xl block mb-1 text-neutral-400">
-                  <Icon name="dress" className="w-5 h-5 mx-auto" />
-                </span>
-                <span className="text-xs font-semibold text-flamencalia-black/70 peer-checked:text-flamencalia-red">
-                  Vender
-                </span>
-              </div>
-            </label>
-          </div>
         </div>
 
         <button

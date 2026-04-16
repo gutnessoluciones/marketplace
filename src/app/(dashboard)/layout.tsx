@@ -8,22 +8,11 @@ import { UnreadBadge } from "@/components/social/unread-badge";
 import { Icon } from "@/components/icons";
 import { MobileSidebar } from "@/components/layout/mobile-sidebar";
 
-const sellerNav = [
+const navItems = [
   { href: "/dashboard", label: "Panel Principal", icon: "chart" },
   { href: "/dashboard/products", label: "Mis Productos", icon: "dress" },
   { href: "/dashboard/orders", label: "Pedidos", icon: "receipt" },
   { href: "/dashboard/offers", label: "Ofertas", icon: "tag" },
-  { href: "/dashboard/disputes", label: "Disputas", icon: "alertTriangle" },
-  { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
-  { href: "/dashboard/favorites", label: "Favoritos", icon: "heart" },
-  { href: "/dashboard/collections", label: "Armarios", icon: "closet" },
-  { href: "/dashboard/settings", label: "Configuración", icon: "gear" },
-];
-
-const buyerNav = [
-  { href: "/dashboard", label: "Panel Principal", icon: "chart" },
-  { href: "/dashboard/orders", label: "Mis Compras", icon: "receipt" },
-  { href: "/dashboard/offers", label: "Mis Ofertas", icon: "tag" },
   { href: "/dashboard/disputes", label: "Disputas", icon: "alertTriangle" },
   { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
   { href: "/dashboard/favorites", label: "Favoritos", icon: "heart" },
@@ -45,12 +34,9 @@ export default async function DashboardLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role, display_name")
+    .select("display_name")
     .eq("id", user.id)
     .single();
-
-  const isSeller = profile?.role === "seller";
-  const navItems = isSeller ? sellerNav : buyerNav;
 
   return (
     <div className="min-h-screen flex bg-flamencalia-cream">
@@ -58,7 +44,6 @@ export default async function DashboardLayout({
       <MobileSidebar
         navItems={navItems}
         displayName={profile?.display_name ?? "U"}
-        isSeller={isSeller}
       />
 
       {/* Desktop Sidebar */}
@@ -120,9 +105,7 @@ export default async function DashboardLayout({
               <p className="text-sm font-medium text-white truncate">
                 {profile?.display_name}
               </p>
-              <p className="text-xs text-flamencalia-albero/60">
-                {isSeller ? "Proveedor" : "Cliente"}
-              </p>
+              <p className="text-xs text-flamencalia-albero/60">Miembro</p>
             </div>
             <NotificationBell />
           </div>

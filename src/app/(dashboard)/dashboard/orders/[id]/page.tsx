@@ -48,12 +48,6 @@ export default async function OrderDetailPage({ params }: PageProps) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
   const service = new OrdersService(supabase);
   let order;
   try {
@@ -62,7 +56,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
     redirect("/dashboard/orders");
   }
 
-  const isSeller = profile?.role === "seller";
+  const isSeller = order.seller_id === user.id;
   const isBuyer = order.buyer_id === user.id;
   const status = STATUS_MAP[order.status] ?? {
     label: order.status,

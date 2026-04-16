@@ -36,16 +36,6 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
     if (!user) return apiResponse({ error: "Unauthorized" }, 401);
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    if (profile?.role !== "seller") {
-      return apiResponse({ error: "Only sellers can create products" }, 403);
-    }
-
     const body = await request.json();
     const parsed = createProductSchema.safeParse(body);
     if (!parsed.success) {
