@@ -82,6 +82,15 @@ export default async function SettingsPage() {
                   <h3 className="text-sm font-bold text-neutral-800 mb-3 flex items-center gap-2">
                     <span className="text-lg">📋</span> Guía paso a paso
                   </h3>
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-3">
+                    <p className="text-xs text-emerald-700">
+                      <strong>🔒 100% gratuito y seguro.</strong> Crear tu
+                      cuenta en Stripe no tiene ningún coste. Stripe es la
+                      plataforma de pagos que usan empresas como Amazon, Google
+                      y Shopify. Tus datos están protegidos con cifrado
+                      bancario.
+                    </p>
+                  </div>
                   <p className="text-xs text-neutral-500 mb-3">
                     Al pulsar el botón, Stripe te redirigirá a su plataforma
                     segura para crear tu cuenta de cobros. Aquí tienes lo que

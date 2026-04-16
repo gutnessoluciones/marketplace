@@ -83,6 +83,12 @@ export default function NewProductPage() {
     setLoading(true);
     setError("");
 
+    if (images.length < 2) {
+      setError("Debes subir al menos 2 fotos del producto.");
+      setLoading(false);
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
 
     const res = await fetch("/api/products", {
