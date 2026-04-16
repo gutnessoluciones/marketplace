@@ -12,7 +12,6 @@ const sellerNav = [
   { href: "/dashboard", label: "Panel Principal", icon: "chart" },
   { href: "/dashboard/products", label: "Mis Productos", icon: "dress" },
   { href: "/dashboard/orders", label: "Pedidos", icon: "receipt" },
-  { href: "/dashboard/cart", label: "Carrito", icon: "cart" },
   { href: "/dashboard/offers", label: "Ofertas", icon: "tag" },
   { href: "/dashboard/disputes", label: "Disputas", icon: "alertTriangle" },
   { href: "/dashboard/chat", label: "Mensajes", icon: "message" },
@@ -24,7 +23,6 @@ const sellerNav = [
 const buyerNav = [
   { href: "/dashboard", label: "Panel Principal", icon: "chart" },
   { href: "/dashboard/orders", label: "Mis Compras", icon: "receipt" },
-  { href: "/dashboard/cart", label: "Carrito", icon: "cart" },
   { href: "/dashboard/offers", label: "Mis Ofertas", icon: "tag" },
   { href: "/dashboard/disputes", label: "Disputas", icon: "alertTriangle" },
   { href: "/dashboard/chat", label: "Mensajes", icon: "message" },

@@ -142,6 +142,14 @@ export function UserNav({ variant = "dark" }: { variant?: "dark" | "light" }) {
               Mis Pedidos
             </Link>
             <Link
+              href="/dashboard/favorites"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"
+            >
+              <Icon name="heart" className="w-4 h-4 text-flamencalia-albero" />
+              Mis Favoritos
+            </Link>
+            <Link
               href="/dashboard/settings"
               onClick={() => setOpen(false)}
               className="flex items-center gap-2.5 px-4 py-2 text-sm text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30 hover:text-flamencalia-red transition-colors"
