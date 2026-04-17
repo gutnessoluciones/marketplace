@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { PaymentsService } from "@/services/payments.service";
 import { apiResponse, apiError } from "@/lib/utils";
 import { rateLimit } from "@/lib/rate-limit";
+import { getPlatformFeePercent } from "@/lib/stripe";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 interface Ctx {
   params: Promise<{ id: string }>;
@@ -65,32 +67,38 @@ export async function POST(request: NextRequest, { params }: Ctx) {
       return apiResponse({ error: "Producto ya no disponible" }, 400);
     }
 
-    // Create order at the offer price
+    // Create order at the offer price (atomic with stock decrement)
     const totalAmount = offer.amount;
-    const platformFee = Math.round((totalAmount * 10) / 100);
+    const feePercent = await getPlatformFeePercent();
+    const platformFee = Math.round((totalAmount * feePercent) / 100);
 
-    const { data: order, error: orderErr } = await supabase
-      .from("orders")
-      .insert({
-        buyer_id: user.id,
-        seller_id: offer.seller_id,
-        product_id: offer.product_id,
-        quantity: 1,
-        total_amount: totalAmount,
-        platform_fee: platformFee,
-        status: "pending",
-      })
-      .select()
-      .single();
+    const { data: orderId, error: orderErr } = await supabaseAdmin.rpc(
+      "create_order_atomic",
+      {
+        p_buyer_id: user.id,
+        p_seller_id: offer.seller_id,
+        p_product_id: offer.product_id,
+        p_quantity: 1,
+        p_total_amount: totalAmount,
+        p_platform_fee: platformFee,
+        p_shipping_address: null,
+        p_coupon_id: null,
+        p_discount_amount: null,
+      },
+    );
 
-    if (orderErr)
+    if (orderErr) {
+      if (orderErr.message?.includes("INSUFFICIENT_STOCK")) {
+        return apiResponse({ error: "Producto sin stock" }, 409);
+      }
       return apiResponse({ error: "Error al crear el pedido" }, 500);
+    }
 
     // C2 FIX: Use checkout_pending instead of paid (confirmed only via webhook)
     const { data: transitioned } = await supabase.rpc("offer_start_checkout", {
       p_offer_id: offerId,
       p_buyer_id: user.id,
-      p_order_id: order.id,
+      p_order_id: orderId,
     });
 
     if (!transitioned) {
@@ -103,11 +111,11 @@ export async function POST(request: NextRequest, { params }: Ctx) {
     // H4 FIX: Direct service call instead of internal HTTP fetch
     const paymentsService = new PaymentsService(supabase);
     const { url } = await paymentsService.createCheckoutSession(
-      order.id,
+      orderId,
       user.id,
     );
 
-    return apiResponse({ url, order_id: order.id });
+    return apiResponse({ url, order_id: orderId });
   } catch (error) {
     return apiError(error);
   }

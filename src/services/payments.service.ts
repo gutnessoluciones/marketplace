@@ -101,103 +101,94 @@ export class PaymentsService {
       return;
     }
 
-    // Decrement stock
-    const { data: stockOrder } = await supabaseAdmin
+    // Stock already decremented by create_order_atomic at order creation time.
+    // No need to decrement again here.
+
+    // Create notification for seller
+    const { data: fullOrder } = await supabaseAdmin
       .from("orders")
-      .select("product_id, quantity")
+      .select("seller_id, product:products!inner(title)")
       .eq("id", orderId)
       .single();
 
-    if (stockOrder) {
-      await supabaseAdmin.rpc("decrement_stock", {
-        p_id: stockOrder.product_id,
-        qty: stockOrder.quantity,
+    if (fullOrder?.seller_id) {
+      const productTitle = (fullOrder.product as unknown as { title: string })
+        ?.title;
+      await supabaseAdmin.from("notifications").insert({
+        user_id: fullOrder.seller_id,
+        type: "order_paid",
+        title: "¡Nueva venta!",
+        message: `Se ha vendido "${productTitle ?? "Producto"}". Revisa tus pedidos.`,
+        data: { order_id: orderId },
       });
 
-      // Create notification for seller
-      const { data: fullOrder } = await supabaseAdmin
+      // Auto-create conversation between buyer and seller
+      const { data: buyerOrder } = await supabaseAdmin
         .from("orders")
-        .select("seller_id, product:products!inner(title)")
+        .select("buyer_id, product_id")
         .eq("id", orderId)
         .single();
 
-      if (fullOrder?.seller_id) {
-        const productTitle = (fullOrder.product as unknown as { title: string })
-          ?.title;
-        await supabaseAdmin.from("notifications").insert({
-          user_id: fullOrder.seller_id,
-          type: "order_paid",
-          title: "¡Nueva venta!",
-          message: `Se ha vendido "${productTitle ?? "Producto"}". Revisa tus pedidos.`,
-          data: { order_id: orderId },
-        });
-
-        // Auto-create conversation between buyer and seller
-        const { data: buyerOrder } = await supabaseAdmin
-          .from("orders")
-          .select("buyer_id, product_id")
-          .eq("id", orderId)
-          .single();
-
-        // Send email confirmations (fire-and-forget)
-        if (buyerOrder) {
-          const { data: buyerAuth } =
-            await supabaseAdmin.auth.admin.getUserById(buyerOrder.buyer_id);
-          if (buyerAuth?.user?.email) {
-            sendOrderStatusEmail(
-              buyerAuth.user.email,
-              productTitle ?? "Producto",
-              "paid",
-              orderId,
-            );
-          }
-          const { data: sellerAuth } =
-            await supabaseAdmin.auth.admin.getUserById(fullOrder.seller_id);
-          if (sellerAuth?.user?.email) {
-            sendOrderStatusEmail(
-              sellerAuth.user.email,
-              productTitle ?? "Producto",
-              "paid",
-              orderId,
-            );
-          }
+      // Send email confirmations (fire-and-forget)
+      if (buyerOrder) {
+        const { data: buyerAuth } = await supabaseAdmin.auth.admin.getUserById(
+          buyerOrder.buyer_id,
+        );
+        if (buyerAuth?.user?.email) {
+          sendOrderStatusEmail(
+            buyerAuth.user.email,
+            productTitle ?? "Producto",
+            "paid",
+            orderId,
+          );
         }
+        const { data: sellerAuth } = await supabaseAdmin.auth.admin.getUserById(
+          fullOrder.seller_id,
+        );
+        if (sellerAuth?.user?.email) {
+          sendOrderStatusEmail(
+            sellerAuth.user.email,
+            productTitle ?? "Producto",
+            "paid",
+            orderId,
+          );
+        }
+      }
 
-        if (buyerOrder) {
-          // Check if conversation already exists
-          const { data: existing } = await supabaseAdmin
-            .from("conversations")
-            .select("id")
-            .eq("product_id", buyerOrder.product_id)
-            .eq("buyer_id", buyerOrder.buyer_id)
-            .maybeSingle();
+      if (buyerOrder) {
+        // Check if conversation already exists
+        const { data: existing } = await supabaseAdmin
+          .from("conversations")
+          .select("id")
+          .eq("product_id", buyerOrder.product_id)
+          .eq("buyer_id", buyerOrder.buyer_id)
+          .maybeSingle();
 
-          const conversationId =
-            existing?.id ??
-            (await (async () => {
-              const { data: newConv } = await supabaseAdmin
-                .from("conversations")
-                .insert({
-                  product_id: buyerOrder.product_id,
-                  buyer_id: buyerOrder.buyer_id,
-                  seller_id: fullOrder.seller_id,
-                })
-                .select("id")
-                .single();
-              return newConv?.id;
-            })());
-
-          if (conversationId) {
-            await supabaseAdmin.from("messages").insert({
-              conversation_id: conversationId,
-              sender_id: buyerOrder.buyer_id,
-              content: `¡Hola! Acabo de comprar "${productTitle ?? "tu producto"}". ¿Cómo coordinamos el envío?`,
-            });
-            await supabaseAdmin
+        const conversationId =
+          existing?.id ??
+          (await (async () => {
+            const { data: newConv } = await supabaseAdmin
               .from("conversations")
-              .update({ last_message_at: new Date().toISOString() })
-              .eq("id", conversationId);
-          }
+              .insert({
+                product_id: buyerOrder.product_id,
+                buyer_id: buyerOrder.buyer_id,
+                seller_id: fullOrder.seller_id,
+              })
+              .select("id")
+              .single();
+            return newConv?.id;
+          })());
+
+        if (conversationId) {
+          await supabaseAdmin.from("messages").insert({
+            conversation_id: conversationId,
+            sender_id: buyerOrder.buyer_id,
+            content: `¡Hola! Acabo de comprar "${productTitle ?? "tu producto"}". ¿Cómo coordinamos el envío?`,
+          });
+          await supabaseAdmin
+            .from("conversations")
+            .update({ last_message_at: new Date().toISOString() })
+            .eq("id", conversationId);
         }
       }
     }
