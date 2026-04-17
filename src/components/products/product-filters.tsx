@@ -357,25 +357,74 @@ export function ProductFilters({ allSellers }: ProductFiltersProps) {
         </div>
       </div>
 
-      {/* Vendedor */}
-      <div>
-        <label className="block text-sm font-semibold text-neutral-800 mb-1.5">
-          Vendedor
-        </label>
-        <select
-          value={seller}
-          onChange={(e) => navigate({ seller: e.target.value || undefined })}
-          className={SELECT_CLASSES}
-          style={SELECT_ARROW}
-        >
-          <option value="">Todos los vendedores</option>
-          {allSellers.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.display_name ?? "Vendedor"} ({s.count})
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Vendedor — burbujas de perfil */}
+      {allSellers.length > 0 && (
+        <div>
+          <label className="block text-sm font-semibold text-neutral-800 mb-2.5">
+            Top Vendedores
+          </label>
+          <div className="flex flex-wrap gap-3">
+            {allSellers.slice(0, 8).map((s) => {
+              const isActive = seller === s.id;
+              const initials = (s.display_name ?? "V")
+                .split(" ")
+                .map((w) => w[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase();
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() =>
+                    navigate({ seller: isActive ? undefined : s.id })
+                  }
+                  className="flex flex-col items-center gap-1 group"
+                  title={`${s.display_name ?? "Vendedor"} · ${s.count} productos`}
+                >
+                  <div
+                    className={`w-11 h-11 rounded-full overflow-hidden border-2 transition-all ${
+                      isActive
+                        ? "border-flamencalia-red ring-2 ring-flamencalia-red/20 scale-110"
+                        : "border-neutral-200 group-hover:border-flamencalia-red/40"
+                    }`}
+                  >
+                    {s.avatar_url ? (
+                      <img
+                        src={s.avatar_url}
+                        alt={s.display_name ?? "Vendedor"}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-flamencalia-red/80 to-flamencalia-red flex items-center justify-center text-white text-xs font-bold">
+                        {initials}
+                      </div>
+                    )}
+                  </div>
+                  <span
+                    className={`text-[10px] leading-tight text-center max-w-[52px] truncate ${
+                      isActive
+                        ? "text-flamencalia-red font-semibold"
+                        : "text-neutral-500 group-hover:text-neutral-700"
+                    }`}
+                  >
+                    {(s.display_name ?? "Vendedor").split(" ")[0]}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {seller && (
+            <button
+              type="button"
+              onClick={() => navigate({ seller: undefined })}
+              className="mt-2 text-xs text-neutral-400 hover:text-flamencalia-red transition-colors"
+            >
+              × Ver todos
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Botón limpiar */}
       {hasActiveFilters && (

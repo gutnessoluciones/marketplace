@@ -489,6 +489,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
                         productId={product.id}
                         inStock={product.stock > 0}
                         price={product.price}
+                        productTitle={product.title}
+                        productImage={product.images?.[0]}
                       />
                     </div>
                     <FavoriteButton

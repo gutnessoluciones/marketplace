@@ -36,6 +36,22 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
     if (!user) return apiResponse({ error: "Unauthorized" }, 401);
 
+    // Verify seller has Stripe connected
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("stripe_account_id")
+      .eq("id", user.id)
+      .single();
+    if (!profile?.stripe_account_id) {
+      return apiResponse(
+        {
+          error:
+            "Debes conectar tu cuenta de Stripe antes de publicar productos. Ve a Configuración → Conectar con Stripe.",
+        },
+        403,
+      );
+    }
+
     const body = await request.json();
     const parsed = createProductSchema.safeParse(body);
     if (!parsed.success) {

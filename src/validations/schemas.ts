@@ -93,12 +93,14 @@ export const createOrderSchema = z.object({
   quantity: z.number().int().positive().default(1),
   shipping_address: z
     .object({
+      full_name: z.string().min(1).optional(),
       line1: z.string().min(1),
       line2: z.string().optional(),
       city: z.string().min(1),
       state: z.string().min(1),
       postal_code: z.string().min(1),
       country: z.string().length(2),
+      phone: z.string().optional(),
     })
     .optional(),
   coupon_code: z.string().max(50).optional(),

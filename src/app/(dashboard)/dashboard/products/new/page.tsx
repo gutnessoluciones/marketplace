@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/icons";
 import { ImageUpload } from "@/components/products/image-upload";
@@ -76,7 +76,16 @@ export default function NewProductPage() {
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const [stripeConnected, setStripeConnected] = useState<boolean | null>(null);
   const router = useRouter();
+
+  // Check Stripe connection on mount
+  useEffect(() => {
+    fetch("/api/stripe/account-info")
+      .then((r) => r.json())
+      .then((d) => setStripeConnected(d.connected !== false))
+      .catch(() => setStripeConnected(false));
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -125,6 +134,68 @@ export default function NewProductPage() {
 
     router.push("/dashboard/products");
     router.refresh();
+  }
+
+  if (stripeConnected === null) {
+    return (
+      <div className="max-w-2xl py-20 text-center">
+        <div className="w-8 h-8 border-2 border-neutral-300 border-t-flamencalia-red rounded-full animate-spin mx-auto" />
+        <p className="text-sm text-neutral-400 mt-3">Verificando cuenta...</p>
+      </div>
+    );
+  }
+
+  if (stripeConnected === false) {
+    return (
+      <div className="max-w-2xl">
+        <div className="bg-white rounded-2xl border border-neutral-200 p-8 text-center">
+          <div className="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
+            <svg
+              className="w-8 h-8 text-amber-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
+            </svg>
+          </div>
+          <h2 className="text-xl font-serif font-bold text-neutral-900 mb-2">
+            Conecta tu cuenta de Stripe
+          </h2>
+          <p className="text-sm text-neutral-500 mb-6 max-w-sm mx-auto">
+            Para publicar productos y recibir pagos, primero necesitas conectar
+            tu cuenta bancaria a través de Stripe.
+          </p>
+          <Link
+            href="/dashboard/settings"
+            className="inline-flex items-center gap-2 bg-flamencalia-red text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-red-700 transition-colors"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"
+              />
+              <path
+                strokeLinecap="round"
+                d="M10.172 13.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.102 1.101"
+              />
+            </svg>
+            Ir a Configuración
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
