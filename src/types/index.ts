@@ -68,7 +68,7 @@ export interface Product {
   updated_at: string;
   seller?: Pick<
     Profile,
-    "id" | "display_name" | "avatar_url" | "verification_status"
+    "id" | "display_name" | "avatar_url" | "verification_status" | "location"
   >;
 }
 

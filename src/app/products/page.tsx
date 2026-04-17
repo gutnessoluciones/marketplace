@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const revalidate = 300;
 import { createClient } from "@/lib/supabase/server";
@@ -8,6 +9,7 @@ import { ProductsService } from "@/services/products.service";
 import { FavoritesService } from "@/services/favorites.service";
 import { BoostsService } from "@/services/boosts.service";
 import { ProductCard } from "@/components/products/product-card";
+import { ProductFilters } from "@/components/products/product-filters";
 import { Icon } from "@/components/icons";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Footer } from "@/components/layout/footer";
@@ -241,7 +243,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   );
 
   return (
-    <div className="min-h-screen bg-flamencalia-cream">
+    <div className="min-h-screen bg-[#f5f5f5]">
       <SiteHeader activeCategory={category} defaultSearch={q} />
 
       {/* ── Hero mini-banner ── */}
@@ -314,6 +316,13 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       </div>
 
       <div className="max-w-350 mx-auto px-4 sm:px-6 py-6">
+        {/* Mobile filter button */}
+        <div className="lg:hidden mb-4 flex items-center gap-3">
+          <Suspense>
+            <ProductFilters allSellers={allSellers} />
+          </Suspense>
+        </div>
+
         {/* Active filter chips */}
         {hasActiveFilters && (
           <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -403,241 +412,10 @@ export default async function ProductsPage({ searchParams }: PageProps) {
         )}
 
         <div className="flex gap-6">
-          {/* ── Sidebar ── */}
-          <aside className="hidden lg:block w-60 shrink-0 space-y-5">
-            {/* Price Range */}
-            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
-              <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
-                Precio
-              </h3>
-              <form
-                action="/products"
-                method="GET"
-                className="flex items-center gap-2"
-              >
-                {category && (
-                  <input type="hidden" name="category" value={category} />
-                )}
-                {q && <input type="hidden" name="q" value={q} />}
-                {seller && <input type="hidden" name="seller" value={seller} />}
-                {color && <input type="hidden" name="color" value={color} />}
-                {size && <input type="hidden" name="size" value={size} />}
-                {condition && (
-                  <input type="hidden" name="condition" value={condition} />
-                )}
-                {brand && <input type="hidden" name="brand" value={brand} />}
-                {sort && <input type="hidden" name="sort" value={sort} />}
-                <input
-                  type="number"
-                  name="priceMin"
-                  placeholder="Min"
-                  defaultValue={priceMin ?? ""}
-                  min="0"
-                  step="1"
-                  className="w-full border border-flamencalia-albero-pale/30 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
-                />
-                <span className="text-neutral-300 text-xs">—</span>
-                <input
-                  type="number"
-                  name="priceMax"
-                  placeholder="Max"
-                  defaultValue={priceMax ?? ""}
-                  min="0"
-                  step="1"
-                  className="w-full border border-flamencalia-albero-pale/30 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
-                />
-                <button
-                  type="submit"
-                  className="p-1.5 bg-flamencalia-black text-white rounded-lg hover:bg-flamencalia-black/80 transition-colors shrink-0"
-                >
-                  <Icon name="check" className="w-3.5 h-3.5" />
-                </button>
-              </form>
-            </div>
-
-            {/* Color */}
-            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
-              <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
-                Color
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {COLORS.map((c) => {
-                  const isActive = color === c.value;
-                  return (
-                    <Link
-                      key={c.value}
-                      href={buildUrl({
-                        color: isActive ? undefined : c.value,
-                        page: undefined,
-                      })}
-                      title={c.label}
-                      className={`w-7 h-7 rounded-full border-2 transition-all hover:scale-110 ${
-                        isActive
-                          ? "border-flamencalia-albero ring-2 ring-flamencalia-albero/30 scale-110"
-                          : "border-flamencalia-albero-pale/50 hover:border-flamencalia-albero"
-                      }`}
-                      style={{ background: c.hex }}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Size */}
-            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
-              <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
-                Talla
-              </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {SIZES.map((s) => {
-                  const isActive = size === s;
-                  return (
-                    <Link
-                      key={s}
-                      href={buildUrl({
-                        size: isActive ? undefined : s,
-                        page: undefined,
-                      })}
-                      className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                        isActive
-                          ? "bg-flamencalia-black text-white"
-                          : "bg-flamencalia-cream text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/30"
-                      }`}
-                    >
-                      {s === "unica" ? "Única" : s}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Condition */}
-            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
-              <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
-                Estado
-              </h3>
-              <div className="space-y-1">
-                {CONDITIONS.map((c) => {
-                  const isActive = condition === c.value;
-                  return (
-                    <Link
-                      key={c.value}
-                      href={buildUrl({
-                        condition: isActive ? undefined : c.value,
-                        page: undefined,
-                      })}
-                      className={`block px-3 py-1.5 rounded-lg text-xs transition-all ${
-                        isActive
-                          ? "bg-flamencalia-red/10 text-flamencalia-albero font-semibold"
-                          : "text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/20"
-                      }`}
-                    >
-                      {c.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Brand */}
-            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
-              <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
-                Marca / Diseñador
-              </h3>
-              <form action="/products" method="GET" className="flex gap-1.5">
-                {category && (
-                  <input type="hidden" name="category" value={category} />
-                )}
-                {q && <input type="hidden" name="q" value={q} />}
-                {seller && <input type="hidden" name="seller" value={seller} />}
-                {color && <input type="hidden" name="color" value={color} />}
-                {size && <input type="hidden" name="size" value={size} />}
-                {condition && (
-                  <input type="hidden" name="condition" value={condition} />
-                )}
-                {priceMin && (
-                  <input type="hidden" name="priceMin" value={priceMin} />
-                )}
-                {priceMax && (
-                  <input type="hidden" name="priceMax" value={priceMax} />
-                )}
-                {sort && <input type="hidden" name="sort" value={sort} />}
-                <input
-                  type="text"
-                  name="brand"
-                  placeholder="Buscar marca..."
-                  defaultValue={brand ?? ""}
-                  className="w-full border border-flamencalia-albero-pale/30 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-flamencalia-albero/20"
-                />
-                <button
-                  type="submit"
-                  className="p-1.5 bg-flamencalia-black text-white rounded-lg hover:bg-flamencalia-black/80 transition-colors shrink-0"
-                >
-                  <Icon name="search" className="w-3.5 h-3.5" />
-                </button>
-              </form>
-            </div>
-
-            {/* Sellers */}
-            <div className="bg-flamencalia-white rounded-xl border border-flamencalia-albero-pale/30 p-4">
-              <h3 className="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-3">
-                Vendedores
-              </h3>
-              <div className="space-y-0.5 max-h-64 overflow-y-auto">
-                {allSellers.map((s) => {
-                  const isActive = seller === s.id;
-                  return (
-                    <div key={s.id} className="flex items-center gap-1">
-                      <Link
-                        href={buildUrl({
-                          seller: isActive ? undefined : s.id,
-                          page: undefined,
-                        })}
-                        className={`flex-1 flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
-                          isActive
-                            ? "bg-flamencalia-red/10 text-flamencalia-albero font-semibold"
-                            : "text-flamencalia-black/70 hover:bg-flamencalia-albero-pale/20"
-                        }`}
-                      >
-                        <div className="w-5 h-5 rounded-full bg-neutral-100 overflow-hidden shrink-0">
-                          {s.avatar_url ? (
-                            <Image
-                              src={s.avatar_url}
-                              alt=""
-                              width={20}
-                              height={20}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Icon
-                                name="user"
-                                className="w-3 h-3 text-neutral-400"
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <span className="truncate">
-                          {s.display_name ?? "Vendedor"}
-                        </span>
-                        <span className="ml-auto text-[10px] text-neutral-400">
-                          {s.count}
-                        </span>
-                      </Link>
-                      <Link
-                        href={`/sellers/${s.id}`}
-                        className="p-1 rounded text-neutral-400 hover:text-flamencalia-albero transition-colors shrink-0"
-                        title="Ver perfil"
-                      >
-                        <Icon name="eye" className="w-3 h-3" />
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </aside>
-
+          {/* ── Desktop Sidebar ── */}
+          <Suspense>
+            <ProductFilters allSellers={allSellers} />
+          </Suspense>
           {/* ── Main grid ── */}
           <div className="flex-1 min-w-0">
             {products.length > 0 ? (

@@ -58,15 +58,20 @@ export function ProductCard({
         </div>
 
         {/* Boosted badge */}
-        {boosted && (
+        {boosted && !product.condition && (
           <span className="absolute top-2.5 left-2.5 bg-flamencalia-albero text-white text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
             ★ Destacado
           </span>
         )}
 
-        {/* Condition badge */}
+        {/* Condition badge — top left, red like volearteflamenca */}
         {product.condition && (
-          <span className="absolute bottom-2.5 left-2.5 bg-white/95 backdrop-blur-sm text-[10px] font-semibold px-2.5 py-1 rounded-full text-neutral-700 uppercase tracking-wide shadow-sm">
+          <span
+            className={`absolute top-2.5 left-2.5 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wide shadow-md ${
+              boosted ? "bg-flamencalia-albero" : "bg-flamencalia-red"
+            }`}
+          >
+            {boosted && "★ "}
             {CONDITION_LABELS[product.condition] ?? product.condition}
           </span>
         )}
@@ -97,6 +102,16 @@ export function ProductCard({
         <p className="text-xs text-neutral-500 mt-2 line-clamp-2 leading-relaxed">
           {product.title}
         </p>
+
+        {/* Location */}
+        {product.seller?.location && (
+          <div className="flex items-center gap-1 mt-1.5">
+            <Icon name="mapPin" className="w-3 h-3 text-neutral-400 shrink-0" />
+            <span className="text-[11px] text-neutral-400 truncate">
+              {product.seller.location}
+            </span>
+          </div>
+        )}
 
         {/* Seller */}
         {product.seller && (

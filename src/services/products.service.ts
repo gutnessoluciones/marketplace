@@ -40,7 +40,7 @@ export class ProductsService {
     let query = this.supabase
       .from("products")
       .select(
-        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status, location)",
         {
           count: "exact",
         },
@@ -86,7 +86,7 @@ export class ProductsService {
       let fallbackQuery = this.supabase
         .from("products")
         .select(
-          "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+          "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status, location)",
           {
             count: "exact",
           },
@@ -136,7 +136,7 @@ export class ProductsService {
     const { data, error } = await this.supabase
       .from("products")
       .select(
-        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status)",
+        "*, seller:profiles!seller_id(id, display_name, avatar_url, verification_status, location)",
       )
       .eq("id", id)
       .single();

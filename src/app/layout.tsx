@@ -61,6 +61,13 @@ export const metadata: Metadata = {
       "Marketplace de moda flamenca. Compra, vende y dale larga vida a tu flamenca.",
     images: ["https://www.flamencalia.com/cliente/abanico-og.png"],
   },
+  icons: {
+    icon: [
+      { url: "/cliente/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/cliente/Abanico.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/cliente/apple-touch-icon.png" }],
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -83,14 +90,6 @@ export default function RootLayout({
       className={`${dmSans.variable} ${playfair.variable} h-full antialiased`}
     >
       <head>
-        <link
-          rel="icon"
-          href="/cliente/favicon-32.png"
-          type="image/png"
-          sizes="32x32"
-        />
-        <link rel="icon" href="/cliente/Abanico.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/cliente/apple-touch-icon.png" />
         <meta name="theme-color" content="#c8102e" />
       </head>
       <body className="min-h-full flex flex-col bg-flamencalia-cream text-foreground">
