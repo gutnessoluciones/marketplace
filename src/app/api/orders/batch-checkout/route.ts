@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { stripe } from "@/lib/stripe";
+import { stripe, getPlatformFeePercent } from "@/lib/stripe";
 import { apiResponse, apiError, AppError } from "@/lib/utils";
 import { z } from "zod";
 
@@ -16,8 +16,6 @@ const batchSchema = z.object({
     .max(20),
   shipping_address: z.any().optional(),
 });
-
-const PLATFORM_FEE_PERCENT = 10;
 
 export async function POST(request: NextRequest) {
   try {
@@ -125,7 +123,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const platformFee = Math.round((totalAmount * PLATFORM_FEE_PERCENT) / 100);
+    const feePercent = await getPlatformFeePercent();
+    const platformFee = Math.round((totalAmount * feePercent) / 100);
 
     // Create single Stripe checkout for all items
     const session = await stripe.checkout.sessions.create({

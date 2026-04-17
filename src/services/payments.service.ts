@@ -1,11 +1,9 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { stripe } from "@/lib/stripe";
+import { stripe, getPlatformFeePercent } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { AppError } from "@/lib/utils";
 import { sendOrderStatusEmail } from "@/lib/email";
 import Stripe from "stripe";
-
-const PLATFORM_FEE_PERCENT = 10;
 
 export class PaymentsService {
   constructor(private supabase: SupabaseClient) {}
@@ -26,9 +24,8 @@ export class PaymentsService {
       throw new AppError("Seller not set up for payments", 400);
     }
 
-    const platformFee = Math.round(
-      (order.total_amount * PLATFORM_FEE_PERCENT) / 100,
-    );
+    const feePercent = await getPlatformFeePercent();
+    const platformFee = Math.round((order.total_amount * feePercent) / 100);
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",

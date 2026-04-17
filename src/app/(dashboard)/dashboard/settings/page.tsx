@@ -1,11 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { StripeConnectButton } from "@/components/layout/stripe-connect-button";
+import { StripeAccountInfo } from "@/components/settings/stripe-account-info";
 import { AddressManager } from "@/components/settings/address-manager";
 import { ProfileEditor } from "@/components/settings/profile-editor";
 import { PushNotificationToggle } from "@/components/settings/push-notification-toggle";
 import { DeleteAccountSection } from "@/components/settings/delete-account";
 import { Icon } from "@/components/icons";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -21,6 +23,15 @@ export default async function SettingsPage() {
     .single();
 
   if (!profile) redirect("/login");
+
+  // Fetch commission percentage from site_settings
+  const { data: feesData } = await supabaseAdmin
+    .from("site_settings")
+    .select("value")
+    .eq("key", "fees")
+    .single();
+  const feePercent = feesData?.value?.platform_fee_percent ?? 10;
+  const sellerPercent = 100 - feePercent;
 
   return (
     <div className="max-w-2xl">
@@ -178,10 +189,10 @@ export default async function SettingsPage() {
                 <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <p className="text-xs text-blue-700">
                     <strong>💡 Importante:</strong> Flamencalia retiene un{" "}
-                    <strong>10% de comisión</strong> por cada venta. El{" "}
-                    <strong>90% restante</strong> se transfiere directamente a
-                    tu cuenta bancaria. Los pagos se procesan de forma segura a
-                    través de Stripe.
+                    <strong>{feePercent}% de comisión</strong> por cada venta.
+                    El <strong>{sellerPercent}% restante</strong> se transfiere
+                    directamente a tu cuenta bancaria. Los pagos se procesan de
+                    forma segura a través de Stripe.
                   </p>
                 </div>
 
@@ -197,6 +208,7 @@ export default async function SettingsPage() {
               <StripeConnectButton />
             </div>
           )}
+          {profile?.stripe_onboarding_complete && <StripeAccountInfo />}
         </div>
       </div>
 

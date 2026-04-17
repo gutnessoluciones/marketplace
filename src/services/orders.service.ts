@@ -1,7 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { AppError } from "@/lib/utils";
-
-const PLATFORM_FEE_PERCENT = 10;
+import { getPlatformFeePercent } from "@/lib/stripe";
 
 interface CreateOrderInput {
   product_id: string;
@@ -38,7 +37,8 @@ export class OrdersService {
     const totalAmount = product.price * input.quantity;
     const discount = input.discount_amount ?? 0;
     const finalAmount = Math.max(totalAmount - discount, 0);
-    const platformFee = Math.round((finalAmount * PLATFORM_FEE_PERCENT) / 100);
+    const feePercent = await getPlatformFeePercent();
+    const platformFee = Math.round((finalAmount * feePercent) / 100);
 
     // C1 FIX: Atomic stock decrement + order creation via PostgreSQL function
     const { data: orderId, error } = await this.supabase.rpc(
