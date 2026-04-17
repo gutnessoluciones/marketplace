@@ -21,7 +21,10 @@ export class PaymentsService {
 
     if (!order) throw new AppError("Order not found", 404);
     if (!order.seller?.stripe_account_id) {
-      throw new AppError("Seller not set up for payments", 400);
+      throw new AppError(
+        "Este vendedor aún no ha configurado sus pagos. No es posible completar la compra por el momento.",
+        400,
+      );
     }
 
     const feePercent = await getPlatformFeePercent();
