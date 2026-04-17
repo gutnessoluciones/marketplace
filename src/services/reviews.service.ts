@@ -13,10 +13,9 @@ export class ReviewsService {
   async listByProduct(productId: string, page = 1, limit = 20) {
     const { data, error, count } = await this.supabase
       .from("reviews")
-      .select(
-        "*, buyer:profiles!buyer_id(id, display_name, avatar_url)",
-        { count: "exact" }
-      )
+      .select("*, buyer:profiles!buyer_id(id, display_name, avatar_url)", {
+        count: "exact",
+      })
       .eq("product_id", productId)
       .order("created_at", { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
@@ -38,8 +37,11 @@ export class ReviewsService {
       throw new AppError("Order not found", 404);
     }
 
-    if (order.status !== "paid" && order.status !== "delivered") {
-      throw new AppError("Can only review paid or delivered orders", 400);
+    if (order.status !== "delivered") {
+      throw new AppError(
+        "Solo puedes dejar una reseña después de recibir el producto",
+        400,
+      );
     }
 
     // Check if review already exists

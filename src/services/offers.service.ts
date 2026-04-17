@@ -3,6 +3,7 @@ import { AppError } from "@/lib/utils";
 
 const MIN_OFFER_PERCENT = 20; // minimum 20% of original price
 const OFFER_EXPIRY_HOURS = 48;
+const MAX_ACTIVE_OFFERS_PER_BUYER = 10;
 
 // Conditions that allow offers (second-hand)
 const OFFERABLE_CONDITIONS = ["como-nuevo", "bueno", "aceptable"];
@@ -74,6 +75,20 @@ export class OffersService {
         "Ya tienes una oferta pendiente para este producto",
         409,
       );
+
+    // Límite global de ofertas activas por comprador
+    const { count: activeCount } = await this.supabase
+      .from("offers")
+      .select("id", { count: "exact", head: true })
+      .eq("buyer_id", buyerId)
+      .in("status", ["pending", "countered"]);
+
+    if ((activeCount ?? 0) >= MAX_ACTIVE_OFFERS_PER_BUYER) {
+      throw new AppError(
+        `No puedes tener más de ${MAX_ACTIVE_OFFERS_PER_BUYER} ofertas activas a la vez`,
+        429,
+      );
+    }
 
     const expiresAt = new Date(
       Date.now() + OFFER_EXPIRY_HOURS * 60 * 60 * 1000,

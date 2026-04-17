@@ -33,7 +33,18 @@ export function SaveToCollection({ productId }: { productId: string }) {
     setLoading(true);
     const res = await fetch("/api/collections");
     const json = await res.json();
-    if (json.data) setCollections(json.data);
+    if (json.data) {
+      const mapped = json.data.map((c: Record<string, unknown>) => ({
+        ...c,
+        item_count:
+          typeof c.item_count === "number"
+            ? c.item_count
+            : Array.isArray(c.items) && c.items.length > 0
+              ? (c.items as Array<{ count: number }>)[0].count
+              : 0,
+      }));
+      setCollections(mapped);
+    }
     setLoading(false);
   };
 

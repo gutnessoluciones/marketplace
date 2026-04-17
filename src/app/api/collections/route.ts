@@ -6,7 +6,7 @@ import { z } from "zod";
 
 const createCollectionSchema = z.object({
   name: z.string().min(1).max(100),
-  description: z.string().max(300).optional(),
+  description: z.string().max(500).optional(),
   is_public: z.boolean().default(true),
 });
 

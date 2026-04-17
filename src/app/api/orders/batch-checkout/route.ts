@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { stripe, getPlatformFeePercent } from "@/lib/stripe";
 import { apiResponse, apiError, AppError } from "@/lib/utils";
 import { z } from "zod";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const batchSchema = z.object({
   items: z
@@ -89,26 +90,36 @@ export async function POST(request: NextRequest) {
       const orderTotal = product.price * qty;
       totalAmount += orderTotal;
 
-      // Create order
-      const { data: order, error: oErr } = await supabase
-        .from("orders")
-        .insert({
-          buyer_id: user.id,
-          seller_id: sellerId,
-          product_id: product.id,
-          quantity: qty,
-          total_amount: orderTotal,
-          status: "pending",
-          shipping_address: parsed.data.shipping_address ?? null,
-        })
-        .select("id")
-        .single();
+      const feePercent = await getPlatformFeePercent();
+      const itemPlatformFee = Math.round((orderTotal * feePercent) / 100);
 
-      if (oErr || !order) {
+      // Atomic order creation with stock decrement
+      const { data: orderId, error: oErr } = await supabaseAdmin.rpc(
+        "create_order_atomic",
+        {
+          p_buyer_id: user.id,
+          p_seller_id: sellerId,
+          p_product_id: product.id,
+          p_quantity: qty,
+          p_total_amount: orderTotal,
+          p_platform_fee: itemPlatformFee,
+          p_shipping_address: parsed.data.shipping_address ?? null,
+          p_coupon_id: null,
+          p_discount_amount: null,
+        },
+      );
+
+      if (oErr) {
+        if (oErr.message?.includes("INSUFFICIENT_STOCK")) {
+          throw new AppError(
+            `"${product.title}" no tiene stock suficiente`,
+            409,
+          );
+        }
         throw new AppError("Error al crear el pedido", 500);
       }
 
-      orderIds.push(order.id);
+      orderIds.push(orderId);
 
       lineItems.push({
         price_data: {
@@ -123,8 +134,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const feePercent = await getPlatformFeePercent();
-    const platformFee = Math.round((totalAmount * feePercent) / 100);
+    const feePercentTotal = await getPlatformFeePercent();
+    const platformFee = Math.round((totalAmount * feePercentTotal) / 100);
 
     // Create single Stripe checkout for all items
     const session = await stripe.checkout.sessions.create({
@@ -147,7 +158,7 @@ export async function POST(request: NextRequest) {
 
     // Store session ID on all orders
     for (const oid of orderIds) {
-      await supabase
+      await supabaseAdmin
         .from("orders")
         .update({ stripe_checkout_session_id: session.id })
         .eq("id", oid);

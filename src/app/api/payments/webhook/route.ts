@@ -59,6 +59,56 @@ export async function POST(request: NextRequest) {
         await PaymentsService.handleAccountUpdated(account);
         break;
       }
+      case "charge.dispute.created": {
+        const dispute = event.data.object as Stripe.Dispute;
+        const piId =
+          typeof dispute.payment_intent === "string"
+            ? dispute.payment_intent
+            : dispute.payment_intent?.id;
+        if (piId) {
+          // Find order by stripe_payment_intent_id
+          const { data: payment } = await supabaseAdmin
+            .from("payments")
+            .select("order_id")
+            .eq("stripe_payment_intent_id", piId)
+            .maybeSingle();
+          if (payment?.order_id) {
+            // Mark order as disputed
+            await supabaseAdmin
+              .from("orders")
+              .update({ status: "disputed" })
+              .eq("id", payment.order_id);
+            // Get order info for notifications
+            const { data: order } = await supabaseAdmin
+              .from("orders")
+              .select("buyer_id, seller_id, product:products(title)")
+              .eq("id", payment.order_id)
+              .single();
+            if (order) {
+              const title =
+                (order.product as unknown as { title: string })?.title ??
+                "Producto";
+              await supabaseAdmin.from("notifications").insert([
+                {
+                  user_id: order.seller_id,
+                  type: "order_disputed",
+                  title: "⚠️ Chargeback recibido",
+                  message: `El comprador ha abierto un chargeback en Stripe para "${title}". Contacta con soporte.`,
+                  data: { order_id: payment.order_id },
+                },
+                {
+                  user_id: order.buyer_id,
+                  type: "order_disputed",
+                  title: "Disputa de pago abierta",
+                  message: `Se ha registrado una disputa de pago para "${title}".`,
+                  data: { order_id: payment.order_id },
+                },
+              ]);
+            }
+          }
+        }
+        break;
+      }
     }
   } catch (error) {
     console.error(`Webhook error for ${event.type}:`, error);

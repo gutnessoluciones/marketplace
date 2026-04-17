@@ -42,12 +42,16 @@ export async function POST(request: NextRequest) {
 
     if (!order) throw new AppError("Pedido no encontrado", 404);
 
-    // Only seller, buyer, or admin can request refund
+    // Solo admin puede procesar reembolsos
     const auth = await isAdmin();
-    const isOrderParty =
-      order.buyer_id === user.id || order.seller_id === user.id;
-    if (!isOrderParty && !auth.authorized) {
-      return apiResponse({ error: "No autorizado" }, 403);
+    if (!auth.authorized) {
+      return apiResponse(
+        {
+          error:
+            "Solo un administrador puede procesar reembolsos. Abre una disputa si necesitas un reembolso.",
+        },
+        403,
+      );
     }
 
     // Can only refund paid/shipped orders

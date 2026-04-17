@@ -149,6 +149,14 @@ export class OrdersService {
       );
     }
 
+    // Tracking obligatorio para marcar como enviado
+    if (input.status === "shipped" && !input.tracking_number?.trim()) {
+      throw new AppError(
+        "Es obligatorio proporcionar un número de seguimiento para marcar como enviado",
+        400,
+      );
+    }
+
     const updateData: Record<string, unknown> = { status: input.status };
     if (input.tracking_number)
       updateData.tracking_number = input.tracking_number;

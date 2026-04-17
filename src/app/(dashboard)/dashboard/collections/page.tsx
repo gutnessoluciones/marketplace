@@ -43,9 +43,25 @@ export default function CollectionsPage() {
   const [editPublic, setEditPublic] = useState(false);
 
   const fetchCollections = useCallback(async () => {
-    const res = await fetch("/api/collections");
-    const json = await res.json();
-    if (json.data) setCollections(json.data);
+    try {
+      const res = await fetch("/api/collections");
+      const json = await res.json();
+      if (json.data) {
+        // API returns items:[{count:N}], transform to item_count
+        const mapped = json.data.map((c: Record<string, unknown>) => ({
+          ...c,
+          item_count:
+            typeof c.item_count === "number"
+              ? c.item_count
+              : Array.isArray(c.items) && c.items.length > 0
+                ? (c.items as Array<{ count: number }>)[0].count
+                : 0,
+        }));
+        setCollections(mapped);
+      }
+    } catch {
+      // silently fail
+    }
     setLoading(false);
   }, []);
 
@@ -57,21 +73,31 @@ export default function CollectionsPage() {
     e.preventDefault();
     if (!name.trim()) return;
     setCreating(true);
-    await fetch("/api/collections", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: name.trim(),
-        description: description.trim() || null,
-        is_public: isPublic,
-      }),
-    });
-    setName("");
-    setDescription("");
-    setIsPublic(false);
-    setShowCreate(false);
+    try {
+      const res = await fetch("/api/collections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          description: description.trim() || null,
+          is_public: isPublic,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.error ? "Error al crear el armario" : "Error desconocido");
+        setCreating(false);
+        return;
+      }
+      setName("");
+      setDescription("");
+      setIsPublic(false);
+      setShowCreate(false);
+      fetchCollections();
+    } catch {
+      alert("Error de conexión al crear el armario");
+    }
     setCreating(false);
-    fetchCollections();
   };
 
   const handleDelete = async (id: string) => {
